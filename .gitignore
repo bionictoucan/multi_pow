@@ -1,0 +1,6 @@
+segmented_dataset/
+*.pth
+old_dataset/
+*.ipynb
+__pycache__/
+*.npz
