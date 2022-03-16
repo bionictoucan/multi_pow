@@ -1,5 +1,3 @@
-from email.mime import image
-from unittest.mock import patch
 import torch
 import torch.nn as nn
 from vit_pytorch.vit_for_small_dataset import ViT
