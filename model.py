@@ -92,7 +92,7 @@ class AECCT(nn.Module):
         super().__init__()
 
         self.ae = AE(in_channels=in_channels, nef=ae_hidden)
-        self.ae.load_state_dict(torch.load(ae_model)["model_state_dict"])
+        self.ae.load_state_dict(torch.load(ae_model)["model_state_dict"], map_location="cpu")
         self.ae = self.ae.encoder
         for param in self.ae.parameters():
             param.requires_grad = False
