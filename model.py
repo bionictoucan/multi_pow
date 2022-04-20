@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from vit_pytorch.vit_for_small_dataset import ViT
+from vit_pytorch.cct import cct_14
 from dimensionality_reduction import AE
 from typing import Dict
 
@@ -60,7 +61,7 @@ class AEViT(nn.Module):
         super().__init__()
 
         self.ae = AE(in_channels=in_channels, nef=ae_hidden)
-        self.ae.load_state_dict(torch.load(ae_model)["model_state_dict"])
+        self.ae.load_state_dict(torch.load(ae_model)["model_state_dict"], map_location="cpu")
         self.ae = self.ae.encoder
         for param in self.ae.parameters():
             param.requires_grad = False
