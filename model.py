@@ -98,7 +98,7 @@ class AECCT(nn.Module):
         for param in self.ae.parameters():
             param.requires_grad = False
 
-        self.vit = cct_14(image_size=image_size, n_conv_layers = 1,  kernel_size = 7, stride = 2, padding = 3, pooling_kernel_size = 3,pooling_stride = 2, pooling_padding = 1, num_classes = num_classes, positional_embedding = "learnable")
+        self.vit = cct_14(image_size=image_size, n_conv_layers = 1,  kernel_size = 7, stride = 2, padding = 3, pooling_kernel_size = 3,pooling_stride = 2, pooling_padding = 1, num_classes = num_classes, positional_embedding = "learnable", n_input_channels=1)
 
         self.y_patches = y_patches
         self.x_patches = x_patches
