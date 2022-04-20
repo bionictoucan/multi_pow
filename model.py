@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torch.nn as nn
 from vit_pytorch.vit_for_small_dataset import ViT
@@ -76,6 +77,38 @@ class AEViT(nn.Module):
         x = self.ae(x)
         _, _, h2, w2 = x.shape
         x = x.reshape(b, p, c, h2, w2)
+        x = torch.swapaxes(x, 1, 2)
+        x = x.reshape(b, c, self.y_patches*h2, self.x_patches*w2)
+
+        out = self.vit(x)
+        return out
+
+class AECCT(nn.Module):
+    """
+    Vision Transformer model with autoencoder input and CCT architecture.
+    """
+
+    def __init__(self, in_channels: int, ae_hidden: int, ae_model: str, image_size: int, num_classes: int, y_patches: int, x_patches: int) -> None:
+        super().__init__()
+
+        self.ae = AE(in_channels=in_channels, nef=ae_hidden)
+        self.ae.load_state_dict(torch.load(ae_model)["model_state_dict"])
+        self.ae = self.ae.encoder
+        for param in self.ae.parameters():
+            param.requires_grad = False
+
+        self.vit = cct_14(image_size=image_size, n_conv_layers = 1,  kernel_size = 7, stride = 2, padding = 3, pooling_kernel_size = 3,pooling_stride = 2, pooling_padding = 1, num_classes = num_classes, positional_embedding = "learnable")
+
+        self.y_patches = y_patches
+        self.x_patches = x_patches
+
+    def forward(self, x: torch.tensor) -> torch.tensor:
+        b, p, c, h1, w1 = x.shape
+        x = x.reshape(b*p, c, h1, w1)
+        x = self.ae(x)
+        _, _, h2, w2 = x.shape
+        x = x.reshape(b, p, c, h2, w2)
+        x = torch.swapaxes(x, 1, 2)
         x = x.reshape(b, c, self.y_patches*h2, self.x_patches*w2)
 
         out = self.vit(x)
