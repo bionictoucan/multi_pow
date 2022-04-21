@@ -21,6 +21,55 @@ pt_vibrant = {
 
 class AE(nn.Module):
     """
+    The autoencoder model to learn a 64x64 representation of the data from a 1024x1024 patch.
+    """
+
+    def __init__(self, in_channels: int, nef: int) -> None:
+        super().__init__()
+        
+        self.encoder = nn.Sequential(
+            nn.Conv2d(in_channels, nef, stride=2, kernel_size=7, padding=3),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(nef, 2*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(2*nef, 4*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(4*nef, in_channels, stride=1, kernel_size=1)
+        )
+
+        self.decoder = nn.Sequential(
+            nn.Conv2d(in_channels, 4*nef, stride=1, kernel_size=1),
+            nn.ConvTranspose2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(4*nef, 2*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(2*nef, nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(nef, in_channels, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.LeakyReLU()
+        )
+
+        for m in self.modules():
+            if not AE:
+                nn.init.kaiming_normal_(m.weight)
+
+    def forward(self, x: torch.tensor) -> torch.tensor:
+        h = self.encoder(x)
+        out = self.decoder(h)
+
+        return out
+
+class AE256(nn.Module):
+    """
     The autoencoder model to learn a 256x256 representation of the data from a 1024x1024 patch.
     """
 
