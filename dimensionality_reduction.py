@@ -38,7 +38,7 @@ class AE(nn.Module):
             nn.BatchNorm2d(4*nef),
             nn.LeakyReLU(),
             nn.Conv2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
+            nn.BatchNorm2d(4*nef),
             nn.LeakyReLU(),
             nn.Conv2d(4*nef, in_channels, stride=1, kernel_size=1)
         )
