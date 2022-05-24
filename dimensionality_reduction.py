@@ -169,12 +169,12 @@ class AETrainer(RegressorTrainer):
             self.val_losses = val_losses
 
             #only save if validation loss is minimal
-            if min(val_losses) == val_losses[-1]:
-                if self.scheduler:
-                    self.checkpoint(add_info={"scheduler_state_dict" : self.scheduler.state_dict()})
-                else:
-                    self.checkpoint()
-                self.save_checkpoint()
+#             if min(val_losses) == val_losses[-1]:
+            if self.scheduler:
+                self.checkpoint(add_info={"scheduler_state_dict" : self.scheduler.state_dict()})
+            else:
+                self.checkpoint()
+            self.save_checkpoint()
 
         #plot the results
             fig.suptitle(f"Time elapsed {t_now}s after epoch {self.current_epoch}")
