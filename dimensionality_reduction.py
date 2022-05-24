@@ -1,9 +1,11 @@
+import enum
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Tuple
 from torch.utils.data import DataLoader
+from tqdm import tqdm
 from battle_factory import RegressorTrainer
 from dataset import PowderDataset
 from torchvision.transforms import Compose
@@ -118,6 +120,27 @@ class AETrainer(RegressorTrainer):
         self.val_in = f["val_in"].reshape(-1, *f["val_in"].shape[-2:])/255
         self.val_out = f["val_in"].reshape(-1, *f["val_in"].shape[-2:])/255
 
+    def train(self, train_loader: DataLoader) -> Tuple[float, np.ndarray, np.ndarray]:
+        batch_losses = []
+        for j, (inputs, outputs) in enumerate(tqdm(train_loader)):
+            inputs, outputs = inputs.float().to(self.device), outputs.float().to(self.device)
+
+            self.optimiser.zero_grad()
+            model_outputs = self.model(inputs)
+            loss = self.loss_fn(model_outputs, outputs)
+            loss.backward()
+            self.optimiser.step()
+
+            batch_losses.append(loss.item())
+            if j == 0:
+                plt_in = inputs[0,0].clone().detach().cpu().squeeze().numpy()
+                plt_gen = model_outputs[0,0].clone().detach().cpu().squeeze().numpy()
+
+        if self.scheduler:
+            self.scheduler.step()
+
+        return torch.mean(torch.tensor(batch_losses)), plt_in, plt_gen
+
     def myth_trainer(self, load: bool = False, load_pth: Optional[str] = None, transform: Union[nn.Module, nn.Sequential, Compose, List, None] = None) -> None:
         """
         This class method trains the network with the interactive plotting environment.
@@ -136,13 +159,23 @@ class AETrainer(RegressorTrainer):
         val_loader = DataLoader(val_dataset, batch_size=self.batch_size, shuffle=True)
 
         #initialisation of the plotting environment
-        fig = plt.figure(figsize=(6,6))
-        train_ax = fig.add_subplot(1,1,1)
+        fig = plt.figure(figsize=(9,9), constrained_layout=True)
+        gs = fig.add_gridspec(nrows=2, ncols=2)
+        train_ax = fig.add_subplot(gs[1,:])
         val_ax = train_ax.twinx()
         # train_ax.set_yscale("log")
         train_ax.set_ylabel("Training Loss", color=pt_vibrant["cyan"])
         train_ax.set_xlabel("Number of Epochs")
         val_ax.set_ylabel("Validation Loss", color=pt_vibrant["magenta"])
+
+        train_im = fig.add_subplot(gs[0,0])
+        train_im.set_xticks([])
+        train_im.set_yticks([])
+        train_im.set_title("Input Image")
+        gen_im = fig.add_subplot(gs[0,1])
+        gen_im.set_xticks([])
+        gen_im.set_yticks([])
+        gen_im.set_title("Generated Image")
         fig.show()
         fig.canvas.draw()
 
@@ -157,7 +190,7 @@ class AETrainer(RegressorTrainer):
             if n == 0 and load:
                 self.current_epoch += 1
 
-            tl = self.train(train_loader=train_loader)
+            tl, plt_in, plt_gen = self.train(train_loader=train_loader)
             train_losses.append(tl.item())
 
             vl = self.validation(val_loader=val_loader)
@@ -183,4 +216,12 @@ class AETrainer(RegressorTrainer):
             val_ax.set_ylabel("Validation Loss", color=pt_vibrant["magenta"])
             train_ax.semilogy(train_losses, color=pt_vibrant["cyan"], marker="o")
             val_ax.semilogy(val_losses, color=pt_vibrant["magenta"], marker="o")
+            train_im.set_xticks([])
+            train_im.set_yticks([])
+            train_im.set_title("Input Image")
+            train_im.imshow(plt_in, cmap="Greys_r", origin="lower")
+            gen_im.set_xticks([])
+            gen_im.set_yticks([])
+            gen_im.set_title("Generated Image")
+            gen_im.imshow(plt_gen, cmap="Greys_r", origin="lower")
             fig.canvas.draw()
