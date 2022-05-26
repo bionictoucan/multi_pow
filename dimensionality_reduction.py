@@ -1,4 +1,3 @@
-import enum
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
@@ -20,6 +19,108 @@ pt_vibrant = {
     "magenta" : "#EE3377",
     "grey" : "#BBBBBB"
 }
+
+class AE_withskip(nn.Module):
+    def __init__(self, in_channels: int, nef: int) -> None:
+        super().__init__()
+        
+        self.E1 = nn.Sequential(
+            nn.Conv2d(in_channels, nef, stride=2, kernel_size=7, padding=3),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU()
+        )
+        self.E2 = nn.Sequential(
+            nn.Conv2d(nef, 2*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU()
+        )
+        self.E3 = nn.Sequential(
+            nn.Conv2d(2*nef, 4*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU()
+        )
+        self.E4 = nn.Sequential(
+            nn.Conv2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU()
+        )
+        self.z1 = nn.Conv2d(4*nef, in_channels, stride=1, kernel_size=1)
+
+        self.z2 = nn.Conv2d(in_channels, 4*nef, stride=1, kernel_size=1)
+        self.D1 = nn.Sequential(
+            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU()
+        )
+        self.D2 = nn.Sequential(
+            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(4*nef, 2*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU()
+        )
+        self.D3 = nn.Sequential(
+            nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(2*nef, nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU()
+        )
+        self.D4 = nn.Sequential(
+            nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(nef, in_channels, stride=2, kernel_size=7, padding=3, output_padding=1),
+            nn.LeakyReLU()
+        )
+
+        for m in self.modules():
+            if not AE:
+                nn.init.kaiming_normal_(m.weight)
+
+    def forward(self, x: torch.tensor) -> torch.tensor:
+        E1 = self.E1(x)
+        E2 = self.E2(E1)
+        E3 = self.E3(E2)
+        E4 = self.E4(E3)
+
+        h = self.z1(E4)
+
+        D1 = self.z2(h) + E4
+        D2 = self.D1(D1) + E3
+        D3 = self.D2(D2) + E2
+        D4 = self.D3(D3) + E1
+
+        out = self.D4(D4)
+
+        return out
+
+    @property
+    def encoder(self) -> nn.Sequential:
+        return nn.Sequential(
+            self.E1,
+            self.E2,
+            self.E3,
+            self.E4,
+            self.z1
+        )
 
 class AE(nn.Module):
     """
@@ -89,6 +190,7 @@ class AE(nn.Module):
                 nn.init.kaiming_normal_(m.weight)
 
     def forward(self, x: torch.tensor) -> torch.tensor:
+        # inp = x.clone()
         h = self.encoder(x)
         out = self.decoder(h)
 

@@ -20,9 +20,11 @@ class Trainer:
         device_id: Union[int, str] = 0
     ) -> None:
 
-        self.device = torch.device(f"cuda:{device_id}" if type(device_id) == int else device_id)
+        # self.device = torch.device(f"cuda:{device_id}" if type(device_id) ==
+        # int else device_id)
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.model = model
+        self.model = torch.nn.DataParallel(model)
         self.model.to(self.device)
 
         self.optimiser = optimiser
