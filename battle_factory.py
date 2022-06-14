@@ -1,6 +1,7 @@
 import torch
 from typing import Optional, Callable, Union, Dict
 from tqdm import tqdm
+import os
 
 class Trainer:
     """
@@ -24,7 +25,7 @@ class Trainer:
         # int else device_id)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.model = torch.nn.DataParallel(model)
+        self.model = model
         self.model.to(self.device)
 
         self.optimiser = optimiser

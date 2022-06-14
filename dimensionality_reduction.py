@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-from typing import List, Union, Optional, Tuple
+import torch.nn.functional as F
+from typing import List, Union, Optional, Tuple, Callable
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from battle_factory import RegressorTrainer
@@ -19,6 +20,152 @@ pt_vibrant = {
     "magenta" : "#EE3377",
     "grey" : "#BBBBBB"
 }
+
+class AE_sparsede(nn.Module):
+    """
+    The autoencoder model to learn a 64x64 representation of the data from a 1024x1024 patch.
+    """
+
+    def __init__(self, in_channels: int, nef: int) -> None:
+        super().__init__()
+        
+        self.encoder = nn.Sequential(
+            nn.Conv2d(in_channels, nef, stride=2, kernel_size=7, padding=3),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(nef, 2*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(2*nef, 4*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(4*nef, in_channels, stride=1, kernel_size=1)
+        )
+
+        self.decoder = nn.Sequential(
+            nn.Conv2d(in_channels, 4*nef, stride=1, kernel_size=1),
+            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(4*nef, 2*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(2*nef, nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU(),
+            nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU(),
+            nn.ConvTranspose2d(nef, in_channels, stride=2, kernel_size=7, padding=3, output_padding=1),
+            nn.ReLU()
+        )
+
+        for m in self.modules():
+            if not AE:
+                nn.init.kaiming_normal_(m.weight)
+
+    def forward(self, x: torch.tensor) -> torch.tensor:
+        h = self.encoder(x)
+        out = self.decoder(h)
+
+        return out
+
+class AE_sparsesh(nn.Module):
+    """
+    The autoencoder model to learn a 64x64 representation of the data from a 1024x1024 patch.
+    """
+
+    def __init__(self, in_channels: int, nef: int) -> None:
+        super().__init__()
+        
+        self.encoder = nn.Sequential(
+            nn.Conv2d(in_channels, nef, stride=2, kernel_size=7, padding=3),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU(),
+            # nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
+            # nn.BatchNorm2d(nef),
+            # nn.LeakyReLU(),
+            nn.Conv2d(nef, 2*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            # nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
+            # nn.BatchNorm2d(2*nef),
+            # nn.LeakyReLU(),
+            nn.Conv2d(2*nef, 4*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            # nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            # nn.BatchNorm2d(4*nef),
+            # nn.LeakyReLU(),
+            nn.Conv2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            # nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            # nn.BatchNorm2d(4*nef),
+            # nn.LeakyReLU(),
+            nn.Conv2d(4*nef, in_channels, stride=1, kernel_size=1)
+        )
+
+        self.decoder = nn.Sequential(
+            nn.Conv2d(in_channels, 4*nef, stride=1, kernel_size=1),
+            # nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            # nn.BatchNorm2d(4*nef),
+            # nn.LeakyReLU(),
+            nn.ConvTranspose2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(4*nef),
+            nn.LeakyReLU(),
+            # nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
+            # nn.BatchNorm2d(4*nef),
+            # nn.LeakyReLU(),
+            nn.ConvTranspose2d(4*nef, 2*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(2*nef),
+            nn.LeakyReLU(),
+            # nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
+            # nn.BatchNorm2d(2*nef),
+            # nn.LeakyReLU(),
+            nn.ConvTranspose2d(2*nef, nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.BatchNorm2d(nef),
+            nn.LeakyReLU(),
+            # nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
+            # nn.BatchNorm2d(nef),
+            # nn.LeakyReLU(),
+            nn.ConvTranspose2d(nef, in_channels, stride=2, kernel_size=7, padding=3, output_padding=1),
+            nn.ReLU()
+        )
+
+        for m in self.modules():
+            if not AE:
+                nn.init.kaiming_normal_(m.weight)
+
+    def forward(self, x: torch.tensor) -> torch.tensor:
+        h = self.encoder(x)
+        out = self.decoder(h)
+
+        return out
 
 class AE_withskip(nn.Module):
     def __init__(self, in_channels: int, nef: int) -> None:
@@ -234,6 +381,22 @@ class AE256(nn.Module):
         return out
 
 class AETrainer(RegressorTrainer):
+    def __init__(
+        self,
+        model : torch.nn.Module,
+        optimiser : torch.optim.Optimizer,
+        loss_fn: Callable[[torch.tensor, torch.tensor], torch.tensor],
+        no_of_epochs: int,
+        batch_size: int,
+        data_pth: str,
+        save_dir: str = "./",
+        scheduler: Optional[torch.optim.lr_scheduler._LRScheduler] = None,
+        device_id: Union[int, str] = 0,
+        rho: float = 0.05
+        ):
+        super().__init__(model, optimiser, loss_fn, no_of_epochs, batch_size, data_pth, save_dir, scheduler, device_id)
+        # self.rho = rho
+
     def load_data(self) -> None:
         """
         This class method loads the training and validation data. This depends on the format of the data.
@@ -246,6 +409,58 @@ class AETrainer(RegressorTrainer):
         self.val_in = f["val_in"].reshape(-1, *f["val_in"].shape[-2:])/255
         self.val_out = f["val_in"].reshape(-1, *f["val_in"].shape[-2:])/255
 
+    # def kl_divergence(self, rho, rho_hat):
+    #     rho_hat = torch.mean(F.sigmoid(rho_hat).view(rho_hat.size(0),-1), 1) # sigmoid because we need the probability distributions
+    #     rho = torch.tensor([rho] * len(rho_hat)).to(self.device)
+    #     return torch.sum(rho * torch.log(rho/rho_hat) + (1 - rho) * torch.log((1 - rho)/(1 - rho_hat)))
+
+    # # define the sparse loss function
+    # def sparse_loss(self, rho, images):
+    #     model_children = list(self.model.children())
+    #     values = images
+    #     loss = 0
+    #     for i in range(len(model_children)):
+    #         values = model_children[i](values)
+    #         loss += self.kl_divergence(rho, values)
+    #     return loss
+
+    def _layer_extract(self) -> List:
+        """
+        This function will extract the layers so the L1 reg will actually be
+        calculated per set of learnable parameters rather than the whole network
+        because of how the model is set up, shennanigans.
+        """
+
+        #this if statement exists so this function will work when using multiple
+        #or single GPU
+        if isinstance(self.model, nn.DataParallel):
+            model = list(self.model.children()).pop()
+        else:
+            model = self.model
+
+        list_ae_ch = []
+        enc, dec = list(model.children())
+        conv_e, norm_e, act_e = enc[::3], enc[1::3], enc[2::3]
+        for j in range(len(enc) // 3):
+            list_ae_ch.append(nn.Sequential(conv_e[j], norm_e[j], act_e[j]))
+        list_ae_ch.append(conv_e[-1])
+        list_ae_ch.append(dec[0])
+        conv_d, norm_d, act_d = dec[1:-2:3], dec[2:-2:3], dec[3:-2:3]
+        for j in range((len(dec) // 3) - 1):
+            list_ae_ch.append(nn.Sequential(conv_d[j], norm_d[j], act_d[j]))
+        list_ae_ch.append(nn.Sequential(dec[-2:]))
+
+        return list_ae_ch
+
+    def sparse_loss(self, images):
+        loss = 0
+        model_children = self._layer_extract()
+        values = images
+        for i in range(len(model_children)):
+            values = model_children[i](values)
+            loss += torch.mean(torch.abs(values))
+        return loss
+
     def train(self, train_loader: DataLoader) -> Tuple[float, np.ndarray, np.ndarray]:
         batch_losses = []
         for j, (inputs, outputs) in enumerate(tqdm(train_loader)):
@@ -253,7 +468,7 @@ class AETrainer(RegressorTrainer):
 
             self.optimiser.zero_grad()
             model_outputs = self.model(inputs)
-            loss = self.loss_fn(model_outputs, outputs)
+            loss = self.loss_fn(model_outputs, outputs) + 0.001*self.sparse_loss(inputs)
             loss.backward()
             self.optimiser.step()
 
@@ -266,6 +481,18 @@ class AETrainer(RegressorTrainer):
             self.scheduler.step()
 
         return torch.mean(torch.tensor(batch_losses)), plt_in, plt_gen
+
+    def validation(self, val_loader: torch.utils.data.DataLoader) -> float:
+        batch_losses = []
+        with torch.no_grad():
+            for inputs, outputs in val_loader:
+                inputs, outputs = inputs.float().to(self.device), outputs.float().to(self.device)
+                model_outputs = self.model(inputs)
+                loss = self.loss_fn(model_outputs, outputs)
+
+                batch_losses.append(loss.item())
+
+        return torch.mean(torch.tensor(batch_losses))
 
     def myth_trainer(self, load: bool = False, load_pth: Optional[str] = None, transform: Union[nn.Module, nn.Sequential, Compose, List, None] = None) -> None:
         """

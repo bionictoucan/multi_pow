@@ -14,7 +14,7 @@ class MVCNN(nn.Module):
     def __init__(self, cnn: nn.Module, num_classes: int) -> None:
         super(MVCNN, self).__init__()
 
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.cpu = torch.device("cpu")
         self.features = cnn.features
         # self.avgpool = nn.AdaptiveAvgPool2d(7)
