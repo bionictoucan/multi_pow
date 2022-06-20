@@ -84,13 +84,13 @@ class FCLayer(nn.Module):
             raise NotImplementedError("Pester John to add this.")
 
         if initialisation.lower() == "kaiming" or "he":
-            nn.init.kaiming_normal_(self.conv.weight, nonlinearity=activation)
+            nn.init.kaiming_normal_(self.lin.weight, nonlinearity=activation)
             if bias:
-                nn.init.kaiming_uniform_(self.conv.bias, nonlinearity=activation)
+                nn.init.kaiming_uniform_(self.lin.bias, nonlinearity=activation)
         elif initialisation.lower() == "xavier":
-            nn.init.xavier_normal_(self.conv.weight, gain=nn.init.calculate_gain(activation))
+            nn.init.xavier_normal_(self.lin.weight, gain=nn.init.calculate_gain(activation))
             if bias:
-                nn.init.xavier_uniform_(self.conv.bias, gain=nn.init.calculate_gain(activation))
+                nn.init.xavier_uniform_(self.lin.bias, gain=nn.init.calculate_gain(activation))
 
         if use_dropout:
             self.dropout = nn.Dropout(dropout_prob)
