@@ -140,6 +140,7 @@ class ClassifierTrainer(Trainer):
         self.model.train()
 
         batch_losses = []
+        total, correct = 0., 0.
         for j, (images, labels) in enumerate(tqdm(train_loader)):
             images, labels = images.float().to(self.device), labels.long().to(self.device)
 
