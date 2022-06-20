@@ -20,7 +20,7 @@ class PowderDataset(Dataset):
         return self.data.shape[0]
 
     def __getitem__(self, index: int):
-        if not isinstance(self.labels, torch.tensor):
+        if not isinstance(self.labels, torch.Tensor):
             return self.data[index]
         else:
             if isinstance(self.transform, torch.nn.Module) or isinstance(self.transform, torch.nn.Sequential) or isinstance(self.transform, Compose):
