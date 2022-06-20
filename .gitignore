@@ -4,3 +4,4 @@ old_dataset/
 *.ipynb
 __pycache__/
 *.npz
+*.ipynb_checkpoints/

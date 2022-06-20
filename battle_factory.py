@@ -1,11 +1,22 @@
 import torch
-from typing import Optional, Callable, Union, Dict
+from typing import Optional, Callable, Union, Dict, Tuple
 from tqdm import tqdm
 import os
 
 class Trainer:
     """
-    This is the default class for defining trainers to teach neural networks different tasks.
+    This is the default class for defining trainers to teach neural networks
+    different tasks.
+    
+    Parameters
+    ----------
+    model : torch.nn.Module
+        The neural network model to train.
+    optimiser : torch.optim.Optimizer
+        The optimiser to use during training.
+    loss_fn : Callable
+        The loss function to use during training.
+    
     """
 
     def __init__(
@@ -18,14 +29,16 @@ class Trainer:
         data_pth: str,
         save_dir: str = "./",
         scheduler: Optional[torch.optim.lr_scheduler._LRScheduler] = None,
-        device_id: Union[int, str] = 0
+        device_id: Union[int, str] = 0,
+        data_parallel: bool = False
     ) -> None:
 
-        # self.device = torch.device(f"cuda:{device_id}" if type(device_id) ==
-        # int else device_id)
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device(f"cuda:{device_id}" if type(device_id) == int else device_id)
 
-        self.model = model
+        if data_parallel:
+            self.model = torch.nn.DataParallel(model)
+        else:
+            self.model = model
         self.model.to(self.device)
 
         self.optimiser = optimiser
@@ -56,15 +69,24 @@ class Trainer:
         This class method creates a checkpoint for the current epoch.
         """
 
-        self.chkpt = {
-            "epoch" : self.current_epoch,
-            "model_state_dict" : self.model.state_dict(),
-            "optimiser_state_dict" : self.optimiser.state_dict(),
-            "train_losses" : self.train_losses,
-            "val_losses" : self.val_losses
-        }
+        if isinstance(self.model, torch.nn.DataParallel):
+            self.chkpt = {
+                "epoch" : self.current_epoch,
+                "model_state_dict" : self.model.module.state_dict(),
+                "optimiser_state_dict" : self.optimiser.state_dict(),
+                "train_losses" : self.train_losses,
+                "val_losses" : self.val_losses
+            }
+        else:
+            self.chkpt = {
+                "epoch" : self.current_epoch,
+                "model_state_dict" : self.model.state_dict(),
+                "optimiser_state_dict" : self.optimiser.state_dict(),
+                "train_losses" : self.train_losses,
+                "val_losses" : self.val_losses
+            }
 
-        if add_info != None:
+        if isinstance(add_info, dict):
             self.chkpt.update(add_info)
 
     def save_checkpoint(self, custom_path: Optional[str] = None) -> None:
@@ -72,7 +94,7 @@ class Trainer:
         This class method saves the current checkpoint to the save directory defined when instantiating the class.
         """
 
-        if custom_path != None:
+        if isinstance(custom_path, str):
             save_pth = f"{custom_path}{self.current_epoch}.pth"
         else:
             save_pth = f"{self.save_dir}{self.current_epoch}.pth"
@@ -114,7 +136,7 @@ class ClassifierTrainer(Trainer):
     """
     A trainer for training a neural network for classification.
     """
-    def train(self, train_loader: torch.utils.data.DataLoader) -> float:
+    def train(self, train_loader: torch.utils.data.DataLoader) -> Tuple[float, float]:
         self.model.train()
 
         batch_losses = []
@@ -129,16 +151,22 @@ class ClassifierTrainer(Trainer):
 
             batch_losses.append(loss.item())
 
+            #work out the % correct per epoch accumulatively
+            _, predicted = torch.max(output.data, 1) #output will have dimensions (batch_size, output_features) with the maximum taken along the output_features axis i.e. the probability distribution of classes, predicted is populated by the indices of the maximum in this dimension -- the class label.
+            total += labels.size(0)
+            correct += (predicted == labels).sum() #produces a boolean tensor which when summed evaluates True to 1 and False to 0.
+
         if self.scheduler:
             self.scheduler.step()
 
-        return torch.mean(torch.tensor(batch_losses))
+        return torch.mean(torch.tensor(batch_losses)), float((correct / total) * 100)
 
-    def validation(self, val_loader: torch.utils.data.DataLoader) -> float:
+    def validation(self, val_loader: torch.utils.data.DataLoader) -> Tuple[float, float]:
         self.model.eval()
 
         total, correct = 0., 0.
         with torch.no_grad():
+            batch_losses = []
             for images, labels in val_loader:
                 images, labels = images.float().to(self.device), labels.long().to(self.device)
                 output = self.model(images)
@@ -146,7 +174,10 @@ class ClassifierTrainer(Trainer):
                 total += labels.size(0)
                 correct += (predicted == labels).sum()
 
-        return float((correct / total) * 100)
+                loss = self.loss_fn(output, labels)
+                batch_losses.append(loss.item())
+
+        return torch.mean(torch.tensor(batch_losses)), float((correct / total) * 100)
 
 class RegressorTrainer(Trainer):
     """

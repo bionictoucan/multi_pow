@@ -21,260 +21,12 @@ pt_vibrant = {
     "grey" : "#BBBBBB"
 }
 
-class AE_sparsede(nn.Module):
-    """
-    The autoencoder model to learn a 64x64 representation of the data from a 1024x1024 patch.
-    """
-
-    def __init__(self, in_channels: int, nef: int) -> None:
-        super().__init__()
-        
-        self.encoder = nn.Sequential(
-            nn.Conv2d(in_channels, nef, stride=2, kernel_size=7, padding=3),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(nef, 2*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(2*nef, 4*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(4*nef, in_channels, stride=1, kernel_size=1)
-        )
-
-        self.decoder = nn.Sequential(
-            nn.Conv2d(in_channels, 4*nef, stride=1, kernel_size=1),
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.ConvTranspose2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.ConvTranspose2d(4*nef, 2*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU(),
-            nn.ConvTranspose2d(2*nef, nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU(),
-            nn.ConvTranspose2d(nef, in_channels, stride=2, kernel_size=7, padding=3, output_padding=1),
-            nn.ReLU()
-        )
-
-        for m in self.modules():
-            if not AE:
-                nn.init.kaiming_normal_(m.weight)
-
-    def forward(self, x: torch.tensor) -> torch.tensor:
-        h = self.encoder(x)
-        out = self.decoder(h)
-
-        return out
-
-class AE_sparsesh(nn.Module):
-    """
-    The autoencoder model to learn a 64x64 representation of the data from a 1024x1024 patch.
-    """
-
-    def __init__(self, in_channels: int, nef: int) -> None:
-        super().__init__()
-        
-        self.encoder = nn.Sequential(
-            nn.Conv2d(in_channels, nef, stride=2, kernel_size=7, padding=3),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU(),
-            # nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
-            # nn.BatchNorm2d(nef),
-            # nn.LeakyReLU(),
-            nn.Conv2d(nef, 2*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU(),
-            # nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
-            # nn.BatchNorm2d(2*nef),
-            # nn.LeakyReLU(),
-            nn.Conv2d(2*nef, 4*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            # nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            # nn.BatchNorm2d(4*nef),
-            # nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            # nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            # nn.BatchNorm2d(4*nef),
-            # nn.LeakyReLU(),
-            nn.Conv2d(4*nef, in_channels, stride=1, kernel_size=1)
-        )
-
-        self.decoder = nn.Sequential(
-            nn.Conv2d(in_channels, 4*nef, stride=1, kernel_size=1),
-            # nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            # nn.BatchNorm2d(4*nef),
-            # nn.LeakyReLU(),
-            nn.ConvTranspose2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            # nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            # nn.BatchNorm2d(4*nef),
-            # nn.LeakyReLU(),
-            nn.ConvTranspose2d(4*nef, 2*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU(),
-            # nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
-            # nn.BatchNorm2d(2*nef),
-            # nn.LeakyReLU(),
-            nn.ConvTranspose2d(2*nef, nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU(),
-            # nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
-            # nn.BatchNorm2d(nef),
-            # nn.LeakyReLU(),
-            nn.ConvTranspose2d(nef, in_channels, stride=2, kernel_size=7, padding=3, output_padding=1),
-            nn.ReLU()
-        )
-
-        for m in self.modules():
-            if not AE:
-                nn.init.kaiming_normal_(m.weight)
-
-    def forward(self, x: torch.tensor) -> torch.tensor:
-        h = self.encoder(x)
-        out = self.decoder(h)
-
-        return out
-
-class AE_withskip(nn.Module):
-    def __init__(self, in_channels: int, nef: int) -> None:
-        super().__init__()
-        
-        self.E1 = nn.Sequential(
-            nn.Conv2d(in_channels, nef, stride=2, kernel_size=7, padding=3),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU()
-        )
-        self.E2 = nn.Sequential(
-            nn.Conv2d(nef, 2*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU()
-        )
-        self.E3 = nn.Sequential(
-            nn.Conv2d(2*nef, 4*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU()
-        )
-        self.E4 = nn.Sequential(
-            nn.Conv2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU()
-        )
-        self.z1 = nn.Conv2d(4*nef, in_channels, stride=1, kernel_size=1)
-
-        self.z2 = nn.Conv2d(in_channels, 4*nef, stride=1, kernel_size=1)
-        self.D1 = nn.Sequential(
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.ConvTranspose2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU()
-        )
-        self.D2 = nn.Sequential(
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
-            nn.LeakyReLU(),
-            nn.ConvTranspose2d(4*nef, 2*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU()
-        )
-        self.D3 = nn.Sequential(
-            nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU(),
-            nn.ConvTranspose2d(2*nef, nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU()
-        )
-        self.D4 = nn.Sequential(
-            nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU(),
-            nn.ConvTranspose2d(nef, in_channels, stride=2, kernel_size=7, padding=3, output_padding=1),
-            nn.LeakyReLU()
-        )
-
-        for m in self.modules():
-            if not AE:
-                nn.init.kaiming_normal_(m.weight)
-
-    def forward(self, x: torch.tensor) -> torch.tensor:
-        E1 = self.E1(x)
-        E2 = self.E2(E1)
-        E3 = self.E3(E2)
-        E4 = self.E4(E3)
-
-        h = self.z1(E4)
-
-        D1 = self.z2(h) + E4
-        D2 = self.D1(D1) + E3
-        D3 = self.D2(D2) + E2
-        D4 = self.D3(D3) + E1
-
-        out = self.D4(D4)
-
-        return out
-
-    @property
-    def encoder(self) -> nn.Sequential:
-        return nn.Sequential(
-            self.E1,
-            self.E2,
-            self.E3,
-            self.E4,
-            self.z1
-        )
-
 class AE(nn.Module):
     """
     The autoencoder model to learn a 64x64 representation of the data from a 1024x1024 patch.
     """
 
-    def __init__(self, in_channels: int, nef: int) -> None:
+    def __init__(self, in_channels: int, nef: int, init: bool = False) -> None:
         super().__init__()
         
         self.encoder = nn.Sequential(
@@ -329,74 +81,23 @@ class AE(nn.Module):
             nn.BatchNorm2d(nef),
             nn.LeakyReLU(),
             nn.ConvTranspose2d(nef, in_channels, stride=2, kernel_size=7, padding=3, output_padding=1),
-            nn.LeakyReLU()
+            nn.ReLU()
         )
 
-        for m in self.modules():
-            if not AE:
-                nn.init.kaiming_normal_(m.weight)
-
-    def forward(self, x: torch.tensor) -> torch.tensor:
-        # inp = x.clone()
-        h = self.encoder(x)
-        out = self.decoder(h)
-
-        return out
-
-class AE256(nn.Module):
-    """
-    The autoencoder model to learn a 256x256 representation of the data from a 1024x1024 patch.
-    """
-
-    def __init__(self, in_channels: int, nef: int) -> None:
-        super().__init__()
-        
-        self.encoder = nn.Sequential(
-            nn.Conv2d(in_channels, nef, stride=2, kernel_size=7, padding=3),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(nef, 2*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
-            nn.LeakyReLU(),
-            nn.Conv2d(2*nef, in_channels, stride=1, kernel_size=1)
-        )
-
-        self.decoder = nn.Sequential(
-            nn.Conv2d(in_channels, 2*nef, stride=1, kernel_size=1),
-            nn.ConvTranspose2d(2*nef, nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(nef),
-            nn.LeakyReLU(),
-            nn.ConvTranspose2d(nef, in_channels, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.LeakyReLU()
-        )
-
-        for m in self.modules():
-            if not AE:
-                nn.init.kaiming_normal_(m.weight)
+        if init:
+            self.apply(self._init_weights)
 
     def forward(self, x: torch.tensor) -> torch.tensor:
         h = self.encoder(x)
         out = self.decoder(h)
 
         return out
+
+    def _init_weights(self, module):
+        if isinstance(module, nn.Conv2d) or isinstance(module, nn.ConvTranspose2d):
+            nn.init.kaiming_normal_(module)
 
 class AETrainer(RegressorTrainer):
-    def __init__(
-        self,
-        model : torch.nn.Module,
-        optimiser : torch.optim.Optimizer,
-        loss_fn: Callable[[torch.tensor, torch.tensor], torch.tensor],
-        no_of_epochs: int,
-        batch_size: int,
-        data_pth: str,
-        save_dir: str = "./",
-        scheduler: Optional[torch.optim.lr_scheduler._LRScheduler] = None,
-        device_id: Union[int, str] = 0,
-        rho: float = 0.05
-        ):
-        super().__init__(model, optimiser, loss_fn, no_of_epochs, batch_size, data_pth, save_dir, scheduler, device_id)
-        # self.rho = rho
-
     def load_data(self) -> None:
         """
         This class method loads the training and validation data. This depends on the format of the data.
@@ -408,21 +109,6 @@ class AETrainer(RegressorTrainer):
         self.train_out = f["train_in"].reshape(-1, *f["train_in"].shape[-2:])/255
         self.val_in = f["val_in"].reshape(-1, *f["val_in"].shape[-2:])/255
         self.val_out = f["val_in"].reshape(-1, *f["val_in"].shape[-2:])/255
-
-    # def kl_divergence(self, rho, rho_hat):
-    #     rho_hat = torch.mean(F.sigmoid(rho_hat).view(rho_hat.size(0),-1), 1) # sigmoid because we need the probability distributions
-    #     rho = torch.tensor([rho] * len(rho_hat)).to(self.device)
-    #     return torch.sum(rho * torch.log(rho/rho_hat) + (1 - rho) * torch.log((1 - rho)/(1 - rho_hat)))
-
-    # # define the sparse loss function
-    # def sparse_loss(self, rho, images):
-    #     model_children = list(self.model.children())
-    #     values = images
-    #     loss = 0
-    #     for i in range(len(model_children)):
-    #         values = model_children[i](values)
-    #         loss += self.kl_divergence(rho, values)
-    #     return loss
 
     def _layer_extract(self) -> List:
         """
@@ -554,8 +240,6 @@ class AETrainer(RegressorTrainer):
             self.train_losses = train_losses
             self.val_losses = val_losses
 
-            #only save if validation loss is minimal
-#             if min(val_losses) == val_losses[-1]:
             if self.scheduler:
                 self.checkpoint(add_info={"scheduler_state_dict" : self.scheduler.state_dict()})
             else:

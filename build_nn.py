@@ -3,9 +3,20 @@ import torch.nn as nn
 from typing import Optional, Union, List, Dict, Sequence
 from neural_network_layers import ConvLayer, ResLayer
 
-class CNN(nn.Module):
+class CNNClassifier(nn.Module):
     """
-    The class for creating a custom convolutional neural network (CNN) for classification.
+    The class for creating a custom convolutional neural network (CNN) for
+    classification.
+    
+    Parameters
+    ----------
+    layers : Sequence[int]
+        The layout of the layers in the CNN. e.g. how many layers to a block. A
+        convolutional block is constructed from convolutional layers in
+        conjunction with the `in_channels`, `out_channels` and
+        `intermediate_channels` kwargs. The number of blocks is to be decided by
+        the user depending on how many times they would like to downsample the
+        input data.
     """
 
     def __init__(

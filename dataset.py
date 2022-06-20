@@ -20,13 +20,13 @@ class PowderDataset(Dataset):
         return self.data.shape[0]
 
     def __getitem__(self, index: int):
-        if self.labels == None:
+        if not isinstance(self.labels, torch.tensor):
             return self.data[index]
         else:
-            if self.transform != None:
+            if isinstance(self.transform, torch.nn.Module) or isinstance(self.transform, torch.nn.Sequential) or isinstance(self.transform, Compose):
                 rn = random.random()
                 if rn <= 0.5:
-                    if type(self.transform) == list:
+                    if isinstance(self.transform, list):
                         nt = random.randint(1, len(self.transform)-1)
                         ts = []
                         for _ in range(nt):
