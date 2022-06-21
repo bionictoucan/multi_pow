@@ -66,9 +66,9 @@ class FCLayer(nn.Module):
         self.lin = nn.Linear(in_nodes, out_nodes, bias=bias, **lin_kwargs)
         
         if (isinstance(normalisation, str)) and (normalisation.lower() == "batch"):
-            self.norm = nn.BatchNorm2d(out_nodes, **norm_kwargs)
+            self.norm = nn.BatchNorm1d(out_nodes, **norm_kwargs)
         elif (isinstance(normalisation, str)) and (normalisation.lower() == "instance"):
-            self.norm = nn.InstanceNorm2d(out_nodes, **norm_kwargs)
+            self.norm = nn.InstanceNorm1d(out_nodes, **norm_kwargs)
         else:
             self.norm = None
 

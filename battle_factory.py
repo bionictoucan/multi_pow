@@ -16,7 +16,28 @@ class Trainer:
         The optimiser to use during training.
     loss_fn : Callable
         The loss function to use during training.
-    
+    no_of_epochs : int
+        The number of epochs to train for.
+    batch_size : int
+        The batch size to use.
+    data_pth : str
+        The path to the training/validation data.
+    save_dir : str, optional
+        The directory to save the trained models to. Default is "./" -- the
+        current working directory (CWD).
+    scheduler : torch.optim.lr_scheduler._LRScheduler, optional
+        The way to adaptively change the learning rate while training. Default
+        is None. For examples on how to adaptively change the learning rate
+        please see
+        `here<https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate>`_.
+    device_id : int or str, optional
+        Which device to perform training on. Providing an integer will point to
+        the GPU with that specific ID whereas the string option can be used to
+        also specify training on the CPU. When using `nn.DataParallel` for the
+        model, setting `device_id = "cuda"` uses all GPUs. Default is 0 -- use
+        the GPU corresponding to ID "cuda:0".
+    data_parallel : bool, optional
+        Whether or not to use multiple GPUs for training. Default is False.
     """
 
     def __init__(
@@ -67,6 +88,12 @@ class Trainer:
     def checkpoint(self, add_info: Optional[Dict] = None) -> None:
         """
         This class method creates a checkpoint for the current epoch.
+
+        Parameters
+        ----------
+        add_info : dict, optional
+            An additional information to add to the checkpoint e.g. scheduler
+            state dictionary. Default is None.
         """
 
         if isinstance(self.model, torch.nn.DataParallel):
@@ -91,7 +118,13 @@ class Trainer:
 
     def save_checkpoint(self, custom_path: Optional[str] = None) -> None:
         """
-        This class method saves the current checkpoint to the save directory defined when instantiating the class.
+        This class method saves the current checkpoint to the save directory
+        defined when instantiating the class.
+        
+        Parameters
+        ----------
+        custom_path : str, optional
+            Path to save the model to. Default is None.
         """
 
         if isinstance(custom_path, str):
@@ -106,6 +139,11 @@ class Trainer:
     def load_checkpoint(self, filename: str) -> None:
         """
         This class method loads a checkpoint for the model.
+
+        Parameters
+        ----------
+        filename : str
+            The path to the model to load.
         """
 
         if os.path.isfile(filename):
