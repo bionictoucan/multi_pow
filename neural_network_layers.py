@@ -19,32 +19,32 @@ class FCLayer(nn.Module):
         transformation as :math:`y = \Theta x` without bias or :math:`y = \Theta
         x + b` where :math:`b` is the bias of the node.
     normalisation : str, optional
-        The normalisation to use in the layer. Default is None -- no
-        normalisation used. Options "batch" and "instance" are supported to
-        perform batch or instance normalisation on the data.
+        The normalisation to use in the layer. Default is ``None`` -- no
+        normalisation used. Options ``"batch"`` and ``"instance"`` are supported
+        to perform batch or instance normalisation on the data.
     activation : str, optional
-        The nonlinearity to use for the layer. Default is "relu" -- uses the
-        rectified linear unit (ReLU) nonlinearity. Other options supported are
-        "leaky_relu", "sigmoid" and "tanh".
+        The nonlinearity to use for the layer. Default is ``"relu"`` -- uses the
+        :abbr:`ReLU (rectified linear unit)` nonlinearity. Other options
+        supported are ``"leaky_relu"``, ``"sigmoid"`` and ``"tanh"``.
     initialisation : str, optional
         How to initialise the learnable parameters in a layer. Default is
-        "kaiming" -- learnable parameters are initialised using Kaiming
-        initialisation. Other options supported are "He" (which is equivalent to
-        Kaiming initialisation but is sometime what it's called), "Xavier" or
-        None.
+        ``"kaiming"`` -- learnable parameters are initialised using Kaiming
+        initialisation. Other options supported are ``"He"`` (which is
+        equivalent to Kaiming initialisation but is sometime what it's called),
+        ``"Xavier"`` or ``None``.
     use_dropout : bool, optional
-        Whether or not to apply dropout after the activation. Default is False.
+        Whether or not to apply dropout after the activation. Default is ``False``.
     dropout_prob : float, optional
         Probability of a node dropping out of the network. Default is 0.5.
     lin_kwargs : dict, optional
-        Additional keyword arguments to be passed to the `torch.nn.Linear`
-        module. Default is {} -- an empty dictionary.
+        Additional keyword arguments to be passed to the ``torch.nn.Linear``
+        module. Default is ``{}`` -- an empty dictionary.
     norm_kwargs : dict, optional
         Additional keyword arguments to be passed to the normalisation being
-        used. Default is {}.
+        used. Default is ``{}``.
     act_kwargs : dict, optional
         Additional keyword arguments to be passed to the activation being used.
-        Default is {}.
+        Default is ``{}``.
     """
 
     def __init__(
@@ -97,7 +97,7 @@ class FCLayer(nn.Module):
         else:
             self.dropout = None
 
-    def forward(self, inp: torch.tensor) -> torch.tensor:
+    def forward(self, inp: torch.Tensor) -> torch.Tensor:
         """
         The class method defining the behaviour of the constructed layer.
         Transformations are applied to the data in the order of linear,
@@ -105,12 +105,12 @@ class FCLayer(nn.Module):
 
         Parameters
         ----------
-        inp : torch.tensor
+        inp : torch.Tensor
             The input data to be transformed by the layer.
 
         Returns
         -------
-         : torch.tensor
+         : torch.Tensor
              The transformed data.
         """
         out = self.lin(inp)
@@ -133,13 +133,13 @@ class ConvLayer(nn.Module):
     out_channels : int
         The number of output channels of the convolutional layer.
     kernel : int or Sequence[int], optional
-        The size of the convolutional kernel to use in the `torch.nn.Conv2d`
+        The size of the convolutional kernel to use in the ``torch.nn.Conv2d``
         linear transformation. Default is 3.
     stride : int or Sequence[int], optional
         The stride of the convolutional kernel. Default is 1.
     pad : str, optional
         The type of padding to use during the convolutional layer. Default is
-        "reflect". Other options available
+        ``"reflect"``. Other options available
         `here<https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d>`_.
     bias : bool, optional
         Whether or not to use a bias node in the fully-connected layer. Default
@@ -147,37 +147,37 @@ class ConvLayer(nn.Module):
         transformation as :math:`y = \Theta x` without bias or :math:`y = \Theta
         x + b` where :math:`b` is the bias of the node.
     normalisation : str, optional
-        The normalisation to use in the layer. Default is None -- no
-        normalisation used. Options "batch" and "instance" are supported to
-        perform batch or instance normalisation on the data.
+        The normalisation to use in the layer. Default is ``None`` -- no
+        normalisation used. Options ``"batch"`` and ``"instance"`` are supported
+        to perform batch or instance normalisation on the data.
     activation : str, optional
-        The nonlinearity to use for the layer. Default is "relu" -- uses the
-        rectified linear unit (ReLU) nonlinearity. Other options supported are
-        "leaky_relu", "sigmoid" and "tanh".
+        The nonlinearity to use for the layer. Default is ``"relu"`` -- uses the
+        :abbr:`ReLU (rectified linear unit)` nonlinearity. Other options
+        supported are ``"leaky_relu"``, ``"sigmoid"`` and ``"tanh"``.
     initialisation : str, optional
         How to initialise the learnable parameters in a layer. Default is
-        "kaiming" -- learnable parameters are initialised using Kaiming
-        initialisation. Other options supported are "He" (which is equivalent to
-        Kaiming initialisation but is sometime what it's called), "Xavier" or
-        None.
+        ``"kaiming"`` -- learnable parameters are initialised using Kaiming
+        initialisation. Other options supported are ``"He"`` (which is
+        equivalent to Kaiming initialisation but is sometime what it's called),
+        ``"Xavier"`` or ``None``.
     upsample : bool, optional
         Whether or not the convolutional layer will be used to spatially
-        upsample the data using a linear interpolation. Default is False.
+        upsample the data using a linear interpolation. Default is ``False``.
     upsample_factor : int, optional
         The factor that the spatial dimensions is upsampled. Default is 2.
     use_dropout : bool, optional
-        Whether or not to apply dropout after the activation. Default is False.
+        Whether or not to apply dropout after the activation. Default is ``False``.
     dropout_prob : float, optional
         Probability of a node dropping out of the network. Default is 0.5.
     conv_kwargs : dict, optional
-        The additional keyword arguments to be passed to the `torch.nn.Conv2d`
-        module. Default is {} -- an empty dictionary.
+        The additional keyword arguments to be passed to the ``torch.nn.Conv2d``
+        module. Default is ``{}`` -- an empty dictionary.
     norm_kwargs : dict, optional
         Additional keyword arguments to be passed to the normalisation being
-        used. Default is {}.
+        used. Default is ``{}``.
     act_kwargs : dict, optional
         Additional keyword arguments to be passed to the activation being used.
-        Default is {}.
+        Default is ``{}``.
     """
 
     def __init__(
@@ -252,7 +252,7 @@ class ConvLayer(nn.Module):
         else:
             self.dropout = None
 
-    def forward(self, inp: torch.tensor) -> torch.tensor:
+    def forward(self, inp: torch.Tensor) -> torch.Tensor:
         """
         The class method defining the behaviour of the constructed layer.
         Transformations are applied to the data in the order of upsample,
@@ -260,12 +260,12 @@ class ConvLayer(nn.Module):
 
         Parameters
         ----------
-        inp : torch.tensor
+        inp : torch.Tensor
             The input data to be transformed by the layer.
 
         Returns
         -------
-         : torch.tensor
+         : torch.Tensor
              The transformed data.
         """
         if self.upsample:
@@ -292,16 +292,17 @@ class ConvTranspLayer(nn.Module):
         The number of output channels of the transpose convolutional layer.
     kernel : int or Sequence[int], optional
         The size of the convolutional kernel to use in the
-        `torch.nn.Conv2dTranspose` linear transformation. Default is 3.
+        ``torch.nn.Conv2dTranspose`` linear transformation. Default is 3.
     stride : int or Sequence[int], optional
         The stride of the convolutional kernel. Default is 1. This is also used
-        to define the `output_padding` kwarg for the `torch.nn.ConvTranspose2d`
-        module. `output_padding` provides implicit padding on the output of the
-        transpose convolution when stride > 1 to deterministically find the
-        correct output shape. For more information, please see `here<https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d>`_.
+        to define the ``output_padding`` kwarg for the
+        ``torch.nn.ConvTranspose2d`` module. ``output_padding`` provides
+        implicit padding on the output of the transpose convolution when
+        ``stride > 1`` to deterministically find the correct output shape. For
+        more information, please see `here<https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d>`_.
     pad : str, optional
         The type of padding to use during the convolutional layer. Default is
-        "reflect". Other options available
+        ``"reflect"``. Other options available
         `here<https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2dTranspose>`_.
     bias : bool, optional
         Whether or not to use a bias node in the fully-connected layer. Default
@@ -309,32 +310,32 @@ class ConvTranspLayer(nn.Module):
         transformation as :math:`y = \Theta x` without bias or :math:`y = \Theta
         x + b` where :math:`b` is the bias of the node.
     normalisation : str, optional
-        The normalisation to use in the layer. Default is None -- no
-        normalisation used. Options "batch" and "instance" are supported to
-        perform batch or instance normalisation on the data.
+        The normalisation to use in the layer. Default is ``None`` -- no
+        normalisation used. Options ``"batch"`` and ``"instance"`` are supported
+        to perform batch or instance normalisation on the data.
     activation : str, optional
-        The nonlinearity to use for the layer. Default is "relu" -- uses the
-        rectified linear unit (ReLU) nonlinearity. Other options supported are
-        "leaky_relu", "sigmoid" and "tanh".
+        The nonlinearity to use for the layer. Default is ``"relu"`` -- uses the
+        :abbr:`ReLU (rectified linear unit)` nonlinearity. Other options
+        supported are ``"leaky_relu"``, ``"sigmoid"`` and ``"tanh"``.
     initialisation : str, optional
         How to initialise the learnable parameters in a layer. Default is
-        "kaiming" -- learnable parameters are initialised using Kaiming
-        initialisation. Other options supported are "He" (which is equivalent to
-        Kaiming initialisation but is sometime what it's called), "Xavier" or
-        None.
+        ``"kaiming"`` -- learnable parameters are initialised using Kaiming
+        initialisation. Other options supported are ``"He"`` (which is
+        equivalent to Kaiming initialisation but is sometime what it's called),
+        ``"Xavier"`` or ``None``.
     use_dropout : bool, optional
-        Whether or not to apply dropout after the activation. Default is False.
+        Whether or not to apply dropout after the activation. Default is ``False``.
     dropout_prob : float, optional
         Probability of a node dropping out of the network. Default is 0.5.
     conv_kwargs : dict, optional
-        The additional keyword arguments to be passed to the `torch.nn.Conv2d`
-        module. Default is {} -- an empty dictionary.
+        The additional keyword arguments to be passed to the ``torch.nn.Conv2d``
+        module. Default is ``{}`` -- an empty dictionary.
     norm_kwargs : dict, optional
         Additional keyword arguments to be passed to the normalisation being
-        used. Default is {}.
+        used. Default is ``{}``.
     act_kwargs : dict, optional
         Additional keyword arguments to be passed to the activation being used.
-        Default is {}.
+        Default is ``{}``.
     """
 
     def __init__(
@@ -405,7 +406,7 @@ class ConvTranspLayer(nn.Module):
         else:
             self.dropout = None
 
-    def forward(self, inp: torch.tensor) -> torch.tensor:
+    def forward(self, inp: torch.Tensor) -> torch.Tensor:
         """
         The class method defining the behaviour of the constructed layer.
         Transformations are applied to the data in the order of
@@ -413,12 +414,12 @@ class ConvTranspLayer(nn.Module):
 
         Parameters
         ----------
-        inp : torch.tensor
+        inp : torch.Tensor
             The input data to be transformed by the layer.
 
         Returns
         -------
-         : torch.tensor
+         : torch.Tensor
              The transformed data.
         """
         out = self.conv(inp)
@@ -442,13 +443,13 @@ class ResLayer(nn.Module):
     out_channels : int
         The number of output channels of the convolutional layer.
     kernel : int or Sequence[int], optional
-        The size of the convolutional kernel to use in the `torch.nn.Conv2d`
+        The size of the convolutional kernel to use in the ``torch.nn.Conv2d``
         linear transformation. Default is 3.
     stride : int or Sequence[int], optional
         The stride of the convolutional kernel. Default is 1.
     pad : str, optional
         The type of padding to use during the convolutional layer. Default is
-        "reflect". Other options available
+        ``"reflect"``. Other options available
         `here<https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d>`_.
     bias : bool, optional
         Whether or not to use a bias node in the fully-connected layer. Default
@@ -456,37 +457,37 @@ class ResLayer(nn.Module):
         transformation as :math:`y = \Theta x` without bias or :math:`y = \Theta
         x + b` where :math:`b` is the bias of the node.
     normalisation : str, optional
-        The normalisation to use in the layer. Default is None -- no
-        normalisation used. Options "batch" and "instance" are supported to
-        perform batch or instance normalisation on the data.
+        The normalisation to use in the layer. Default is ``None`` -- no
+        normalisation used. Options ``"batch"`` and ``"instance"`` are supported
+        to perform batch or instance normalisation on the data.
     activation : str, optional
-        The nonlinearity to use for the layer. Default is "relu" -- uses the
-        rectified linear unit (ReLU) nonlinearity. Other options supported are
-        "leaky_relu", "sigmoid" and "tanh".
+        The nonlinearity to use for the layer. Default is ``"relu"`` -- uses the
+        :abbr:`ReLU (rectified linear unit)` nonlinearity. Other options
+        supported are ``"leaky_relu"``, ``"sigmoid"`` and ``"tanh"``.
     initialisation : str, optional
         How to initialise the learnable parameters in a layer. Default is
-        "kaiming" -- learnable parameters are initialised using Kaiming
-        initialisation. Other options supported are "He" (which is equivalent to
-        Kaiming initialisation but is sometime what it's called), "Xavier" or
-        None.
+        ``"kaiming"`` -- learnable parameters are initialised using Kaiming
+        initialisation. Other options supported are ``"He"`` (which is
+        equivalent to Kaiming initialisation but is sometime what it's called),
+        ``"Xavier"`` or ``None``.
     upsample : bool, optional
         Whether or not the convolutional layer will be used to spatially
-        upsample the data using a linear interpolation. Default is False.
+        upsample the data using a linear interpolation. Default is ``False``.
     upsample_factor : int, optional
         The factor that the spatial dimensions is upsampled. Default is 2.
     use_dropout : bool, optional
-        Whether or not to apply dropout after the first activation. Default is False.
+        Whether or not to apply dropout after the first activation. Default is ``False``.
     dropout_prob : float, optional
         Probability of a node dropping out of the network. Default is 0.5.
     conv_kwargs : dict, optional
-        The additional keyword arguments to be passed to the `torch.nn.Conv2d`
-        module. Default is {} -- an empty dictionary.
+        The additional keyword arguments to be passed to the ``torch.nn.Conv2d``
+        module. Default is ``{}`` -- an empty dictionary.
     norm_kwargs : dict, optional
         Additional keyword arguments to be passed to the normalisation being
-        used. Default is {}.
+        used. Default is ``{}``.
     act_kwargs : dict, optional
         Additional keyword arguments to be passed to the activation being used.
-        Default is {}.
+        Default is ``{}``.
     """
 
     def __init__(
@@ -600,7 +601,7 @@ class ResLayer(nn.Module):
         else:
             self.dropout = None
 
-    def forward(self, inp: torch.tensor) -> torch.tensor:
+    def forward(self, inp: torch.Tensor) -> torch.Tensor:
         """
         The class method defining the behaviour of the constructed layer.
         Transformations are applied to the data in the order of
@@ -609,12 +610,12 @@ class ResLayer(nn.Module):
 
         Parameters
         ----------
-        inp : torch.tensor
+        inp : torch.Tensor
             The input data to be transformed by the layer.
 
         Returns
         -------
-         : torch.tensor
+         : torch.Tensor
              The transformed data.
         """
         identity = inp.clone()

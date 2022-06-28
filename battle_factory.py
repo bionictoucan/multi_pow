@@ -23,8 +23,8 @@ class Trainer:
     data_pth : str
         The path to the training/validation data.
     save_dir : str, optional
-        The directory to save the trained models to. Default is "./" -- the
-        current working directory (CWD).
+        The directory to save the trained models to. Default is ``"./"`` -- the
+        :abbr:`CWD (current working directory)`.
     scheduler : torch.optim.lr_scheduler._LRScheduler, optional
         The way to adaptively change the learning rate while training. Default
         is None. For examples on how to adaptively change the learning rate
@@ -33,11 +33,11 @@ class Trainer:
     device_id : int or str, optional
         Which device to perform training on. Providing an integer will point to
         the GPU with that specific ID whereas the string option can be used to
-        also specify training on the CPU. When using `nn.DataParallel` for the
-        model, setting `device_id = "cuda"` uses all GPUs. Default is 0 -- use
-        the GPU corresponding to ID "cuda:0".
+        also specify training on the CPU. When using ``nn.DataParallel`` for the
+        model, setting ``device_id = "cuda"`` uses all GPUs. Default is 0 -- use
+        the GPU corresponding to ID ``"cuda:0"``.
     data_parallel : bool, optional
-        Whether or not to use multiple GPUs for training. Default is False.
+        Whether or not to use multiple GPUs for training. Default is ``False``.
     """
 
     def __init__(
@@ -93,7 +93,7 @@ class Trainer:
         ----------
         add_info : dict, optional
             An additional information to add to the checkpoint e.g. scheduler
-            state dictionary. Default is None.
+            state dictionary. Default is ``None``.
         """
 
         if isinstance(self.model, torch.nn.DataParallel):
@@ -124,7 +124,7 @@ class Trainer:
         Parameters
         ----------
         custom_path : str, optional
-            Path to save the model to. Default is None.
+            Path to save the model to. Default is ``None``.
         """
 
         if isinstance(custom_path, str):
@@ -173,8 +173,55 @@ class Trainer:
 class ClassifierTrainer(Trainer):
     """
     A trainer for training a neural network for classification.
+
+    Parameters
+    ----------
+    model : torch.nn.Module
+        The neural network model to train.
+    optimiser : torch.optim.Optimizer
+        The optimiser to use during training.
+    loss_fn : Callable
+        The loss function to use during training.
+    no_of_epochs : int
+        The number of epochs to train for.
+    batch_size : int
+        The batch size to use.
+    data_pth : str
+        The path to the training/validation data.
+    save_dir : str, optional
+        The directory to save the trained models to. Default is ``"./"`` -- the
+        :abbr:`CWD (current working directory)`.
+    scheduler : torch.optim.lr_scheduler._LRScheduler, optional
+        The way to adaptively change the learning rate while training. Default
+        is None. For examples on how to adaptively change the learning rate
+        please see
+        `here<https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate>`_.
+    device_id : int or str, optional
+        Which device to perform training on. Providing an integer will point to
+        the GPU with that specific ID whereas the string option can be used to
+        also specify training on the CPU. When using ``nn.DataParallel`` for the
+        model, setting ``device_id = "cuda"`` uses all GPUs. Default is 0 -- use
+        the GPU corresponding to ID ``"cuda:0"``.
+    data_parallel : bool, optional
+        Whether or not to use multiple GPUs for training. Default is ``False``.
     """
     def train(self, train_loader: torch.utils.data.DataLoader) -> Tuple[float, float]:
+        """
+        The function used to train the classifier model.
+
+        Parameters
+        ----------
+        train_loader: torch.utils.data.DataLoader
+            The data to train the model on wrapped up in a `PyTorch DataLoader
+            <https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader>`_.
+            
+        Returns
+        -------
+         : float
+            The average of the batch losses for one training epoch.
+         : float
+            The percentage correct on the training data.
+        """
         self.model.train()
 
         batch_losses = []
@@ -201,6 +248,23 @@ class ClassifierTrainer(Trainer):
         return torch.mean(torch.tensor(batch_losses)), float((correct / total) * 100)
 
     def validation(self, val_loader: torch.utils.data.DataLoader) -> Tuple[float, float]:
+        """
+        The function used to validate the classifier model.
+
+        Parameters
+        ----------
+        val_loader : torch.utils.data.DataLoader
+            The data to validate the model on wrapped up in a `PyTorch
+            DataLoader
+            <https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader>`_.
+
+        Returns
+        -------
+         : float
+            The average of the batch losses for one training epoch.
+         : float
+            The percentage correct on the validation data.
+        """
         self.model.eval()
 
         total, correct = 0., 0.
@@ -221,8 +285,56 @@ class ClassifierTrainer(Trainer):
 class RegressorTrainer(Trainer):
     """
     A trainer for training a neural network for regression.
+
+
+    Parameters
+    ----------
+    model : torch.nn.Module
+        The neural network model to train.
+    optimiser : torch.optim.Optimizer
+        The optimiser to use during training.
+    loss_fn : Callable
+        The loss function to use during training.
+    no_of_epochs : int
+        The number of epochs to train for.
+    batch_size : int
+        The batch size to use.
+    data_pth : str
+        The path to the training/validation data.
+    save_dir : str, optional
+        The directory to save the trained models to. Default is ``"./"`` -- the
+        :abbr:`CWD (current working directory)`.
+    scheduler : torch.optim.lr_scheduler._LRScheduler, optional
+        The way to adaptively change the learning rate while training. Default
+        is None. For examples on how to adaptively change the learning rate
+        please see
+        `here<https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate>`_.
+    device_id : int or str, optional
+        Which device to perform training on. Providing an integer will point to
+        the GPU with that specific ID whereas the string option can be used to
+        also specify training on the CPU. When using ``nn.DataParallel`` for the
+        model, setting ``device_id = "cuda"`` uses all GPUs. Default is 0 -- use
+        the GPU corresponding to ID ``"cuda:0"``.
+    data_parallel : bool, optional
+        Whether or not to use multiple GPUs for training. Default is ``False``.
     """
     def train(self, train_loader: torch.utils.data.DataLoader) -> float:
+        """
+        The function used to train the regression model.
+
+        Parameters
+        ----------
+        train_loader: torch.utils.data.DataLoader
+            The data to train the model on wrapped up in a `PyTorch DataLoader
+            <https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader>`_.
+            
+        Returns
+        -------
+         : float
+            The average of the batch losses for one training epoch.
+        """
+        self.model.train()
+
         batch_losses = []
         for j, (inputs, outputs) in enumerate(tqdm(train_loader)):
             inputs, outputs = inputs.float().to(self.device), outputs.float().to(self.device)
@@ -241,6 +353,23 @@ class RegressorTrainer(Trainer):
         return torch.mean(torch.tensor(batch_losses))
 
     def validation(self, val_loader: torch.utils.data.DataLoader) -> float:
+        """
+        The function used to validate the regression model.
+
+        Parameters
+        ----------
+        val_loader : torch.utils.data.DataLoader
+            The data to validate the model on wrapped up in a `PyTorch
+            DataLoader
+            <https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader>`_.
+
+        Returns
+        -------
+         : float
+            The average of the batch losses for one training epoch.
+        """
+        self.model.eval()
+
         batch_losses = []
         with torch.no_grad():
             for inputs, outputs in val_loader:

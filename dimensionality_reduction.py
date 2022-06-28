@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from typing import List, Union, Optional, Tuple, Callable
+from typing import List, Union, Optional, Tuple
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from battle_factory import RegressorTrainer
@@ -23,7 +23,18 @@ pt_vibrant = {
 
 class AE(nn.Module):
     """
-    The autoencoder model to learn a 64x64 representation of the data from a 1024x1024 patch.
+    The autoencoder model to learn a 64x64 representation of the data from a
+    1024x1024 patch.
+    
+    Parameters
+    ----------
+    in_channels : int
+        The number of channels of the images.
+    nef : int
+        The number of feature maps to use in the first layer and to be
+        multiplied by powers of 2 as the images are downsampled by factors of 2.
+    init : bool, optional
+        Whether or not to initalise the convolutional kernels using He initialisation.
     """
 
     def __init__(self, in_channels: int, nef: int, init: bool = False) -> None:
@@ -87,13 +98,38 @@ class AE(nn.Module):
         if init:
             self.apply(self._init_weights)
 
-    def forward(self, x: torch.tensor) -> torch.tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        The class method defining the application of the network: first the
+        encoding layers are applied to the input to compute a lower-dimensional
+        representation of the data with the decoding layers applied to this
+        representation to reconstruct the input.
+
+        Parameters
+        ----------
+        x : torch.Tensor
+            The input to the autoencoder network.
+
+        Returns
+        -------
+        out : torch.Tensor
+            The reconstructed input, the output.
+        """
         h = self.encoder(x)
         out = self.decoder(h)
 
         return out
 
-    def _init_weights(self, module):
+    def _init_weights(self, module: Union[nn.Conv2d, nn.ConvTranspose2d]) -> None:
+        """
+        The class method used to intialise the convolutional kernels using He
+        intialisation.
+        
+        Parameters
+        ----------
+        module : torch.nn.Conv2d, torch.nn.ConvTranspose2d
+            The layer to be initialised.
+        """
         if isinstance(module, nn.Conv2d) or isinstance(module, nn.ConvTranspose2d):
             nn.init.kaiming_normal_(module)
 
@@ -115,6 +151,12 @@ class AETrainer(RegressorTrainer):
         This function will extract the layers so the L1 reg will actually be
         calculated per set of learnable parameters rather than the whole network
         because of how the model is set up, shennanigans.
+
+        Returns
+        -------
+        list_ae_ch : list
+            A list of the layers in the autoencoder split up to be able to
+            calculate the activations after each layer.
         """
 
         #this if statement exists so this function will work when using multiple
@@ -138,7 +180,21 @@ class AETrainer(RegressorTrainer):
 
         return list_ae_ch
 
-    def sparse_loss(self, images):
+    def sparse_loss(self, images: torch.Tensor) -> torch.Tensor:
+        """
+        A class method for calculating the accumulative sparse loss of the
+        network for a given batch of images.
+
+        Parameters
+        ----------
+        images : torch.Tensor
+            The batch of images to calculate the sparse loss for.
+
+        Returns
+        -------
+        loss : torch.Tensor
+            The sparse loss calculated for the batch of images.
+        """
         loss = 0
         model_children = self._layer_extract()
         values = images
@@ -148,6 +204,30 @@ class AETrainer(RegressorTrainer):
         return loss
 
     def train(self, train_loader: DataLoader) -> Tuple[float, np.ndarray, np.ndarray]:
+        """
+        The class method for training the autoencoder.
+
+        Parameters
+        ----------
+        train_loader : torch.utils.data.DataLoader
+            The data to train the model on wrapped up in a `PyTorch DataLoader
+            <https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader>`_.
+
+        Returns
+        -------
+         : float
+            The average of the batch losses for the training step. This is the
+            weighted sum of the cross entropy loss and the sparse loss where the
+            weighting factors are 1 and 0.0001, respectively.
+        plt_in : numpy.ndarray
+            One of the input images to be used for visualising the learning of
+            the network.
+        plt_gen : numpy.ndarray
+            The reconstruction of ``plt_in`` by the network to visualise the
+            learning of the network.
+        """
+        self.model.train()
+
         batch_losses = []
         for j, (inputs, outputs) in enumerate(tqdm(train_loader)):
             inputs, outputs = inputs.float().to(self.device), outputs.float().to(self.device)
@@ -169,6 +249,23 @@ class AETrainer(RegressorTrainer):
         return torch.mean(torch.tensor(batch_losses)), plt_in, plt_gen
 
     def validation(self, val_loader: torch.utils.data.DataLoader) -> float:
+        """
+        The function used to validate the classifier model.
+
+        Parameters
+        ----------
+        val_loader : torch.utils.data.DataLoader
+            The data to validate the model on wrapped up in a `PyTorch
+            DataLoader
+            <https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader>`_.
+
+        Returns
+        -------
+         : float
+            The average of the batch losses for the validation data.
+        """
+        self.model.eval()
+
         batch_losses = []
         with torch.no_grad():
             for inputs, outputs in val_loader:
@@ -182,7 +279,19 @@ class AETrainer(RegressorTrainer):
 
     def myth_trainer(self, load: bool = False, load_pth: Optional[str] = None, transform: Union[nn.Module, nn.Sequential, Compose, List, None] = None) -> None:
         """
-        This class method trains the network with the interactive plotting environment.
+        This class method trains the network with the interactive plotting
+        environment.
+        
+        Parameters
+        ----------
+        load : bool, optional
+            Whether or not to load a previously trained model to continue to
+            train it. Default is ``False``.
+        load_pth : str, optional
+            The path to the model to be loaded. Default is ``None``.
+        transform : torch.nn.Module, torch.nn.Sequential,
+        torchvision.transforms.Compose, list, optional
+            The augmentations to apply to the input images. Default is ``None``.
         """
 
         if load:
