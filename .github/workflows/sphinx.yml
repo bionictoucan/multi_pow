@@ -20,7 +20,7 @@ jobs:
           name: html-docs
           path: docs/_build/html
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@master
+        uses: peaceiris/actions-gh-pages@main
         if: github.ref == 'refs/heads/main'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
