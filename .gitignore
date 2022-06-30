@@ -5,3 +5,4 @@ old_dataset/
 __pycache__/
 *.npz
 *.ipynb_checkpoints/
+.vscode/
