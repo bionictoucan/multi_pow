@@ -12,15 +12,16 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))
+
+sys.path.insert(0, os.path.abspath("../.."))
 # sys.path.append("/home/gwb21218/multi_pow/")
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'multi_pow'
-copyright = '2022, John A. Armstrong'
-author = 'John A. Armstrong'
+project = "multi_pow"
+copyright = "2022, John A. Armstrong"
+author = "John A. Armstrong"
 
 
 # -- General configuration ---------------------------------------------------
@@ -28,19 +29,25 @@ author = 'John A. Armstrong'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [ "sphinx.ext.napoleon", "sphinx.ext.autodoc", "sphinx.ext.intersphinx", "sphinx.ext.linkcode", "sphinx.ext.githubpages", "sphinx_gallery.gen_gallery"
+extensions = [
+    "sphinx.ext.napoleon",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.linkcode",
+    "sphinx.ext.githubpages",
+    "sphinx_gallery.gen_gallery",
 ]
 
 autodoc_member_order = "bysource"
 
 sphinx_gallery_conf = {
-    "examples_dirs" : ["../../examples", "../../tutorials"],
-    "gallery_dirs" : ["auto_examples", "tutorials"],
-    "run_stale_examples" : True
+    "examples_dirs": ["../../examples", "../../tutorials"],
+    "gallery_dirs": ["auto_examples", "tutorials"],
+    "run_stale_examples": True,
 }
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -58,18 +65,23 @@ html_theme = "sphinx_rtd_theme"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
+
+
 def setup(app):
     app.add_css_file("my_theme.css")
 
-#-- Options for link code ------------------------------------------------------
+
+# -- Options for link code ------------------------------------------------------
 def linkcode_resolve(domain, info):
-    if domain != 'py':
+    if domain != "py":
         return None
-    if not info['module']:
+    if not info["module"]:
         return None
-    filename = info['module'].replace('.', '/')
+    filename = info["module"].replace(".", "/")
     return "https://github.com/bionictoucan/multi_pow/blob/main/%s.py" % filename
 
+
 import warnings
+
 warnings.filterwarnings("ignore")
