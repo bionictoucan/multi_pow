@@ -24,8 +24,7 @@ class PowderDataset(Dataset):
         The output of the network, can be class labels or FFc values or the
         images themselves for the autoencoder. Can also be left empty when used
         for testing. Default is ``None``.
-    transform : torch.nn.Module, torch.nn.Sequential,
-    torchvision.transforms.Compose, list, Optional
+    transform : torch.nn.Module, torch.nn.Sequential, torchvision.transforms.Compose, list, Optional
         Any data augmentations to be done to the input data. These
         transformations will be carried out as batches are called from the
         dataset. Transformations can take the form of ``torch.nn.Module`` for
@@ -33,7 +32,7 @@ class PowderDataset(Dataset):
         ``torchvision.transforms.Compose`` or ``list`` for multiple augmentations.
 
         When augmentations are defined a random number is drawn from the unit
-        uniform distribution (using Python's internal `random.random()<https://docs.python.org/3/library/random.html#random.random>`_ function). If this value is <= ``aug_prob``, then the data is
+        uniform distribution (using Python's internal `random.random() <https://docs.python.org/3/library/random.html#random.random>`_ function). If this value is <= ``aug_prob``, then the data is
         augmented. Essentially there is a (``aug_prob``*100)% chance of data augmentation.
 
         When the augmentations are given as a ``torch.nn.Module``,
@@ -61,7 +60,7 @@ class PowderDataset(Dataset):
         augmentation is
         chosen at random (by sampling an integer from the unit distribution
         ``[1, len(transform)]`` using Python's internal `random.randint()
-        <https://docs.python.org/3/library/random.html#random.randint>`_
+         <https://docs.python.org/3/library/random.html#random.randint>`_
         function).
 
         .. note::
@@ -71,7 +70,7 @@ class PowderDataset(Dataset):
 
         For ``"multi"``, the random integer is used to define the number of
         augmentations applied to the data. These augmentations will be chosen at
-        random using Python's internal `random.sample() <https://docs.python.org/3/library/random.html#random.sample>_` function.
+        random using Python's internal `random.sample() <https://docs.python.org/3/library/random.html#random.sample>`_ function.
     """
 
     def __init__(

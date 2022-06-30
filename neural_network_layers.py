@@ -146,7 +146,7 @@ class ConvLayer(nn.Module):
     pad : str, optional
         The type of padding to use during the convolutional layer. Default is
         ``"reflect"``. Other options available
-        `here<https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d>`_.
+        `here <https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d>`_.
     bias : bool, optional
         Whether or not to use a bias node in the fully-connected layer. Default
         is False. i.e. whether to have the fully-connected layer perform the
@@ -306,11 +306,11 @@ class ConvTranspLayer(nn.Module):
         ``torch.nn.ConvTranspose2d`` module. ``output_padding`` provides
         implicit padding on the output of the transpose convolution when
         ``stride > 1`` to deterministically find the correct output shape. For
-        more information, please see `here<https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d>`_.
+        more information, please see `here <https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d>`_.
     pad : str, optional
         The type of padding to use during the convolutional layer. Default is
         ``"reflect"``. Other options available
-        `here<https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2dTranspose>`_.
+        `here <https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2dTranspose>`_.
     bias : bool, optional
         Whether or not to use a bias node in the fully-connected layer. Default
         is False. i.e. whether to have the fully-connected layer perform the
@@ -458,7 +458,7 @@ class ResLayer(nn.Module):
     pad : str, optional
         The type of padding to use during the convolutional layer. Default is
         ``"reflect"``. Other options available
-        `here<https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d>`_.
+        `here <https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d>`_.
     bias : bool, optional
         Whether or not to use a bias node in the fully-connected layer. Default
         is False. i.e. whether to have the fully-connected layer perform the

@@ -30,7 +30,7 @@ class Trainer:
         The way to adaptively change the learning rate while training. Default
         is None. For examples on how to adaptively change the learning rate
         please see
-        `here<https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate>`_.
+        `here <https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate>`_.
     device_id : int or str, optional
         Which device to perform training on. Providing an integer will point to
         the GPU with that specific ID whereas the string option can be used to
@@ -207,7 +207,7 @@ class ClassifierTrainer(Trainer):
         The way to adaptively change the learning rate while training. Default
         is None. For examples on how to adaptively change the learning rate
         please see
-        `here<https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate>`_.
+        `here <https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate>`_.
     device_id : int or str, optional
         Which device to perform training on. Providing an integer will point to
         the GPU with that specific ID whereas the string option can be used to
@@ -332,7 +332,7 @@ class RegressorTrainer(Trainer):
         The way to adaptively change the learning rate while training. Default
         is None. For examples on how to adaptively change the learning rate
         please see
-        `here<https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate>`_.
+        `here <https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate>`_.
     device_id : int or str, optional
         Which device to perform training on. Providing an integer will point to
         the GPU with that specific ID whereas the string option can be used to

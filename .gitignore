@@ -6,3 +6,4 @@ __pycache__/
 *.npz
 *.ipynb_checkpoints/
 .vscode/
+docs/build/
