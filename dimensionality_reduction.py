@@ -140,7 +140,7 @@ class AE(nn.Module):
             The layer to be initialised.
         """
         if isinstance(module, nn.Conv2d) or isinstance(module, nn.ConvTranspose2d):
-            nn.init.kaiming_normal_(module)
+            nn.init.kaiming_normal_(module.weight)
 
 
 class AETrainer(RegressorTrainer):
