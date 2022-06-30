@@ -4,6 +4,7 @@ from typing import Union, Optional, Tuple, List
 import random
 from torchvision.transforms import Compose
 
+
 class PowderDataset(Dataset):
     """
     This is a custom torch.utils.data.Dataset for the powder images including
@@ -14,7 +15,7 @@ class PowderDataset(Dataset):
 
     .. warning::
         Setting the random seed *may* affect random weight initialisation and dataset splitting (if other random seeds are not explicitly stated for these steps). This is something I need to check what happens if a random seed is set by the random library different from ``numpy`` and ``PyTorch``.
-    
+
     Parameters
     ----------
     inp : torch.Tensor
@@ -73,7 +74,16 @@ class PowderDataset(Dataset):
         random using Python's internal `random.sample() <https://docs.python.org/3/library/random.html#random.sample>_` function.
     """
 
-    def __init__(self, inp: torch.Tensor, out: Optional[torch.Tensor] = None, transform: Union[torch.nn.Module, torch.nn.Sequential, Compose, List, None] = None, aug_prob: float = 0.5, aug_type: str = "single") -> None:
+    def __init__(
+        self,
+        inp: torch.Tensor,
+        out: Optional[torch.Tensor] = None,
+        transform: Union[
+            torch.nn.Module, torch.nn.Sequential, Compose, List, None
+        ] = None,
+        aug_prob: float = 0.5,
+        aug_type: str = "single",
+    ) -> None:
         super().__init__()
 
         self.data = inp
@@ -88,7 +98,9 @@ class PowderDataset(Dataset):
         """
         return self.data.shape[0]
 
-    def __getitem__(self, index: Union[int, Slice]) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
+    def __getitem__(
+        self, index: Union[int, Slice]
+    ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """
         Returns some data of the dataset.
 
@@ -97,7 +109,7 @@ class PowderDataset(Dataset):
         index : int or Slice
             The index or range of indices at which to return data from the
             dataset.
-            
+
         Returns
         -------
          : torch.Tensor or tuple
@@ -108,13 +120,17 @@ class PowderDataset(Dataset):
         if not isinstance(self.labels, torch.Tensor):
             return self.data[index]
         else:
-            if isinstance(self.transform, (torch.nn.Module, torch.nn.Sequential, Compose, list)):
+            if isinstance(
+                self.transform, (torch.nn.Module, torch.nn.Sequential, Compose, list)
+            ):
                 rn = random.random()
                 if rn <= self.aug_prob:
                     if isinstance(self.transform, list):
                         nt = random.randint(1, len(self.transform))
                         if self.aug_type == "multi":
-                            ts = torch.nn.Sequential(*random.sample(self.transform, k = nt))
+                            ts = torch.nn.Sequential(
+                                *random.sample(self.transform, k=nt)
+                            )
                         elif self.aug_type == "single":
                             ts = self.transform[nt - 1]
 

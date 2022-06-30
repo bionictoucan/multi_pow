@@ -3,11 +3,12 @@ from typing import Optional, Callable, Union, Dict, Tuple
 from tqdm import tqdm
 import os
 
+
 class Trainer:
     """
     This is the default class for defining trainers to teach neural networks
     different tasks.
-    
+
     Parameters
     ----------
     model : torch.nn.Module
@@ -42,8 +43,8 @@ class Trainer:
 
     def __init__(
         self,
-        model : torch.nn.Module,
-        optimiser : torch.optim.Optimizer,
+        model: torch.nn.Module,
+        optimiser: torch.optim.Optimizer,
         loss_fn: Callable[[torch.tensor, torch.tensor], torch.tensor],
         no_of_epochs: int,
         batch_size: int,
@@ -51,10 +52,12 @@ class Trainer:
         save_dir: str = "./",
         scheduler: Optional[torch.optim.lr_scheduler._LRScheduler] = None,
         device_id: Union[int, str] = 0,
-        data_parallel: bool = False
+        data_parallel: bool = False,
     ) -> None:
 
-        self.device = torch.device(f"cuda:{device_id}" if type(device_id) == int else device_id)
+        self.device = torch.device(
+            f"cuda:{device_id}" if type(device_id) == int else device_id
+        )
 
         if data_parallel:
             self.model = torch.nn.DataParallel(model)
@@ -98,19 +101,19 @@ class Trainer:
 
         if isinstance(self.model, torch.nn.DataParallel):
             self.chkpt = {
-                "epoch" : self.current_epoch,
-                "model_state_dict" : self.model.module.state_dict(),
-                "optimiser_state_dict" : self.optimiser.state_dict(),
-                "train_losses" : self.train_losses,
-                "val_losses" : self.val_losses
+                "epoch": self.current_epoch,
+                "model_state_dict": self.model.module.state_dict(),
+                "optimiser_state_dict": self.optimiser.state_dict(),
+                "train_losses": self.train_losses,
+                "val_losses": self.val_losses,
             }
         else:
             self.chkpt = {
-                "epoch" : self.current_epoch,
-                "model_state_dict" : self.model.state_dict(),
-                "optimiser_state_dict" : self.optimiser.state_dict(),
-                "train_losses" : self.train_losses,
-                "val_losses" : self.val_losses
+                "epoch": self.current_epoch,
+                "model_state_dict": self.model.state_dict(),
+                "optimiser_state_dict": self.optimiser.state_dict(),
+                "train_losses": self.train_losses,
+                "val_losses": self.val_losses,
             }
 
         if isinstance(add_info, dict):
@@ -120,7 +123,7 @@ class Trainer:
         """
         This class method saves the current checkpoint to the save directory
         defined when instantiating the class.
-        
+
         Parameters
         ----------
         custom_path : str, optional
@@ -155,20 +158,29 @@ class Trainer:
             self.model.load_state_dict(chkpt["model_state_dict"])
             self.optimiser.load_state_dict(chkpt["optimiser_state_dict"])
 
-            def_keys = ["epoch", "train_losses", "val_losses", "model_state_dict", "optimiser_state_dict"]
+            def_keys = [
+                "epoch",
+                "train_losses",
+                "val_losses",
+                "model_state_dict",
+                "optimiser_state_dict",
+            ]
             if len(chkpt.keys()) != 5:
                 self.add_info = {}
                 for key in chkpt.keys():
                     if key not in def_keys:
-                        self.add_info.update({key : chkpt[key]})
+                        self.add_info.update({key: chkpt[key]})
             if self.scheduler:
                 self.scheduler.load_state_dict(self.add_info["scheduler_state_dict"])
 
             train_l = self.train_losses[-1]
             val_l = self.val_losses[-1]
-            print(f"=> loaded checkpoint at {filename} at epoch {self.current_epoch} with training loss {train_l} and validation loss {val_l}.")
+            print(
+                f"=> loaded checkpoint at {filename} at epoch {self.current_epoch} with training loss {train_l} and validation loss {val_l}."
+            )
         else:
             print(f"=> no checkpoint found at {filename}")
+
 
 class ClassifierTrainer(Trainer):
     """
@@ -205,6 +217,7 @@ class ClassifierTrainer(Trainer):
     data_parallel : bool, optional
         Whether or not to use multiple GPUs for training. Default is ``False``.
     """
+
     def train(self, train_loader: torch.utils.data.DataLoader) -> Tuple[float, float]:
         """
         The function used to train the classifier model.
@@ -214,7 +227,7 @@ class ClassifierTrainer(Trainer):
         train_loader: torch.utils.data.DataLoader
             The data to train the model on wrapped up in a `PyTorch DataLoader
             <https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader>`_.
-            
+
         Returns
         -------
          : float
@@ -225,9 +238,11 @@ class ClassifierTrainer(Trainer):
         self.model.train()
 
         batch_losses = []
-        total, correct = 0., 0.
+        total, correct = 0.0, 0.0
         for j, (images, labels) in enumerate(tqdm(train_loader)):
-            images, labels = images.float().to(self.device), labels.long().to(self.device)
+            images, labels = images.float().to(self.device), labels.long().to(
+                self.device
+            )
 
             self.optimiser.zero_grad()
             output = self.model(images)
@@ -237,17 +252,23 @@ class ClassifierTrainer(Trainer):
 
             batch_losses.append(loss.item())
 
-            #work out the % correct per epoch accumulatively
-            _, predicted = torch.max(output.data, 1) #output will have dimensions (batch_size, output_features) with the maximum taken along the output_features axis i.e. the probability distribution of classes, predicted is populated by the indices of the maximum in this dimension -- the class label.
+            # work out the % correct per epoch accumulatively
+            _, predicted = torch.max(
+                output.data, 1
+            )  # output will have dimensions (batch_size, output_features) with the maximum taken along the output_features axis i.e. the probability distribution of classes, predicted is populated by the indices of the maximum in this dimension -- the class label.
             total += labels.size(0)
-            correct += (predicted == labels).sum() #produces a boolean tensor which when summed evaluates True to 1 and False to 0.
+            correct += (
+                predicted == labels
+            ).sum()  # produces a boolean tensor which when summed evaluates True to 1 and False to 0.
 
         if self.scheduler:
             self.scheduler.step()
 
         return torch.mean(torch.tensor(batch_losses)), float((correct / total) * 100)
 
-    def validation(self, val_loader: torch.utils.data.DataLoader) -> Tuple[float, float]:
+    def validation(
+        self, val_loader: torch.utils.data.DataLoader
+    ) -> Tuple[float, float]:
         """
         The function used to validate the classifier model.
 
@@ -267,11 +288,13 @@ class ClassifierTrainer(Trainer):
         """
         self.model.eval()
 
-        total, correct = 0., 0.
+        total, correct = 0.0, 0.0
         with torch.no_grad():
             batch_losses = []
             for images, labels in val_loader:
-                images, labels = images.float().to(self.device), labels.long().to(self.device)
+                images, labels = images.float().to(self.device), labels.long().to(
+                    self.device
+                )
                 output = self.model(images)
                 _, predicted = torch.max(output.data, 1)
                 total += labels.size(0)
@@ -281,6 +304,7 @@ class ClassifierTrainer(Trainer):
                 batch_losses.append(loss.item())
 
         return torch.mean(torch.tensor(batch_losses)), float((correct / total) * 100)
+
 
 class RegressorTrainer(Trainer):
     """
@@ -318,6 +342,7 @@ class RegressorTrainer(Trainer):
     data_parallel : bool, optional
         Whether or not to use multiple GPUs for training. Default is ``False``.
     """
+
     def train(self, train_loader: torch.utils.data.DataLoader) -> float:
         """
         The function used to train the regression model.
@@ -327,7 +352,7 @@ class RegressorTrainer(Trainer):
         train_loader: torch.utils.data.DataLoader
             The data to train the model on wrapped up in a `PyTorch DataLoader
             <https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader>`_.
-            
+
         Returns
         -------
          : float
@@ -337,7 +362,9 @@ class RegressorTrainer(Trainer):
 
         batch_losses = []
         for j, (inputs, outputs) in enumerate(tqdm(train_loader)):
-            inputs, outputs = inputs.float().to(self.device), outputs.float().to(self.device)
+            inputs, outputs = inputs.float().to(self.device), outputs.float().to(
+                self.device
+            )
 
             self.optimiser.zero_grad()
             model_outputs = self.model(inputs)
@@ -373,7 +400,9 @@ class RegressorTrainer(Trainer):
         batch_losses = []
         with torch.no_grad():
             for inputs, outputs in val_loader:
-                inputs, outputs = inputs.float().to(self.device), outputs.float().to(self.device)
+                inputs, outputs = inputs.float().to(self.device), outputs.float().to(
+                    self.device
+                )
                 model_outputs = self.model(inputs)
                 loss = self.loss_fn(model_outputs, outputs)
 

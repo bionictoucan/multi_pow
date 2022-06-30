@@ -6,6 +6,7 @@ from vit_pytorch.cct import cct_14
 from dimensionality_reduction import AE
 from typing import Dict
 
+
 class MVCNN(nn.Module):
     """
     The base class for the multiview CNN for learning image classification based on different views of a larger field of view.
@@ -21,17 +22,17 @@ class MVCNN(nn.Module):
         self.classifier = cnn.classifier
 
     def forward(self, x: torch.tensor) -> torch.tensor:
-        x = x.transpose(0,1) #switches the view dimension with the batch dimension
+        x = x.transpose(0, 1)  # switches the view dimension with the batch dimension
         # print(x.shape)
 
-        view_pool = [] #create an empty list to store all features for each view
+        view_pool = []  # create an empty list to store all features for each view
 
         for j, v in enumerate(x):
             # print(j)
             v = self.features(v)
             # print(v.shape)
-            #v will have shape (batch_size, C, H, W)
-            #want to reshape it for the fully-connected layers as (batch_size, -1), the -1 combines all other dimensions
+            # v will have shape (batch_size, C, H, W)
+            # want to reshape it for the fully-connected layers as (batch_size, -1), the -1 combines all other dimensions
             # v = self.avgpool(v)
             v = v.view(v.size(0), -1)
             # print(v.shape)
@@ -43,8 +44,10 @@ class MVCNN(nn.Module):
             #     pooled_view, _ = torch.max(torch.stack([pooled_view,v]), dim=0)
             # del(v)
 
-        pooled_view, _ = torch.max(torch.stack(view_pool), dim=0) #inline with the literature, the elementwise maximum is taken across the view dimension to complete the viewpooling
-        #here torch.max() returns the elementwise maximum along the view dimension but will also return which dimension each corresponding maximum came from hence the _
+        pooled_view, _ = torch.max(
+            torch.stack(view_pool), dim=0
+        )  # inline with the literature, the elementwise maximum is taken across the view dimension to complete the viewpooling
+        # here torch.max() returns the elementwise maximum along the view dimension but will also return which dimension each corresponding maximum came from hence the _
 
         # pooled_view = pooled_view.to(self.device)
 
@@ -52,65 +55,117 @@ class MVCNN(nn.Module):
 
         return pooled_view
 
+
 class AEViT(nn.Module):
     """
     Vision Transformer model with autoencoder input.
     """
 
-    def __init__(self, in_channels: int, ae_hidden: int, ae_model: str, image_size: int, patch_size: int, num_classes: int, vit_dim: int, vit_depth: int, vit_heads: int, vit_mlp_dim: int, y_patches: int, x_patches: int, vit_kwargs: Dict = {}) -> None:
+    def __init__(
+        self,
+        in_channels: int,
+        ae_hidden: int,
+        ae_model: str,
+        image_size: int,
+        patch_size: int,
+        num_classes: int,
+        vit_dim: int,
+        vit_depth: int,
+        vit_heads: int,
+        vit_mlp_dim: int,
+        y_patches: int,
+        x_patches: int,
+        vit_kwargs: Dict = {},
+    ) -> None:
         super().__init__()
 
         self.ae = AE(in_channels=in_channels, nef=ae_hidden)
-        self.ae.load_state_dict(torch.load(ae_model, map_location="cpu")["model_state_dict"])
+        self.ae.load_state_dict(
+            torch.load(ae_model, map_location="cpu")["model_state_dict"]
+        )
         self.ae = self.ae.encoder
         for param in self.ae.parameters():
             param.requires_grad = False
 
-        assert (image_size == patch_size * y_patches or patch_size * x_patches) 
-        self.vit = ViT(image_size=image_size, patch_size=patch_size, num_classes=num_classes, dim=vit_dim, depth=vit_depth, heads=vit_heads, mlp_dim=vit_mlp_dim, channels=in_channels, **vit_kwargs)
+        assert image_size == patch_size * y_patches or patch_size * x_patches
+        self.vit = ViT(
+            image_size=image_size,
+            patch_size=patch_size,
+            num_classes=num_classes,
+            dim=vit_dim,
+            depth=vit_depth,
+            heads=vit_heads,
+            mlp_dim=vit_mlp_dim,
+            channels=in_channels,
+            **vit_kwargs
+        )
 
         self.y_patches = y_patches
         self.x_patches = x_patches
 
     def forward(self, x: torch.tensor) -> torch.tensor:
         b, p, c, h1, w1 = x.shape
-        x = x.reshape(b*p, c, h1, w1)
+        x = x.reshape(b * p, c, h1, w1)
         x = self.ae(x)
         _, _, h2, w2 = x.shape
         x = x.reshape(b, p, c, h2, w2)
         x = torch.swapaxes(x, 1, 2)
-        x = x.reshape(b, c, self.y_patches*h2, self.x_patches*w2)
+        x = x.reshape(b, c, self.y_patches * h2, self.x_patches * w2)
 
         out = self.vit(x)
         return out
+
 
 class AECCT(nn.Module):
     """
     Vision Transformer model with autoencoder input and CCT architecture.
     """
 
-    def __init__(self, in_channels: int, ae_hidden: int, ae_model: str, image_size: int, num_classes: int, y_patches: int, x_patches: int) -> None:
+    def __init__(
+        self,
+        in_channels: int,
+        ae_hidden: int,
+        ae_model: str,
+        image_size: int,
+        num_classes: int,
+        y_patches: int,
+        x_patches: int,
+    ) -> None:
         super().__init__()
 
         self.ae = AE(in_channels=in_channels, nef=ae_hidden)
-        self.ae.load_state_dict(torch.load(ae_model, map_location="cpu")["model_state_dict"])
+        self.ae.load_state_dict(
+            torch.load(ae_model, map_location="cpu")["model_state_dict"]
+        )
         self.ae = self.ae.encoder
         for param in self.ae.parameters():
             param.requires_grad = False
 
-        self.vit = cct_14(image_size=image_size, n_conv_layers = 1,  kernel_size = 7, stride = 2, padding = 3, pooling_kernel_size = 3,pooling_stride = 2, pooling_padding = 1, num_classes = num_classes, positional_embedding = "learnable", n_input_channels=1)
+        self.vit = cct_14(
+            image_size=image_size,
+            n_conv_layers=1,
+            kernel_size=7,
+            stride=2,
+            padding=3,
+            pooling_kernel_size=3,
+            pooling_stride=2,
+            pooling_padding=1,
+            num_classes=num_classes,
+            positional_embedding="learnable",
+            n_input_channels=1,
+        )
 
         self.y_patches = y_patches
         self.x_patches = x_patches
 
     def forward(self, x: torch.tensor) -> torch.tensor:
         b, p, c, h1, w1 = x.shape
-        x = x.reshape(b*p, c, h1, w1)
+        x = x.reshape(b * p, c, h1, w1)
         x = self.ae(x)
         _, _, h2, w2 = x.shape
         x = x.reshape(b, p, c, h2, w2)
         x = torch.swapaxes(x, 1, 2)
-        x = x.reshape(b, c, self.y_patches*h2, self.x_patches*w2)
+        x = x.reshape(b, c, self.y_patches * h2, self.x_patches * w2)
 
         out = self.vit(x)
         return out

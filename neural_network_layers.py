@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from typing import Optional, Sequence, Dict, Union
 
+
 class FCLayer(nn.Module):
     """
     A modifiable fully-connected layer for deep networks.
@@ -59,12 +60,12 @@ class FCLayer(nn.Module):
         dropout_prob: float = 0.5,
         lin_kwargs: Dict = {},
         norm_kwargs: Dict = {},
-        act_kwargs: Dict = {}
+        act_kwargs: Dict = {},
     ) -> None:
         super().__init__()
 
         self.lin = nn.Linear(in_nodes, out_nodes, bias=bias, **lin_kwargs)
-        
+
         if (isinstance(normalisation, str)) and (normalisation.lower() == "batch"):
             self.norm = nn.BatchNorm1d(out_nodes, **norm_kwargs)
         elif (isinstance(normalisation, str)) and (normalisation.lower() == "instance"):
@@ -88,9 +89,13 @@ class FCLayer(nn.Module):
             if bias:
                 nn.init.kaiming_uniform_(self.lin.bias, nonlinearity=activation)
         elif initialisation.lower() == "xavier":
-            nn.init.xavier_normal_(self.lin.weight, gain=nn.init.calculate_gain(activation))
+            nn.init.xavier_normal_(
+                self.lin.weight, gain=nn.init.calculate_gain(activation)
+            )
             if bias:
-                nn.init.xavier_uniform_(self.lin.bias, gain=nn.init.calculate_gain(activation))
+                nn.init.xavier_uniform_(
+                    self.lin.bias, gain=nn.init.calculate_gain(activation)
+                )
 
         if use_dropout:
             self.dropout = nn.Dropout(dropout_prob)
@@ -121,6 +126,7 @@ class FCLayer(nn.Module):
             out = self.dropout(out)
 
         return out
+
 
 class ConvLayer(nn.Module):
     """
@@ -184,7 +190,7 @@ class ConvLayer(nn.Module):
         self,
         in_channels: int,
         out_channels: int,
-        kernel: Union[int,Sequence[int]] = 3,
+        kernel: Union[int, Sequence[int]] = 3,
         stride: Union[int, Sequence[int]] = 1,
         pad: str = "reflect",
         bias: bool = False,
@@ -197,7 +203,7 @@ class ConvLayer(nn.Module):
         dropout_prob: float = 0.5,
         conv_kwargs: Dict = {},
         norm_kwargs: Dict = {},
-        act_kwargs: Dict = {}
+        act_kwargs: Dict = {},
     ) -> None:
         super(ConvLayer, self).__init__()
 
@@ -205,10 +211,10 @@ class ConvLayer(nn.Module):
         self.upsample_factor = upsample_factor
 
         if isinstance(kernel, int):
-            padding = (kernel-1)//2
+            padding = (kernel - 1) // 2
         else:
-            padding = [(x-1)//2 for x in kernel]
-        
+            padding = [(x - 1) // 2 for x in kernel]
+
         self.conv = nn.Conv2d(
             in_channels,
             out_channels,
@@ -280,6 +286,7 @@ class ConvLayer(nn.Module):
 
         return out
 
+
 class ConvTranspLayer(nn.Module):
     """
     A modifiable transpose convolutional layer.
@@ -342,7 +349,7 @@ class ConvTranspLayer(nn.Module):
         self,
         in_channels: int,
         out_channels: int,
-        kernel: Union[int,Sequence[int]] = 3,
+        kernel: Union[int, Sequence[int]] = 3,
         stride: Union[int, Sequence[int]] = 1,
         pad: str = "reflect",
         bias: bool = False,
@@ -353,14 +360,14 @@ class ConvTranspLayer(nn.Module):
         dropout_prob: float = 0.5,
         conv_kwargs: Dict = {},
         norm_kwargs: Dict = {},
-        act_kwargs: Dict = {}
+        act_kwargs: Dict = {},
     ) -> None:
         super(ConvTranspLayer, self).__init__()
 
         if isinstance(kernel, int):
-            padding = (kernel - 1)//2
+            padding = (kernel - 1) // 2
         else:
-            padding = [(x-1)//2 for x in kernel]
+            padding = [(x - 1) // 2 for x in kernel]
 
         self.conv = nn.ConvTranspose2d(
             in_channels,
@@ -370,7 +377,7 @@ class ConvTranspLayer(nn.Module):
             bias=bias,
             padding=padding,
             padding_mode=pad,
-            output_padding=stride//2,
+            output_padding=stride // 2,
             **conv_kwargs
         )
 
@@ -431,6 +438,7 @@ class ConvTranspLayer(nn.Module):
             out = self.dropout(out)
 
         return out
+
 
 class ResLayer(nn.Module):
     """
@@ -497,17 +505,17 @@ class ResLayer(nn.Module):
         kernel: Union[int, Sequence[int]] = 3,
         stride: Union[int, Sequence[int]] = 1,
         pad: str = "reflect",
-        bias : bool = False,
-        normalisation : Optional[str] = None,
-        activation : str = "relu",
-        initialisation : str = "kaiming",
+        bias: bool = False,
+        normalisation: Optional[str] = None,
+        activation: str = "relu",
+        initialisation: str = "kaiming",
         upsample: bool = False,
         upsample_factor: int = 2,
         use_dropout: bool = False,
         dropout_prob: float = 0.5,
         conv_kwargs: Dict = {},
         norm_kwargs: Dict = {},
-        act_kwargs: Dict = {}
+        act_kwargs: Dict = {},
     ) -> None:
         super(ResLayer, self).__init__()
 
@@ -515,9 +523,9 @@ class ResLayer(nn.Module):
         self.upsample_factor = upsample_factor
 
         if isinstance(kernel, int):
-            padding = (kernel-1)//2
+            padding = (kernel - 1) // 2
         else:
-            padding = [(x-1)//2 for x in kernel]
+            padding = [(x - 1) // 2 for x in kernel]
 
         self.conv1 = nn.Conv2d(
             in_channels,
@@ -574,24 +582,16 @@ class ResLayer(nn.Module):
                 nn.init.xavier_uniform_(self.conv1.bias)
                 nn.init.xavier_uniform_(self.conv2.bias)
 
-        #if the number of channels is changing and there is not an upsample then self.downsample is needed to transform the identity of the residual layer to the dimensions of the output so they can be added
-        #if the number of channels is changing and there is also upsampling then self.downsample is needed to transform the number of channels of the identity of the residual layer with the upscaling of the identity taking place elsewhere
-        #if the number of channels stays the same then the 1x1 convolution is not needed
+        # if the number of channels is changing and there is not an upsample then self.downsample is needed to transform the identity of the residual layer to the dimensions of the output so they can be added
+        # if the number of channels is changing and there is also upsampling then self.downsample is needed to transform the number of channels of the identity of the residual layer with the upscaling of the identity taking place elsewhere
+        # if the number of channels stays the same then the 1x1 convolution is not needed
         if in_channels != out_channels and not upsample:
             self.downsample = nn.Conv2d(
-                in_channels,
-                out_channels,
-                kernel_size=1,
-                stride=stride,
-                bias=False
+                in_channels, out_channels, kernel_size=1, stride=stride, bias=False
             )
         elif in_channels != out_channels and upsample:
             self.downsample = nn.Conv2d(
-                in_channels,
-                out_channels,
-                kernel_size=1,
-                stride=1,
-                bias=False
+                in_channels, out_channels, kernel_size=1, stride=1, bias=False
             )
         else:
             self.downsample = None
@@ -635,7 +635,7 @@ class ResLayer(nn.Module):
         out = self.conv2(out)
         if self.norm2:
             out = self.norm2(out)
-        
+
         if self.downsample:
             identity = self.downsample(identity)
 

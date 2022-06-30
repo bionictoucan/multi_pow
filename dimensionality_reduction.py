@@ -12,20 +12,21 @@ from torchvision.transforms import Compose
 from time import time
 
 pt_vibrant = {
-    "blue" : "#0077BB",
-    "cyan" : "#33BBEE",
-    "teal" : "#009988",
-    "orange" : "#EE7733",
-    "red" : "#CC3311",
-    "magenta" : "#EE3377",
-    "grey" : "#BBBBBB"
+    "blue": "#0077BB",
+    "cyan": "#33BBEE",
+    "teal": "#009988",
+    "orange": "#EE7733",
+    "red": "#CC3311",
+    "magenta": "#EE3377",
+    "grey": "#BBBBBB",
 }
+
 
 class AE(nn.Module):
     """
     The autoencoder model to learn a 64x64 representation of the data from a
     1024x1024 patch.
-    
+
     Parameters
     ----------
     in_channels : int
@@ -39,7 +40,7 @@ class AE(nn.Module):
 
     def __init__(self, in_channels: int, nef: int, init: bool = False) -> None:
         super().__init__()
-        
+
         self.encoder = nn.Sequential(
             nn.Conv2d(in_channels, nef, stride=2, kernel_size=7, padding=3),
             nn.BatchNorm2d(nef),
@@ -47,52 +48,60 @@ class AE(nn.Module):
             nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
             nn.BatchNorm2d(nef),
             nn.LeakyReLU(),
-            nn.Conv2d(nef, 2*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
+            nn.Conv2d(nef, 2 * nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2 * nef),
             nn.LeakyReLU(),
-            nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
+            nn.Conv2d(2 * nef, 2 * nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2 * nef),
             nn.LeakyReLU(),
-            nn.Conv2d(2*nef, 4*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
+            nn.Conv2d(2 * nef, 4 * nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4 * nef),
             nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
+            nn.Conv2d(4 * nef, 4 * nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4 * nef),
             nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
+            nn.Conv2d(4 * nef, 4 * nef, stride=2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4 * nef),
             nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
+            nn.Conv2d(4 * nef, 4 * nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4 * nef),
             nn.LeakyReLU(),
-            nn.Conv2d(4*nef, in_channels, stride=1, kernel_size=1)
+            nn.Conv2d(4 * nef, in_channels, stride=1, kernel_size=1),
         )
 
         self.decoder = nn.Sequential(
-            nn.Conv2d(in_channels, 4*nef, stride=1, kernel_size=1),
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
+            nn.Conv2d(in_channels, 4 * nef, stride=1, kernel_size=1),
+            nn.Conv2d(4 * nef, 4 * nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4 * nef),
             nn.LeakyReLU(),
-            nn.ConvTranspose2d(4*nef, 4*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(4*nef),
+            nn.ConvTranspose2d(
+                4 * nef, 4 * nef, stride=2, kernel_size=3, padding=1, output_padding=1
+            ),
+            nn.BatchNorm2d(4 * nef),
             nn.LeakyReLU(),
-            nn.Conv2d(4*nef, 4*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4*nef),
+            nn.Conv2d(4 * nef, 4 * nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4 * nef),
             nn.LeakyReLU(),
-            nn.ConvTranspose2d(4*nef, 2*nef, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm2d(2*nef),
+            nn.ConvTranspose2d(
+                4 * nef, 2 * nef, stride=2, kernel_size=3, padding=1, output_padding=1
+            ),
+            nn.BatchNorm2d(2 * nef),
             nn.LeakyReLU(),
-            nn.Conv2d(2*nef, 2*nef, stride=1, kernel_size=3, padding=1),
-            nn.BatchNorm2d(2*nef),
+            nn.Conv2d(2 * nef, 2 * nef, stride=1, kernel_size=3, padding=1),
+            nn.BatchNorm2d(2 * nef),
             nn.LeakyReLU(),
-            nn.ConvTranspose2d(2*nef, nef, stride=2, kernel_size=3, padding=1, output_padding=1),
+            nn.ConvTranspose2d(
+                2 * nef, nef, stride=2, kernel_size=3, padding=1, output_padding=1
+            ),
             nn.BatchNorm2d(nef),
             nn.LeakyReLU(),
             nn.Conv2d(nef, nef, stride=1, kernel_size=3, padding=1),
             nn.BatchNorm2d(nef),
             nn.LeakyReLU(),
-            nn.ConvTranspose2d(nef, in_channels, stride=2, kernel_size=7, padding=3, output_padding=1),
-            nn.ReLU()
+            nn.ConvTranspose2d(
+                nef, in_channels, stride=2, kernel_size=7, padding=3, output_padding=1
+            ),
+            nn.ReLU(),
         )
 
         if init:
@@ -124,7 +133,7 @@ class AE(nn.Module):
         """
         The class method used to intialise the convolutional kernels using He
         intialisation.
-        
+
         Parameters
         ----------
         module : torch.nn.Conv2d, torch.nn.ConvTranspose2d
@@ -132,6 +141,7 @@ class AE(nn.Module):
         """
         if isinstance(module, nn.Conv2d) or isinstance(module, nn.ConvTranspose2d):
             nn.init.kaiming_normal_(module)
+
 
 class AETrainer(RegressorTrainer):
     def load_data(self) -> None:
@@ -141,10 +151,10 @@ class AETrainer(RegressorTrainer):
 
         f = np.load(self.data_pth)
 
-        self.train_in = f["train_in"].reshape(-1, *f["train_in"].shape[-2:])/255
-        self.train_out = f["train_in"].reshape(-1, *f["train_in"].shape[-2:])/255
-        self.val_in = f["val_in"].reshape(-1, *f["val_in"].shape[-2:])/255
-        self.val_out = f["val_in"].reshape(-1, *f["val_in"].shape[-2:])/255
+        self.train_in = f["train_in"].reshape(-1, *f["train_in"].shape[-2:]) / 255
+        self.train_out = f["train_in"].reshape(-1, *f["train_in"].shape[-2:]) / 255
+        self.val_in = f["val_in"].reshape(-1, *f["val_in"].shape[-2:]) / 255
+        self.val_out = f["val_in"].reshape(-1, *f["val_in"].shape[-2:]) / 255
 
     def _layer_extract(self) -> List:
         """
@@ -159,8 +169,8 @@ class AETrainer(RegressorTrainer):
             calculate the activations after each layer.
         """
 
-        #this if statement exists so this function will work when using multiple
-        #or single GPU
+        # this if statement exists so this function will work when using multiple
+        # or single GPU
         if isinstance(self.model, nn.DataParallel):
             model = list(self.model.children()).pop()
         else:
@@ -230,18 +240,22 @@ class AETrainer(RegressorTrainer):
 
         batch_losses = []
         for j, (inputs, outputs) in enumerate(tqdm(train_loader)):
-            inputs, outputs = inputs.float().to(self.device), outputs.float().to(self.device)
+            inputs, outputs = inputs.float().to(self.device), outputs.float().to(
+                self.device
+            )
 
             self.optimiser.zero_grad()
             model_outputs = self.model(inputs)
-            loss = self.loss_fn(model_outputs, outputs) + 0.001*self.sparse_loss(inputs)
+            loss = self.loss_fn(model_outputs, outputs) + 0.001 * self.sparse_loss(
+                inputs
+            )
             loss.backward()
             self.optimiser.step()
 
             batch_losses.append(loss.item())
             if j == 0:
-                plt_in = inputs[0,0].clone().detach().cpu().squeeze().numpy()
-                plt_gen = model_outputs[0,0].clone().detach().cpu().squeeze().numpy()
+                plt_in = inputs[0, 0].clone().detach().cpu().squeeze().numpy()
+                plt_gen = model_outputs[0, 0].clone().detach().cpu().squeeze().numpy()
 
         if self.scheduler:
             self.scheduler.step()
@@ -269,7 +283,9 @@ class AETrainer(RegressorTrainer):
         batch_losses = []
         with torch.no_grad():
             for inputs, outputs in val_loader:
-                inputs, outputs = inputs.float().to(self.device), outputs.float().to(self.device)
+                inputs, outputs = inputs.float().to(self.device), outputs.float().to(
+                    self.device
+                )
                 model_outputs = self.model(inputs)
                 loss = self.loss_fn(model_outputs, outputs)
 
@@ -277,11 +293,16 @@ class AETrainer(RegressorTrainer):
 
         return torch.mean(torch.tensor(batch_losses))
 
-    def myth_trainer(self, load: bool = False, load_pth: Optional[str] = None, transform: Union[nn.Module, nn.Sequential, Compose, List, None] = None) -> None:
+    def myth_trainer(
+        self,
+        load: bool = False,
+        load_pth: Optional[str] = None,
+        transform: Union[nn.Module, nn.Sequential, Compose, List, None] = None,
+    ) -> None:
         """
         This class method trains the network with the interactive plotting
         environment.
-        
+
         Parameters
         ----------
         load : bool, optional
@@ -299,38 +320,48 @@ class AETrainer(RegressorTrainer):
             self.load_checkpoint(load_pth)
 
         # dataset and data loader creation
-        train_dataset = PowderDataset(torch.from_numpy(self.train_in).unsqueeze(1), torch.from_numpy(self.train_out).unsqueeze(1), transform=transform)
-        val_dataset = PowderDataset(torch.from_numpy(self.val_in).unsqueeze(1), torch.from_numpy(self.val_out).unsqueeze(1), transform=transform)
+        train_dataset = PowderDataset(
+            torch.from_numpy(self.train_in).unsqueeze(1),
+            torch.from_numpy(self.train_out).unsqueeze(1),
+            transform=transform,
+        )
+        val_dataset = PowderDataset(
+            torch.from_numpy(self.val_in).unsqueeze(1),
+            torch.from_numpy(self.val_out).unsqueeze(1),
+            transform=transform,
+        )
         # val_dataset = PowderDataset(torch.from_numpy(self.val_in), torch.from_numpy(self.val_out))
 
-        train_loader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True)
+        train_loader = DataLoader(
+            train_dataset, batch_size=self.batch_size, shuffle=True
+        )
         val_loader = DataLoader(val_dataset, batch_size=self.batch_size, shuffle=True)
 
-        #initialisation of the plotting environment
-        fig = plt.figure(figsize=(9,9), constrained_layout=True)
+        # initialisation of the plotting environment
+        fig = plt.figure(figsize=(9, 9), constrained_layout=True)
         gs = fig.add_gridspec(nrows=2, ncols=2)
-        train_ax = fig.add_subplot(gs[1,:])
+        train_ax = fig.add_subplot(gs[1, :])
         val_ax = train_ax.twinx()
         # train_ax.set_yscale("log")
         train_ax.set_ylabel("Training Loss", color=pt_vibrant["cyan"])
         train_ax.set_xlabel("Number of Epochs")
         val_ax.set_ylabel("Validation Loss", color=pt_vibrant["magenta"])
 
-        train_im = fig.add_subplot(gs[0,0])
+        train_im = fig.add_subplot(gs[0, 0])
         train_im.set_xticks([])
         train_im.set_yticks([])
         train_im.set_title("Input Image")
-        gen_im = fig.add_subplot(gs[0,1])
+        gen_im = fig.add_subplot(gs[0, 1])
         gen_im.set_xticks([])
         gen_im.set_yticks([])
         gen_im.set_title("Generated Image")
         fig.show()
         fig.canvas.draw()
 
-        #define lists to store the different losses in
+        # define lists to store the different losses in
         train_losses, val_losses = [], []
 
-        #do the training and validation
+        # do the training and validation
         t_init = time()
         for n in range(self.total_epochs):
             if n != 0:
@@ -345,17 +376,19 @@ class AETrainer(RegressorTrainer):
             val_losses.append(vl)
             t_now = round(time() - t_init, 3)
 
-        #save the model
+            # save the model
             self.train_losses = train_losses
             self.val_losses = val_losses
 
             if self.scheduler:
-                self.checkpoint(add_info={"scheduler_state_dict" : self.scheduler.state_dict()})
+                self.checkpoint(
+                    add_info={"scheduler_state_dict": self.scheduler.state_dict()}
+                )
             else:
                 self.checkpoint()
             self.save_checkpoint()
 
-        #plot the results
+            # plot the results
             fig.suptitle(f"Time elapsed {t_now}s after epoch {self.current_epoch}")
             train_ax.set_ylabel("Training Loss", color=pt_vibrant["cyan"])
             train_ax.set_xlabel("Number of Epochs")
