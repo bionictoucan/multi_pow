@@ -99,7 +99,7 @@ class PowderDataset(Dataset):
         return self.data.shape[0]
 
     def __getitem__(
-        self, index: Union[int, Slice]
+        self, index: Union[int, slice]
     ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """
         Returns some data of the dataset.
