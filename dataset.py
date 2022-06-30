@@ -33,7 +33,7 @@ class PowderDataset(Dataset):
 
         When augmentations are defined a random number is drawn from the unit
         uniform distribution (using Python's internal `random.random() <https://docs.python.org/3/library/random.html#random.random>`_ function). If this value is <= ``aug_prob``, then the data is
-        augmented. Essentially there is a (``aug_prob``*100)% chance of data augmentation.
+        augmented. Essentially there is a (``aug_prob`` *100)% chance of data augmentation.
 
         When the augmentations are given as a ``torch.nn.Module``,
         ``torch.nn.Sequential`` or ``torchvision.transforms.Compose`` then the
@@ -48,7 +48,8 @@ class PowderDataset(Dataset):
         would be chosen at random and applied to the data.
 
         .. note::
-            This method will NOT pick the same augmentation twice.
+           This method will NOT pick the same augmentation twice.
+
     aug_prob : float, optional
         The probability threshold set such that if a random number drawn from
         the uniform unit distribution is <= ``aug_prob`` the augmentations will
@@ -59,8 +60,7 @@ class PowderDataset(Dataset):
         the two options ``["single", "multi"]``. For ``"single"``, one
         augmentation is
         chosen at random (by sampling an integer from the unit distribution
-        ``[1, len(transform)]`` using Python's internal `random.randint()
-         <https://docs.python.org/3/library/random.html#random.randint>`_
+        ``[1, len(transform)]`` using Python's internal `random.randint() <https://docs.python.org/3/library/random.html#random.randint>`_
         function).
 
         .. note::

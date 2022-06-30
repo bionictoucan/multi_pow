@@ -4,7 +4,8 @@
 
 .. _sphx_glr_tutorials:
 
-
+Tutorials
+=========
 
 .. raw:: html
 

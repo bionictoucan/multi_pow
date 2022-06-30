@@ -4,7 +4,8 @@
 
 .. _sphx_glr_auto_examples:
 
-
+Examples
+========
 
 .. raw:: html
 
