@@ -7,6 +7,48 @@
 Examples
 ========
 
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Advanced Usage of the Fully-connected Layer">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_exa_fclayers_adv_thumb.png
+     :alt: Advanced Usage of the Fully-connected Layer
+
+     :ref:`sphx_glr_auto_examples_exa_fclayers_adv.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/exa_fclayers_adv
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Using the Fully-connected Layer">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_exa_fclayers_thumb.png
+     :alt: Using the Fully-connected Layer
+
+     :ref:`sphx_glr_auto_examples_exa_fclayers.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/exa_fclayers
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

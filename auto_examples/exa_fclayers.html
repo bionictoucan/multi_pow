@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Using the Fully-connected Layer &mdash; multi_pow  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/my_theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Code API" href="../API.html" />
+    <link rel="prev" title="Advanced Usage of the Fully-connected Layer" href="exa_fclayers_adv.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> multi_pow
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">How to Access and Use This Code</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="exa_fclayers_adv.html">Advanced Usage of the Fully-connected Layer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Using the Fully-connected Layer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-an-fclayer">Setting up an <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../API.html">Code API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">multi_pow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Examples</a> &raquo;</li>
+      <li>Using the Fully-connected Layer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto_examples/exa_fclayers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-exa-fclayers-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="using-the-fully-connected-layer">
+<span id="fclayer-exa"></span><span id="sphx-glr-auto-examples-exa-fclayers-py"></span><h1>Using the Fully-connected Layer<a class="headerlink" href="#using-the-fully-connected-layer" title="Permalink to this heading"></a></h1>
+<p>The following will demonstrate how to use the <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code> object from the
+<code class="docutils literal notranslate"><span class="pre">neural_network_layers</span></code> script. This is a highly customisable
+fully-connected layer for use in construction of bespoke neural networks. We
+will start by importing the object.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">neural_network_layers</span> <span class="kn">import</span> <span class="n">FCLayer</span>
+</pre></div>
+</div>
+<p>An <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code> object can take a variety of arguments during construction (for
+more detail see <a class="reference internal" href="../layers.html#layers"><span class="std std-ref">Customisable Neural Network layers</span></a>). Neural network layers in general are
+constructed using two or three objects: a linear function, a normalisation
+(optional) and a non-linear function. In a fully-connected layer, the linear
+function takes the form a <a class="reference external" href="https://pytorch.org/">PyTorch</a> <code class="docutils literal notranslate"><span class="pre">nn.Linear</span></code>
+module which maps the input <span class="math notranslate nohighlight">\(x\)</span> to the output <span class="math notranslate nohighlight">\(y\)</span> via the
+following equation</p>
+<div class="math notranslate nohighlight">
+\[y = \Theta x + b\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Theta\)</span> is known as the learnable parameters or weights of the
+layer – it is a matrix of numbers which multiplies the vector of inputs
+<span class="math notranslate nohighlight">\(x\)</span>. These are the parameters that are optimised to give the best
+transformation of the data. <span class="math notranslate nohighlight">\(b\)</span> is an optional, learnable bias of the
+linear transformation. The two main arguments for the linear transformation
+(and thus of the <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code> object) are <code class="docutils literal notranslate"><span class="pre">in_nodes</span></code> and <code class="docutils literal notranslate"><span class="pre">out_nodes</span></code>: this
+is the dimensionality of the input <span class="math notranslate nohighlight">\(x\)</span> and the dimensionality of the
+output <span class="math notranslate nohighlight">\(y\)</span>. This is used to construct the learnable parameters
+<span class="math notranslate nohighlight">\(\Theta\)</span>. <code class="docutils literal notranslate"><span class="pre">in_nodes</span></code> and <code class="docutils literal notranslate"><span class="pre">out_nodes</span></code> are integers.</p>
+<p>The non-linear function that is part of a neural network layer can be set
+through the <code class="docutils literal notranslate"><span class="pre">activation</span></code> keyword argument. Its default value <code class="docutils literal notranslate"><span class="pre">&quot;relu&quot;</span></code> uses
+the rectified linear unit non-linearity but other options of <code class="docutils literal notranslate"><span class="pre">&quot;leaky_relu&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;sigmoid&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;tanh&quot;</span></code> exist <a class="footnote-reference brackets" href="#f1" id="id1">1</a>.</p>
+<section id="setting-up-an-fclayer">
+<h2>Setting up an <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code><a class="headerlink" href="#setting-up-an-fclayer" title="Permalink to this heading"></a></h2>
+<p>To construct the layer we do the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fclayer</span> <span class="o">=</span> <span class="n">FCLayer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>FCLayer(
+  (lin): Linear(in_features=3, out_features=5, bias=False)
+  (act): ReLU(inplace=True)
+)
+</pre></div>
+</div>
+<p>This create a fully-connected layer with input dimension 3, output dimension
+5, no bias and the ReLU non-linearity. This is equivalent to defining a
+<code class="docutils literal notranslate"><span class="pre">nn.Sequential</span></code> object as follows</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fcseq</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The main idea is to have a nicer looking way of representing these layers
+(especially when the networks get really deep). Each element of the
+<code class="docutils literal notranslate"><span class="pre">FCLayer</span></code> object can be accessed via class attributes <code class="docutils literal notranslate"><span class="pre">.lin`</span></code> for the
+linear function and <code class="docutils literal notranslate"><span class="pre">.act</span></code> for the non-linearity e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="o">.</span><span class="n">lin</span><span class="p">,</span> <span class="n">fclayer</span><span class="o">.</span><span class="n">act</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Linear(in_features=3, out_features=5, bias=False) ReLU(inplace=True)
+</pre></div>
+</div>
+<p>A dummy input can be created to show that the objects <code class="docutils literal notranslate"><span class="pre">fclayer</span></code> and
+<code class="docutils literal notranslate"><span class="pre">fcseq</span></code> are equivalent.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="c1">#randomly sample 3 integers from the range [0,10)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default random initialisation for <code class="docutils literal notranslate"><span class="pre">nn.Linear</span></code> objects samples a
+uniform distribution bounded by <span class="math notranslate nohighlight">\(\pm 1/\sqrt{dim(x)}\)</span> for <em>reasons</em>
+(I really don’t know this answer to why). Due to the nature of the random
+sampling, the easiest way to compare these two examples is to initialise
+them with the same numbers. Below we initialise them with 0.5</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">constant_</span><span class="p">(</span><span class="n">fclayer</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">constant_</span><span class="p">(</span><span class="n">fcseq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Parameter containing:
+tensor([[0.5000, 0.5000, 0.5000],
+        [0.5000, 0.5000, 0.5000],
+        [0.5000, 0.5000, 0.5000],
+        [0.5000, 0.5000, 0.5000],
+        [0.5000, 0.5000, 0.5000]], requires_grad=True)
+</pre></div>
+</div>
+<p>Then the output is calculated for passing the dummy inputs to the different
+formulations of the layer.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The layers can be applied to inputs in the same manner as functions.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">),</span> <span class="n">fcseq</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tensor([6., 6., 6., 6., 6.], grad_fn=&lt;ReluBackward0&gt;) tensor([6., 6., 6., 6., 6.], grad_fn=&lt;ReluBackward0&gt;)
+</pre></div>
+</div>
+<p>Further, we can check how the layer we have defined interacts with gradient
+backpropagation by creating a dummy desired output and a loss function that we
+want to use to optmise our layer.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">fclayer</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">)</span>
+<span class="n">output_seq</span> <span class="o">=</span> <span class="n">fcseq</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">)</span>
+<span class="n">dummy_output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">dummy_output</span><span class="p">)</span>
+<span class="n">loss_seq</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">output_seq</span><span class="p">,</span> <span class="n">dummy_output</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The above code assigns the output of the <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code> applied to the dummy
+input to the variable <code class="docutils literal notranslate"><span class="pre">output</span></code> alongside the output of the
+<code class="docutils literal notranslate"><span class="pre">nn.Sequential</span></code>’s output being labelled <code class="docutils literal notranslate"><span class="pre">output_seq</span></code>. Then a fake desired
+output of ones in each dimension is created (<code class="docutils literal notranslate"><span class="pre">dummy_output</span></code>) and the mean
+squared error is calculated for each to see how close the layer gets to this
+desired output (<code class="docutils literal notranslate"><span class="pre">loss</span></code> and <code class="docutils literal notranslate"><span class="pre">loss_seq</span></code>, respectively following the naming
+conventions for the outputs). The gradient of the loss with respect to each
+weight is then calculated doing the following</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<span class="n">loss_seq</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>These calculated gradients can then be accessed from the original objects.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">grad</span><span class="p">,</span> <span class="n">fcseq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tensor([[ 8., 10.,  6.],
+        [ 8., 10.,  6.],
+        [ 8., 10.,  6.],
+        [ 8., 10.,  6.],
+        [ 8., 10.,  6.]]) tensor([[ 8., 10.,  6.],
+        [ 8., 10.,  6.],
+        [ 8., 10.,  6.],
+        [ 8., 10.,  6.],
+        [ 8., 10.,  6.]])
+</pre></div>
+</div>
+<p>As can be seen, both the outputs and the gradients calculated via
+backpropagation are identical whether using this customisable block or using
+raw PyTorch so hopefully having a tidier wrapper to keep everything in is
+useful!</p>
+<p>For more advanced use of the <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code> object, the interested reader is
+referred to <a class="reference internal" href="exa_fclayers_adv.html#fclayer-adv-exa"><span class="std std-ref">Advanced Usage of the Fully-connected Layer</span></a>.</p>
+<dl class="footnote brackets">
+<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>These are the most commonly-used non-linearities but implementations
+of other can be added when needed. Also, a custom non-linearity
+function being addable is being considered (I only thought of it when
+writing this document).</p>
+</dd>
+</dl>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.023 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-exa-fclayers-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/8d0cd522ddae877424614b9e752df40c/exa_fclayers.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">exa_fclayers.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/d19e0473c64cc0c36ab3416b65def572/exa_fclayers.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">exa_fclayers.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="exa_fclayers_adv.html" class="btn btn-neutral float-left" title="Advanced Usage of the Fully-connected Layer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../API.html" class="btn btn-neutral float-right" title="Code API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, John A. Armstrong.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

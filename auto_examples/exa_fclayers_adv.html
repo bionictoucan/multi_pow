@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Usage of the Fully-connected Layer &mdash; multi_pow  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/my_theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Using the Fully-connected Layer" href="exa_fclayers.html" />
+    <link rel="prev" title="Examples" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> multi_pow
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">How to Access and Use This Code</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Advanced Usage of the Fully-connected Layer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#normalisation">Normalisation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dropout">Dropout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initialisation">Initialisation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="exa_fclayers.html">Using the Fully-connected Layer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../API.html">Code API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">multi_pow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Examples</a> &raquo;</li>
+      <li>Advanced Usage of the Fully-connected Layer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto_examples/exa_fclayers_adv.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-exa-fclayers-adv-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="advanced-usage-of-the-fully-connected-layer">
+<span id="fclayer-adv-exa"></span><span id="sphx-glr-auto-examples-exa-fclayers-adv-py"></span><h1>Advanced Usage of the Fully-connected Layer<a class="headerlink" href="#advanced-usage-of-the-fully-connected-layer" title="Permalink to this heading"></a></h1>
+<p>The following makes the assumption that you are already comfortable with the
+contents of <a class="reference internal" href="exa_fclayers.html#fclayer-exa"><span class="std std-ref">Using the Fully-connected Layer</span></a>.</p>
+<p>As always, the layer must be imported</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">neural_network_layers</span> <span class="kn">import</span> <span class="n">FCLayer</span>
+</pre></div>
+</div>
+<section id="normalisation">
+<h2>Normalisation<a class="headerlink" href="#normalisation" title="Permalink to this heading"></a></h2>
+<p>A third, often vital, operation part of any neural network layer is the
+normalisation layer. Normalisation across batches of data (known as “batch
+normalisation”) is useful in reducing the dynamic range of your batches at the
+expense of having a learnable mean and standard deviation. In the grand scheme
+of having millions of fitted parameters in your network, having a couple more
+due to batch normalisation is preferable over the network taking some time to
+learn the data distribution.</p>
+<p>Normalisation can be added to an <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code> object using the keyword argument
+<code class="docutils literal notranslate"><span class="pre">normalisation</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fclayer</span> <span class="o">=</span> <span class="n">FCLayer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">normalisation</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="n">initialisation</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Valid options here are <code class="docutils literal notranslate"><span class="pre">&quot;batch&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;instance&quot;</span></code> to add batch
+normalisation and instance normalisation respectively but batch normalisation
+is typically the most useful. The layout of the layer is then</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>FCLayer(
+  (lin): Linear(in_features=3, out_features=5, bias=False)
+  (norm): BatchNorm1d(5, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (act): ReLU(inplace=True)
+)
+</pre></div>
+</div>
+<p>The normalisation operation itself can be accessed via the <code class="docutils literal notranslate"><span class="pre">.norm</span></code> attribute
+of the class</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>BatchNorm1d(5, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+</pre></div>
+</div>
+</section>
+<section id="dropout">
+<h2>Dropout<a class="headerlink" href="#dropout" title="Permalink to this heading"></a></h2>
+<p>Another technique that can be added to neural network layers is called
+“dropout”. Dropout will assign a probability to each of the connections in a
+fully-connected layer and randomly not use those transformations during
+learning iterations. This is employed in deeper networks to avoid overfitting
+with the intuition that the model only being able to use some of its
+parameters while training will result in a more general model.</p>
+<p>There are two keyword arguments associated with dropout here: <code class="docutils literal notranslate"><span class="pre">use_dropout</span></code>
+which can be set to <code class="docutils literal notranslate"><span class="pre">True</span></code> if the user wishes to include dropout in the
+layer and <code class="docutils literal notranslate"><span class="pre">dropout_prob</span></code> which is the probability assigned to each
+connection of whether or not it will be dropped (the default value for this is
+0.5, 50% chance of the connection not being used).</p>
+<p>For example if we wanted to make an <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code> which uses dropout and each
+connection has a 30% chance of being dropped this would be formulated like so</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fclayer</span> <span class="o">=</span> <span class="n">FCLayer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">normalisation</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="n">initialisation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_dropout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dropout_prob</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>FCLayer(
+  (lin): Linear(in_features=3, out_features=5, bias=False)
+  (norm): BatchNorm1d(5, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (act): ReLU(inplace=True)
+  (dropout): Dropout(p=0.3, inplace=False)
+)
+</pre></div>
+</div>
+<p>The dropout operation can then be accessed via the <code class="docutils literal notranslate"><span class="pre">.dropout</span></code> attribute of
+the class.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="o">.</span><span class="n">dropout</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dropout(p=0.3, inplace=False)
+</pre></div>
+</div>
+</section>
+<section id="initialisation">
+<h2>Initialisation<a class="headerlink" href="#initialisation" title="Permalink to this heading"></a></h2>
+<p>The last thing that can be added to the <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code> is a different
+initialisation scheme for the weights. So far, we have been setting the
+<code class="docutils literal notranslate"><span class="pre">initalisation</span></code> keyword argument to <code class="docutils literal notranslate"><span class="pre">None</span></code> which causes the learnable
+parameters to be initialised using the standard method discussed in
+<span class="xref std std-ref">fclayers_exa</span>. Other initialisation methods can be employed through this
+kwarg, namely He initialisation and Xavier initialisation.</p>
+<p>He initialisation (the default), was used for <a class="reference external" href="https://arxiv.org/abs/1502.01852">the first deep learning
+algorithm that surpassed human level classification percentage</a>, bases the initialisation on drawing
+random samples from a normal distribution with mean zero and standard
+deviation inversely proportional to the number of connections in a layer and
+proportional to a value describing the effect the non-linear function has on
+the variance of the output distribution (for a mathematical derivation of this
+see the paper above) and using these as the starting points for the weights.</p>
+<p>Xavier initialisation is a special case of He initialisation where it is
+assumed that the non-linearity does not contribute to the variance of the
+output distribution of the layer.</p>
+<p>Initialisation using both schemes is shown below</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fclayer</span> <span class="o">=</span> <span class="n">FCLayer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">normalisation</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="n">initialisation</span><span class="o">=</span><span class="s2">&quot;he&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+
+<span class="n">fclayer</span> <span class="o">=</span> <span class="n">FCLayer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">normalisation</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="n">initialisation</span><span class="o">=</span><span class="s2">&quot;xavier&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Parameter containing:
+tensor([[-0.5850, -1.1109,  0.2872],
+        [-0.0439, -0.9584, -0.0150],
+        [-0.6895, -1.2103, -0.7344],
+        [-0.4067,  0.4403,  0.7985],
+        [-0.1655,  0.7591,  0.4162]], requires_grad=True)
+Parameter containing:
+tensor([[-0.7671, -0.7900,  0.5897],
+        [ 0.3708,  0.2001, -1.6636],
+        [-0.9418, -0.1206, -0.0230],
+        [-0.6701, -0.7745, -0.6625],
+        [ 0.9398, -0.1775, -1.2006]], requires_grad=True)
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.251 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-exa-fclayers-adv-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/961ae1705dd7c5ae29a65398f5642b5c/exa_fclayers_adv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">exa_fclayers_adv.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/4e0e1cefa9279c76c76c734f157d2cb0/exa_fclayers_adv.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">exa_fclayers_adv.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="exa_fclayers.html" class="btn btn-neutral float-right" title="Using the Fully-connected Layer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, John A. Armstrong.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
