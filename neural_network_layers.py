@@ -84,23 +84,32 @@ class FCLayer(nn.Module):
         else:
             raise NotImplementedError("Pester John to add this.")
 
-        if initialisation.lower() == "kaiming" or "he":
-            nn.init.kaiming_normal_(self.lin.weight, nonlinearity=activation)
-            if bias:
-                nn.init.kaiming_uniform_(self.lin.bias, nonlinearity=activation)
-        elif initialisation.lower() == "xavier":
-            nn.init.xavier_normal_(
-                self.lin.weight, gain=nn.init.calculate_gain(activation)
-            )
-            if bias:
-                nn.init.xavier_uniform_(
-                    self.lin.bias, gain=nn.init.calculate_gain(activation)
+        if initialisation:
+            if initialisation.lower() == "kaiming" or "he":
+                nn.init.kaiming_normal_(self.lin.weight, nonlinearity=activation)
+                if bias:
+                    nn.init.kaiming_uniform_(self.lin.bias, nonlinearity=activation)
+            elif initialisation.lower() == "xavier":
+                nn.init.xavier_normal_(
+                    self.lin.weight, gain=nn.init.calculate_gain(activation)
                 )
+                if bias:
+                    nn.init.xavier_uniform_(
+                        self.lin.bias, gain=nn.init.calculate_gain(activation)
+                    )
 
         if use_dropout:
             self.dropout = nn.Dropout(dropout_prob)
         else:
             self.dropout = None
+
+    @property
+    def weight(self):
+        return self.lin.weight
+
+    @property
+    def bias(self):
+        return self.lin.bias
 
     def forward(self, inp: torch.Tensor) -> torch.Tensor:
         """
@@ -244,19 +253,28 @@ class ConvLayer(nn.Module):
         else:
             raise NotImplementedError("Pester John to add this.")
 
-        if initialisation.lower() == "kaiming" or "he":
-            nn.init.kaiming_normal_(self.conv.weight, nonlinearity=activation)
-            if bias:
-                nn.init.kaiming_uniform_(self.conv.bias, nonlinearity=activation)
-        elif initialisation.lower() == "xavier":
-            nn.init.xavier_normal_(self.conv.weight)
-            if bias:
-                nn.init.xavier_uniform_(self.conv.bias)
+        if initialisation:
+            if initialisation.lower() == "kaiming" or "he":
+                nn.init.kaiming_normal_(self.conv.weight, nonlinearity=activation)
+                if bias:
+                    nn.init.kaiming_uniform_(self.conv.bias, nonlinearity=activation)
+            elif initialisation.lower() == "xavier":
+                nn.init.xavier_normal_(self.conv.weight)
+                if bias:
+                    nn.init.xavier_uniform_(self.conv.bias)
 
         if use_dropout:
             self.dropout = nn.Dropout2d(dropout_prob)
         else:
             self.dropout = None
+
+    @property
+    def weight(self):
+        return self.conv.weight
+
+    @property
+    def bias(self):
+        return self.conv.bias
 
     def forward(self, inp: torch.Tensor) -> torch.Tensor:
         """
@@ -399,19 +417,28 @@ class ConvTranspLayer(nn.Module):
         else:
             raise NotImplementedError("Pester John to add this.")
 
-        if initialisation.lower() == "kaiming" or "he":
-            nn.init.kaiming_normal_(self.conv.weight, nonlinearity=activation)
-            if bias:
-                nn.init.kaiming_uniform_(self.conv.bias, nonlinearity=activation)
-        elif initialisation.lower() == "xavier":
-            nn.init.xavier_normal_(self.conv.weight)
-            if bias:
-                nn.init.xavier_uniform_(self.conv.bias)
+        if initialisation:
+            if initialisation.lower() == "kaiming" or "he":
+                nn.init.kaiming_normal_(self.conv.weight, nonlinearity=activation)
+                if bias:
+                    nn.init.kaiming_uniform_(self.conv.bias, nonlinearity=activation)
+            elif initialisation.lower() == "xavier":
+                nn.init.xavier_normal_(self.conv.weight)
+                if bias:
+                    nn.init.xavier_uniform_(self.conv.bias)
 
         if use_dropout:
             self.dropout = nn.Dropout2d(dropout_prob)
         else:
             self.dropout = None
+
+    @property
+    def weight(self):
+        return self.conv.weight
+
+    @property
+    def bias(self):
+        return self.conv.bias
 
     def forward(self, inp: torch.Tensor) -> torch.Tensor:
         """
@@ -569,18 +596,19 @@ class ResLayer(nn.Module):
         else:
             raise NotImplementedError("Pester John to add this.")
 
-        if initialisation.lower() == "kaiming" or "he":
-            nn.init.kaiming_normal_(self.conv1.weight, nonlinearity=activation)
-            nn.init.kaiming_normal_(self.conv2.weight, nonlinearity=activation)
-            if bias:
-                nn.init.kaiming_uniform_(self.conv1.bias, nonlinearity=activation)
-                nn.init.kaiming_uniform_(self.conv2.bias, nonlinearity=activation)
-        elif initialisation.lower() == "xavier":
-            nn.init.xavier_normal_(self.conv1.weight)
-            nn.init.xavier_normal_(self.conv2.weight)
-            if bias:
-                nn.init.xavier_uniform_(self.conv1.bias)
-                nn.init.xavier_uniform_(self.conv2.bias)
+        if initialisation:
+            if initialisation.lower() == "kaiming" or "he":
+                nn.init.kaiming_normal_(self.conv1.weight, nonlinearity=activation)
+                nn.init.kaiming_normal_(self.conv2.weight, nonlinearity=activation)
+                if bias:
+                    nn.init.kaiming_uniform_(self.conv1.bias, nonlinearity=activation)
+                    nn.init.kaiming_uniform_(self.conv2.bias, nonlinearity=activation)
+            elif initialisation.lower() == "xavier":
+                nn.init.xavier_normal_(self.conv1.weight)
+                nn.init.xavier_normal_(self.conv2.weight)
+                if bias:
+                    nn.init.xavier_uniform_(self.conv1.bias)
+                    nn.init.xavier_uniform_(self.conv2.bias)
 
         # if the number of channels is changing and there is not an upsample then self.downsample is needed to transform the identity of the residual layer to the dimensions of the output so they can be added
         # if the number of channels is changing and there is also upsampling then self.downsample is needed to transform the number of channels of the identity of the residual layer with the upscaling of the identity taking place elsewhere
@@ -600,6 +628,14 @@ class ResLayer(nn.Module):
             self.dropout = nn.Dropout2d(dropout_prob)
         else:
             self.dropout = None
+
+    @property
+    def weight(self):
+        return self.conv1.weight, self.conv2.weight
+
+    @property
+    def bias(self):
+        return self.conv1.bias, self.conv2.bias
 
     def forward(self, inp: torch.Tensor) -> torch.Tensor:
         """

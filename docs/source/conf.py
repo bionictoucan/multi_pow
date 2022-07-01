@@ -44,6 +44,7 @@ sphinx_gallery_conf = {
     "examples_dirs": ["../../examples", "../../tutorials"],
     "gallery_dirs": ["auto_examples", "tutorials"],
     "run_stale_examples": True,
+    "filename_pattern" : "/exa_"
 }
 
 # Add any paths that contain templates here, relative to this directory.
