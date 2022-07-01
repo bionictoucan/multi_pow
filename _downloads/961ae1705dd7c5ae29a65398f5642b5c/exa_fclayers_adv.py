@@ -61,7 +61,9 @@ print(fclayer.norm)
 # For example if we wanted to make an ``FCLayer`` which uses dropout and each
 # connection has a 30% chance of being dropped this would be formulated like so
 
-fclayer = FCLayer(3, 5, normalisation="batch", initialisation=None, use_dropout=True, dropout_prob=0.3)
+fclayer = FCLayer(
+    3, 5, normalisation="batch", initialisation=None, use_dropout=True, dropout_prob=0.3
+)
 
 print(fclayer)
 

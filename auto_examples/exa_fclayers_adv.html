@@ -150,7 +150,9 @@ connection of whether or not it will be dropped (the default value for this is
 0.5, 50% chance of the connection not being used).</p>
 <p>For example if we wanted to make an <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code> which uses dropout and each
 connection has a 30% chance of being dropped this would be formulated like so</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fclayer</span> <span class="o">=</span> <span class="n">FCLayer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">normalisation</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="n">initialisation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_dropout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dropout_prob</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fclayer</span> <span class="o">=</span> <span class="n">FCLayer</span><span class="p">(</span>
+    <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">normalisation</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="n">initialisation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_dropout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dropout_prob</span><span class="o">=</span><span class="mf">0.3</span>
+<span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="p">)</span>
 </pre></div>
@@ -204,20 +206,20 @@ output distribution of the layer.</p>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Parameter containing:
-tensor([[-0.5850, -1.1109,  0.2872],
-        [-0.0439, -0.9584, -0.0150],
-        [-0.6895, -1.2103, -0.7344],
-        [-0.4067,  0.4403,  0.7985],
-        [-0.1655,  0.7591,  0.4162]], requires_grad=True)
+tensor([[ 0.0863, -0.3567, -0.2809],
+        [-0.3383,  0.0487,  0.7611],
+        [-1.0739,  0.2060,  0.1004],
+        [-0.5582,  0.6467, -0.7933],
+        [ 0.6429, -0.4412, -0.4360]], requires_grad=True)
 Parameter containing:
-tensor([[-0.7671, -0.7900,  0.5897],
-        [ 0.3708,  0.2001, -1.6636],
-        [-0.9418, -0.1206, -0.0230],
-        [-0.6701, -0.7745, -0.6625],
-        [ 0.9398, -0.1775, -1.2006]], requires_grad=True)
+tensor([[-0.1721,  0.0233, -2.3663],
+        [ 0.0369, -0.3198,  0.3799],
+        [-0.2513, -0.2810,  0.6905],
+        [ 0.1659, -0.1796, -1.1889],
+        [-0.3353,  0.6029, -0.2412]], requires_grad=True)
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.251 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.270 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-exa-fclayers-adv-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/961ae1705dd7c5ae29a65398f5642b5c/exa_fclayers_adv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">exa_fclayers_adv.py</span></code></a></p>

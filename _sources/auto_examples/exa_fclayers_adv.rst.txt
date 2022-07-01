@@ -152,12 +152,14 @@ connection of whether or not it will be dropped (the default value for this is
 For example if we wanted to make an ``FCLayer`` which uses dropout and each
 connection has a 30% chance of being dropped this would be formulated like so
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-68
+.. GENERATED FROM PYTHON SOURCE LINES 63-70
 
 .. code-block:: default
 
 
-    fclayer = FCLayer(3, 5, normalisation="batch", initialisation=None, use_dropout=True, dropout_prob=0.3)
+    fclayer = FCLayer(
+        3, 5, normalisation="batch", initialisation=None, use_dropout=True, dropout_prob=0.3
+    )
 
     print(fclayer)
 
@@ -181,12 +183,12 @@ connection has a 30% chance of being dropped this would be formulated like so
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-71
+.. GENERATED FROM PYTHON SOURCE LINES 71-73
 
 The dropout operation can then be accessed via the ``.dropout`` attribute of
 the class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-74
+.. GENERATED FROM PYTHON SOURCE LINES 73-76
 
 .. code-block:: default
 
@@ -208,7 +210,7 @@ the class.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-98
+.. GENERATED FROM PYTHON SOURCE LINES 77-100
 
 Initialisation
 --------------
@@ -234,7 +236,7 @@ output distribution of the layer.
 
 Initialisation using both schemes is shown below
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-105
+.. GENERATED FROM PYTHON SOURCE LINES 100-108
 
 .. code-block:: default
 
@@ -249,6 +251,7 @@ Initialisation using both schemes is shown below
 
 
 
+
 .. rst-class:: sphx-glr-script-out
 
  Out:
@@ -256,17 +259,17 @@ Initialisation using both schemes is shown below
  .. code-block:: none
 
     Parameter containing:
-    tensor([[-0.5850, -1.1109,  0.2872],
-            [-0.0439, -0.9584, -0.0150],
-            [-0.6895, -1.2103, -0.7344],
-            [-0.4067,  0.4403,  0.7985],
-            [-0.1655,  0.7591,  0.4162]], requires_grad=True)
+    tensor([[ 0.0863, -0.3567, -0.2809],
+            [-0.3383,  0.0487,  0.7611],
+            [-1.0739,  0.2060,  0.1004],
+            [-0.5582,  0.6467, -0.7933],
+            [ 0.6429, -0.4412, -0.4360]], requires_grad=True)
     Parameter containing:
-    tensor([[-0.7671, -0.7900,  0.5897],
-            [ 0.3708,  0.2001, -1.6636],
-            [-0.9418, -0.1206, -0.0230],
-            [-0.6701, -0.7745, -0.6625],
-            [ 0.9398, -0.1775, -1.2006]], requires_grad=True)
+    tensor([[-0.1721,  0.0233, -2.3663],
+            [ 0.0369, -0.3198,  0.3799],
+            [-0.2513, -0.2810,  0.6905],
+            [ 0.1659, -0.1796, -1.1889],
+            [-0.3353,  0.6029, -0.2412]], requires_grad=True)
 
 
 
@@ -274,7 +277,7 @@ Initialisation using both schemes is shown below
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.251 seconds)
+   **Total running time of the script:** ( 0 minutes  1.270 seconds)
 
 
 .. _sphx_glr_download_auto_examples_exa_fclayers_adv.py:

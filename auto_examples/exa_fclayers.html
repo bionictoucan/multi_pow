@@ -95,6 +95,7 @@ to download the full example code</p>
 fully-connected layer for use in construction of bespoke neural networks. We
 will start by importing the object.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+
 <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">from</span> <span class="nn">neural_network_layers</span> <span class="kn">import</span> <span class="n">FCLayer</span>
@@ -125,7 +126,7 @@ the rectified linear unit non-linearity but other options of <code class="docuti
 <section id="setting-up-an-fclayer">
 <h2>Setting up an <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code><a class="headerlink" href="#setting-up-an-fclayer" title="Permalink to this heading"></a></h2>
 <p>To construct the layer we do the following:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fclayer</span> <span class="o">=</span> <span class="n">FCLayer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fclayer</span> <span class="o">=</span> <span class="n">FCLayer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">fclayer</span><span class="p">)</span>
 </pre></div>
@@ -140,10 +141,7 @@ the rectified linear unit non-linearity but other options of <code class="docuti
 <p>This create a fully-connected layer with input dimension 3, output dimension
 5, no bias and the ReLU non-linearity. This is equivalent to defining a
 <code class="docutils literal notranslate"><span class="pre">nn.Sequential</span></code> object as follows</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fcseq</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-    <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fcseq</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>The main idea is to have a nicer looking way of representing these layers
@@ -159,7 +157,9 @@ linear function and <code class="docutils literal notranslate"><span class="pre"
 </div>
 <p>A dummy input can be created to show that the objects <code class="docutils literal notranslate"><span class="pre">fclayer</span></code> and
 <code class="docutils literal notranslate"><span class="pre">fcseq</span></code> are equivalent.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="c1">#randomly sample 3 integers from the range [0,10)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
+    <span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>  <span class="c1"># randomly sample 3 integers from the range [0,10)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -248,7 +248,7 @@ function being addable is being considered (I only thought of it when
 writing this document).</p>
 </dd>
 </dl>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.023 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.022 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-exa-fclayers-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/8d0cd522ddae877424614b9e752df40c/exa_fclayers.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">exa_fclayers.py</span></code></a></p>

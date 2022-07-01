@@ -30,12 +30,13 @@ The following will demonstrate how to use the ``FCLayer`` object from the
 fully-connected layer for use in construction of bespoke neural networks. We
 will start by importing the object.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-19
+.. GENERATED FROM PYTHON SOURCE LINES 13-20
 
 .. code-block:: default
 
 
     import torch
+
     torch.manual_seed(12)
     import torch.nn as nn
     from neural_network_layers import FCLayer
@@ -47,7 +48,7 @@ will start by importing the object.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-49
+.. GENERATED FROM PYTHON SOURCE LINES 21-50
 
 An ``FCLayer`` object can take a variety of arguments during construction (for
 more detail see :ref:`layers`). Neural network layers in general are
@@ -79,12 +80,12 @@ Setting up an ``FCLayer``
 -------------------------
 To construct the layer we do the following:
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-54
+.. GENERATED FROM PYTHON SOURCE LINES 50-55
 
 .. code-block:: default
 
 
-    fclayer = FCLayer(3,5)
+    fclayer = FCLayer(3, 5)
 
     print(fclayer)
 
@@ -106,21 +107,18 @@ To construct the layer we do the following:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-58
+.. GENERATED FROM PYTHON SOURCE LINES 56-59
 
 This create a fully-connected layer with input dimension 3, output dimension
 5, no bias and the ReLU non-linearity. This is equivalent to defining a
 ``nn.Sequential`` object as follows
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-64
+.. GENERATED FROM PYTHON SOURCE LINES 59-62
 
 .. code-block:: default
 
 
-    fcseq = nn.Sequential(
-        nn.Linear(3, 5, bias=False),
-        nn.ReLU(inplace=True)
-    )
+    fcseq = nn.Sequential(nn.Linear(3, 5, bias=False), nn.ReLU(inplace=True))
 
 
 
@@ -129,14 +127,14 @@ This create a fully-connected layer with input dimension 3, output dimension
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-69
+.. GENERATED FROM PYTHON SOURCE LINES 63-67
 
 The main idea is to have a nicer looking way of representing these layers
 (especially when the networks get really deep). Each element of the
 ``FCLayer`` object can be accessed via class attributes ``.lin``` for the
 linear function and ``.act`` for the non-linearity e.g.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-72
+.. GENERATED FROM PYTHON SOURCE LINES 67-70
 
 .. code-block:: default
 
@@ -158,17 +156,19 @@ linear function and ``.act`` for the non-linearity e.g.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-75
+.. GENERATED FROM PYTHON SOURCE LINES 71-73
 
 A dummy input can be created to show that the objects ``fclayer`` and
 ``fcseq`` are equivalent.
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-78
+.. GENERATED FROM PYTHON SOURCE LINES 73-78
 
 .. code-block:: default
 
 
-    dummy_input = torch.randint(10, (3,)).float() #randomly sample 3 integers from the range [0,10)
+    dummy_input = torch.randint(
+        10, (3,)
+    ).float()  # randomly sample 3 integers from the range [0,10)
 
 
 
@@ -338,7 +338,7 @@ useful!
 For more advanced use of the ``FCLayer`` object, the interested reader is
 referred to :ref:`fclayer_adv_exa`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-167
+.. GENERATED FROM PYTHON SOURCE LINES 138-142
 
 .. [#f1] These are the most commonly-used non-linearities but implementations
          of other can be added when needed. Also, a custom non-linearity
@@ -348,7 +348,7 @@ referred to :ref:`fclayer_adv_exa`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.023 seconds)
+   **Total running time of the script:** ( 0 minutes  0.022 seconds)
 
 
 .. _sphx_glr_download_auto_examples_exa_fclayers.py:

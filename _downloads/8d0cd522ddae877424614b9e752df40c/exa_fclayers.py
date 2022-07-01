@@ -12,6 +12,7 @@ Using the Fully-connected Layer
 # will start by importing the object.
 
 import torch
+
 torch.manual_seed(12)
 import torch.nn as nn
 from neural_network_layers import FCLayer
@@ -47,7 +48,7 @@ from neural_network_layers import FCLayer
 # -------------------------
 # To construct the layer we do the following:
 
-fclayer = FCLayer(3,5)
+fclayer = FCLayer(3, 5)
 
 print(fclayer)
 
@@ -56,10 +57,7 @@ print(fclayer)
 # 5, no bias and the ReLU non-linearity. This is equivalent to defining a
 # ``nn.Sequential`` object as follows
 
-fcseq = nn.Sequential(
-    nn.Linear(3, 5, bias=False),
-    nn.ReLU(inplace=True)
-)
+fcseq = nn.Sequential(nn.Linear(3, 5, bias=False), nn.ReLU(inplace=True))
 
 # %%
 # The main idea is to have a nicer looking way of representing these layers
@@ -73,7 +71,9 @@ print(fclayer.lin, fclayer.act)
 # A dummy input can be created to show that the objects ``fclayer`` and
 # ``fcseq`` are equivalent.
 
-dummy_input = torch.randint(10, (3,)).float() #randomly sample 3 integers from the range [0,10)
+dummy_input = torch.randint(
+    10, (3,)
+).float()  # randomly sample 3 integers from the range [0,10)
 
 # %%
 # .. note::
@@ -132,32 +132,6 @@ print(fclayer.weight.grad, fcseq[0].weight.grad)
 #
 # For more advanced use of the ``FCLayer`` object, the interested reader is
 # referred to :ref:`fclayer_adv_exa`.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #%%
