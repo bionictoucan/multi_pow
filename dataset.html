@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Datasets &mdash; multi_pow  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dimensionality Reduction of Morphologi G3 Images" href="dim_red.html" />
+    <link rel="prev" title="Frameworks for Training Neural Networks" href="factory.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> multi_pow
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="download.html">How to Access and Use This Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="API.html">Code API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="layers.html">Customisable Neural Network layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factory.html">Frameworks for Training Neural Networks</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Custom Datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#powder-dataset">Powder Dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dim_red.html">Dimensionality Reduction of Morphologi G3 Images</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">multi_pow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="API.html">Code API</a> &raquo;</li>
+      <li>Custom Datasets</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/dataset.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="custom-datasets">
+<span id="dataset"></span><h1>Custom Datasets<a class="headerlink" href="#custom-datasets" title="Permalink to this heading"></a></h1>
+<section id="powder-dataset">
+<h2>Powder Dataset<a class="headerlink" href="#powder-dataset" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="dataset.PowderDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dataset.</span></span><span class="sig-name descname"><span class="pre">PowderDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Module</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequential</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Compose</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aug_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aug_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'single'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/dataset.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dataset.PowderDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
+<p>This is a custom torch.utils.data.Dataset for the powder images including
+how to handle any transformations wanted.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To provide deterministic augmentations please use Python’s internal <a class="reference external" href="https://docs.python.org/3/library/random.html#random.seed">random.seed()</a> to set the random seed.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Setting the random seed <em>may</em> affect random weight initialisation and dataset splitting (if other random seeds are not explicitly stated for these steps). This is something I need to check what happens if a random seed is set by the random library different from <code class="docutils literal notranslate"><span class="pre">numpy</span></code> and <code class="docutils literal notranslate"><span class="pre">PyTorch</span></code>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inp</strong> (<em>torch.Tensor</em>) – The input powder images to whatever network is to be trained.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – The output of the network, can be class labels or FFc values or the
+images themselves for the autoencoder. Can also be left empty when used
+for testing. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>transform</strong> (<em>torch.nn.Module</em><em>, </em><em>torch.nn.Sequential</em><em>, </em><em>torchvision.transforms.Compose</em><em>, </em><em>list</em><em>, </em><em>Optional</em>) – <p>Any data augmentations to be done to the input data. These
+transformations will be carried out as batches are called from the
+dataset. Transformations can take the form of <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> for
+single augmentations and <code class="docutils literal notranslate"><span class="pre">torch.nn.Sequential</span></code>,
+<code class="docutils literal notranslate"><span class="pre">torchvision.transforms.Compose</span></code> or <code class="docutils literal notranslate"><span class="pre">list</span></code> for multiple augmentations.</p>
+<p>When augmentations are defined a random number is drawn from the unit
+uniform distribution (using Python’s internal <a class="reference external" href="https://docs.python.org/3/library/random.html#random.random">random.random()</a> function). If this value is &lt;= <code class="docutils literal notranslate"><span class="pre">aug_prob</span></code>, then the data is
+augmented. Essentially there is a (<code class="docutils literal notranslate"><span class="pre">aug_prob</span></code> <a href="#id1"><span class="problematic" id="id2">*</span></a>100)% chance of data augmentation.</p>
+<p>When the augmentations are given as a <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code>,
+<code class="docutils literal notranslate"><span class="pre">torch.nn.Sequential</span></code> or <code class="docutils literal notranslate"><span class="pre">torchvision.transforms.Compose</span></code> then the
+augmentations are applied in their current form to the data. If the
+augmentations are given as a list, the <code class="docutils literal notranslate"><span class="pre">aug_type</span></code> kwarg defines the
+behaviour of the augmentations. For <code class="docutils literal notranslate"><span class="pre">aug_type</span> <span class="pre">=</span> <span class="pre">&quot;single&quot;</span></code>, one
+transformation is selected randomly from the list (by sampling the
+uniform distribution between <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">len(transform)]</span></code>) and applied to the
+data. For <code class="docutils literal notranslate"><span class="pre">aug_type</span> <span class="pre">=</span> <span class="pre">&quot;multi&quot;</span></code>, the list of augmentations is sampled a
+random number of times (by sampling the same uniform distribution as
+before), e.g. if the random number chosen is 3, then 3 augmentations
+would be chosen at random and applied to the data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method will NOT pick the same augmentation twice.</p>
+</div>
+</p></li>
+<li><p><strong>aug_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – The probability threshold set such that if a random number drawn from
+the uniform unit distribution is &lt;= <code class="docutils literal notranslate"><span class="pre">aug_prob</span></code> the augmentations will
+be applied to the data. Default is 0.5.</p></li>
+<li><p><strong>aug_type</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>The behaviour of the list of augmentations assuming that
+<code class="docutils literal notranslate"><span class="pre">isinstance(self.transform,</span> <span class="pre">list)</span> <span class="pre">==</span> <span class="pre">True</span></code>. The user can choose from
+the two options <code class="docutils literal notranslate"><span class="pre">[&quot;single&quot;,</span> <span class="pre">&quot;multi&quot;]</span></code>. For <code class="docutils literal notranslate"><span class="pre">&quot;single&quot;</span></code>, one
+augmentation is
+chosen at random (by sampling an integer from the unit distribution
+<code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">len(transform)]</span></code> using Python’s internal <a class="reference external" href="https://docs.python.org/3/library/random.html#random.randint">random.randint()</a>
+function).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This random integer is sampled <em>every time</em> the dataset is accessed meaning that each time a batch is created a different augmentation will be applied.</p>
+<p>In fact, this holds true for applying the augmentation in general.</p>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">&quot;multi&quot;</span></code>, the random integer is used to define the number of
+augmentations applied to the data. These augmentations will be chosen at
+random using Python’s internal <a class="reference external" href="https://docs.python.org/3/library/random.html#random.sample">random.sample()</a> function.</p>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="factory.html" class="btn btn-neutral float-left" title="Frameworks for Training Neural Networks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dim_red.html" class="btn btn-neutral float-right" title="Dimensionality Reduction of Morphologi G3 Images" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, John A. Armstrong.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

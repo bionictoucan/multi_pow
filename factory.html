@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frameworks for Training Neural Networks &mdash; multi_pow  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Custom Datasets" href="dataset.html" />
+    <link rel="prev" title="Customisable Neural Network layers" href="layers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> multi_pow
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="download.html">How to Access and Use This Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="API.html">Code API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="layers.html">Customisable Neural Network layers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Frameworks for Training Neural Networks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#base-trainer">Base Trainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trainer-for-classification">Trainer for Classification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trainer-for-regression">Trainer for Regression</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dataset.html">Custom Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dim_red.html">Dimensionality Reduction of Morphologi G3 Images</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">multi_pow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="API.html">Code API</a> &raquo;</li>
+      <li>Frameworks for Training Neural Networks</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/factory.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="frameworks-for-training-neural-networks">
+<span id="factory"></span><h1>Frameworks for Training Neural Networks<a class="headerlink" href="#frameworks-for-training-neural-networks" title="Permalink to this heading"></a></h1>
+<section id="base-trainer">
+<h2>Base Trainer<a class="headerlink" href="#base-trainer" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="battle_factory.Trainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">battle_factory.</span></span><span class="sig-name descname"><span class="pre">Trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimiser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_of_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheduler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">_LRScheduler</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_parallel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.Trainer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the default class for defining trainers to teach neural networks
+different tasks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – The neural network model to train.</p></li>
+<li><p><strong>optimiser</strong> (<em>torch.optim.Optimizer</em>) – The optimiser to use during training.</p></li>
+<li><p><strong>loss_fn</strong> (<em>Callable</em>) – The loss function to use during training.</p></li>
+<li><p><strong>no_of_epochs</strong> (<em>int</em>) – The number of epochs to train for.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – The batch size to use.</p></li>
+<li><p><strong>data_pth</strong> (<em>str</em>) – The path to the training/validation data.</p></li>
+<li><p><strong>save_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – The directory to save the trained models to. Default is <code class="docutils literal notranslate"><span class="pre">&quot;./&quot;</span></code> – the
+<abbr title="current working directory">CWD</abbr>.</p></li>
+<li><p><strong>scheduler</strong> (<em>torch.optim.lr_scheduler._LRScheduler</em><em>, </em><em>optional</em>) – The way to adaptively change the learning rate while training. Default
+is None. For examples on how to adaptively change the learning rate
+please see
+<a class="reference external" href="https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate">here</a>.</p></li>
+<li><p><strong>device_id</strong> (<em>int</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – Which device to perform training on. Providing an integer will point to
+the GPU with that specific ID whereas the string option can be used to
+also specify training on the CPU. When using <code class="docutils literal notranslate"><span class="pre">nn.DataParallel</span></code> for the
+model, setting <code class="docutils literal notranslate"><span class="pre">device_id</span> <span class="pre">=</span> <span class="pre">&quot;cuda&quot;</span></code> uses all GPUs. Default is 0 – use
+the GPU corresponding to ID <code class="docutils literal notranslate"><span class="pre">&quot;cuda:0&quot;</span></code>.</p></li>
+<li><p><strong>data_parallel</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to use multiple GPUs for training. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="battle_factory.Trainer.load_data">
+<span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.Trainer.load_data" title="Permalink to this definition"></a></dt>
+<dd><p>User-defined data loading instance method.
+This should populate self.train_in, self.train_out, self.val_in and self.val_out.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="battle_factory.Trainer.checkpoint">
+<span class="sig-name descname"><span class="pre">checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.Trainer.checkpoint" title="Permalink to this definition"></a></dt>
+<dd><p>This class method creates a checkpoint for the current epoch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>add_info</strong> (<em>dict</em><em>, </em><em>optional</em>) – An additional information to add to the checkpoint e.g. scheduler
+state dictionary. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="battle_factory.Trainer.save_checkpoint">
+<span class="sig-name descname"><span class="pre">save_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.Trainer.save_checkpoint" title="Permalink to this definition"></a></dt>
+<dd><p>This class method saves the current checkpoint to the save directory
+defined when instantiating the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>custom_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save the model to. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="battle_factory.Trainer.load_checkpoint">
+<span class="sig-name descname"><span class="pre">load_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.Trainer.load_checkpoint" title="Permalink to this definition"></a></dt>
+<dd><p>This class method loads a checkpoint for the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The path to the model to load.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="trainer-for-classification">
+<h2>Trainer for Classification<a class="headerlink" href="#trainer-for-classification" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="battle_factory.ClassifierTrainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">battle_factory.</span></span><span class="sig-name descname"><span class="pre">ClassifierTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimiser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_of_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheduler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">_LRScheduler</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_parallel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.ClassifierTrainer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#battle_factory.Trainer" title="battle_factory.Trainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trainer</span></code></a></p>
+<p>A trainer for training a neural network for classification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – The neural network model to train.</p></li>
+<li><p><strong>optimiser</strong> (<em>torch.optim.Optimizer</em>) – The optimiser to use during training.</p></li>
+<li><p><strong>loss_fn</strong> (<em>Callable</em>) – The loss function to use during training.</p></li>
+<li><p><strong>no_of_epochs</strong> (<em>int</em>) – The number of epochs to train for.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – The batch size to use.</p></li>
+<li><p><strong>data_pth</strong> (<em>str</em>) – The path to the training/validation data.</p></li>
+<li><p><strong>save_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – The directory to save the trained models to. Default is <code class="docutils literal notranslate"><span class="pre">&quot;./&quot;</span></code> – the
+<abbr title="current working directory">CWD</abbr>.</p></li>
+<li><p><strong>scheduler</strong> (<em>torch.optim.lr_scheduler._LRScheduler</em><em>, </em><em>optional</em>) – <p>The way to adaptively change the learning rate while training. Default
+is None. For examples on how to adaptively change the learning rate
+please see
+<a class="reference external" href="https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate">here</a>.</p>
+</p></li>
+<li><p><strong>device_id</strong> (<em>int</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – Which device to perform training on. Providing an integer will point to
+the GPU with that specific ID whereas the string option can be used to
+also specify training on the CPU. When using <code class="docutils literal notranslate"><span class="pre">nn.DataParallel</span></code> for the
+model, setting <code class="docutils literal notranslate"><span class="pre">device_id</span> <span class="pre">=</span> <span class="pre">&quot;cuda&quot;</span></code> uses all GPUs. Default is 0 – use
+the GPU corresponding to ID <code class="docutils literal notranslate"><span class="pre">&quot;cuda:0&quot;</span></code>.</p></li>
+<li><p><strong>data_parallel</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to use multiple GPUs for training. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="battle_factory.ClassifierTrainer.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.ClassifierTrainer.train" title="Permalink to this definition"></a></dt>
+<dd><p>The function used to train the classifier model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>train_loader</strong> (<em>torch.utils.data.DataLoader</em>) – The data to train the model on wrapped up in a <a class="reference external" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader">PyTorch DataLoader</a>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>float</em> – The average of the batch losses for one training epoch.</p></li>
+<li><p><em>float</em> – The percentage correct on the training data.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="battle_factory.ClassifierTrainer.validation">
+<span class="sig-name descname"><span class="pre">validation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.ClassifierTrainer.validation" title="Permalink to this definition"></a></dt>
+<dd><p>The function used to validate the classifier model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val_loader</strong> (<em>torch.utils.data.DataLoader</em>) – <p>The data to validate the model on wrapped up in a <a class="reference external" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader">PyTorch
+DataLoader</a>.</p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>float</em> – The average of the batch losses for one training epoch.</p></li>
+<li><p><em>float</em> – The percentage correct on the validation data.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="trainer-for-regression">
+<h2>Trainer for Regression<a class="headerlink" href="#trainer-for-regression" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="battle_factory.RegressorTrainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">battle_factory.</span></span><span class="sig-name descname"><span class="pre">RegressorTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimiser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_of_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheduler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">_LRScheduler</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_parallel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.RegressorTrainer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#battle_factory.Trainer" title="battle_factory.Trainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trainer</span></code></a></p>
+<p>A trainer for training a neural network for regression.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – The neural network model to train.</p></li>
+<li><p><strong>optimiser</strong> (<em>torch.optim.Optimizer</em>) – The optimiser to use during training.</p></li>
+<li><p><strong>loss_fn</strong> (<em>Callable</em>) – The loss function to use during training.</p></li>
+<li><p><strong>no_of_epochs</strong> (<em>int</em>) – The number of epochs to train for.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – The batch size to use.</p></li>
+<li><p><strong>data_pth</strong> (<em>str</em>) – The path to the training/validation data.</p></li>
+<li><p><strong>save_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – The directory to save the trained models to. Default is <code class="docutils literal notranslate"><span class="pre">&quot;./&quot;</span></code> – the
+<abbr title="current working directory">CWD</abbr>.</p></li>
+<li><p><strong>scheduler</strong> (<em>torch.optim.lr_scheduler._LRScheduler</em><em>, </em><em>optional</em>) – <p>The way to adaptively change the learning rate while training. Default
+is None. For examples on how to adaptively change the learning rate
+please see
+<a class="reference external" href="https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate">here</a>.</p>
+</p></li>
+<li><p><strong>device_id</strong> (<em>int</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – Which device to perform training on. Providing an integer will point to
+the GPU with that specific ID whereas the string option can be used to
+also specify training on the CPU. When using <code class="docutils literal notranslate"><span class="pre">nn.DataParallel</span></code> for the
+model, setting <code class="docutils literal notranslate"><span class="pre">device_id</span> <span class="pre">=</span> <span class="pre">&quot;cuda&quot;</span></code> uses all GPUs. Default is 0 – use
+the GPU corresponding to ID <code class="docutils literal notranslate"><span class="pre">&quot;cuda:0&quot;</span></code>.</p></li>
+<li><p><strong>data_parallel</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to use multiple GPUs for training. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="battle_factory.RegressorTrainer.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.RegressorTrainer.train" title="Permalink to this definition"></a></dt>
+<dd><p>The function used to train the regression model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>train_loader</strong> (<em>torch.utils.data.DataLoader</em>) – <p>The data to train the model on wrapped up in a <a class="reference external" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader">PyTorch DataLoader</a>.</p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The average of the batch losses for one training epoch.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="battle_factory.RegressorTrainer.validation">
+<span class="sig-name descname"><span class="pre">validation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/battle_factory.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battle_factory.RegressorTrainer.validation" title="Permalink to this definition"></a></dt>
+<dd><p>The function used to validate the regression model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val_loader</strong> (<em>torch.utils.data.DataLoader</em>) – <p>The data to validate the model on wrapped up in a <a class="reference external" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader">PyTorch
+DataLoader</a>.</p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The average of the batch losses for one training epoch.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="layers.html" class="btn btn-neutral float-left" title="Customisable Neural Network layers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dataset.html" class="btn btn-neutral float-right" title="Custom Datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, John A. Armstrong.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

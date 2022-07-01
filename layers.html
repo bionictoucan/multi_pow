@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customisable Neural Network layers &mdash; multi_pow  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Frameworks for Training Neural Networks" href="factory.html" />
+    <link rel="prev" title="Code API" href="API.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> multi_pow
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="download.html">How to Access and Use This Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="API.html">Code API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Customisable Neural Network layers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fully-connected-layer">Fully-connected Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convolutional-layer">Convolutional Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transpose-convolutional-layer">Transpose Convolutional Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#residual-layer">Residual Layer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="factory.html">Frameworks for Training Neural Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataset.html">Custom Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dim_red.html">Dimensionality Reduction of Morphologi G3 Images</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">multi_pow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="API.html">Code API</a> &raquo;</li>
+      <li>Customisable Neural Network layers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/layers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="customisable-neural-network-layers">
+<span id="layers"></span><h1>Customisable Neural Network layers<a class="headerlink" href="#customisable-neural-network-layers" title="Permalink to this heading"></a></h1>
+<section id="fully-connected-layer">
+<h2>Fully-connected Layer<a class="headerlink" href="#fully-connected-layer" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_network_layers.FCLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neural_network_layers.</span></span><span class="sig-name descname"><span class="pre">FCLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalisation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'relu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialisation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'kaiming'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lin_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">act_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/neural_network_layers.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neural_network_layers.FCLayer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>A modifiable fully-connected layer for deep networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_nodes</strong> (<em>int</em>) – The number of input nodes to the fully-connected layer.</p></li>
+<li><p><strong>out_nodes</strong> (<em>int</em>) – The number of output nodes of the fully-connected layer.</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to use a bias node in the fully-connected layer. Default
+is False. i.e. whether to have the fully-connected layer perform the
+transformation as <span class="math notranslate nohighlight">\(y = \Theta x\)</span> without bias or <span class="math notranslate nohighlight">\(y = \Theta
+x + b\)</span> where <span class="math notranslate nohighlight">\(b\)</span> is the bias of the node.</p></li>
+<li><p><strong>normalisation</strong> (<em>str</em><em>, </em><em>optional</em>) – The normalisation to use in the layer. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> – no
+normalisation used. Options <code class="docutils literal notranslate"><span class="pre">&quot;batch&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;instance&quot;</span></code> are supported
+to perform batch or instance normalisation on the data.</p></li>
+<li><p><strong>activation</strong> (<em>str</em><em>, </em><em>optional</em>) – The nonlinearity to use for the layer. Default is <code class="docutils literal notranslate"><span class="pre">&quot;relu&quot;</span></code> – uses the
+<abbr title="rectified linear unit">ReLU</abbr> nonlinearity. Other options
+supported are <code class="docutils literal notranslate"><span class="pre">&quot;leaky_relu&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sigmoid&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;tanh&quot;</span></code>.</p></li>
+<li><p><strong>initialisation</strong> (<em>str</em><em>, </em><em>optional</em>) – How to initialise the learnable parameters in a layer. Default is
+<code class="docutils literal notranslate"><span class="pre">&quot;kaiming&quot;</span></code> – learnable parameters are initialised using Kaiming
+initialisation. Other options supported are <code class="docutils literal notranslate"><span class="pre">&quot;He&quot;</span></code> (which is
+equivalent to Kaiming initialisation but is sometime what it’s called),
+<code class="docutils literal notranslate"><span class="pre">&quot;Xavier&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>use_dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to apply dropout after the activation. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of a node dropping out of the network. Default is 0.5.</p></li>
+<li><p><strong>lin_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to the <code class="docutils literal notranslate"><span class="pre">torch.nn.Linear</span></code>
+module. Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code> – an empty dictionary.</p></li>
+<li><p><strong>norm_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to the normalisation being
+used. Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p></li>
+<li><p><strong>act_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to the activation being used.
+Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_network_layers.FCLayer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/neural_network_layers.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neural_network_layers.FCLayer.forward" title="Permalink to this definition"></a></dt>
+<dd><p>The class method defining the behaviour of the constructed layer.
+Transformations are applied to the data in the order of linear,
+normalisation, activation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inp</strong> (<em>torch.Tensor</em>) – The input data to be transformed by the layer.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transformed data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="convolutional-layer">
+<h2>Convolutional Layer<a class="headerlink" href="#convolutional-layer" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_network_layers.ConvLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neural_network_layers.</span></span><span class="sig-name descname"><span class="pre">ConvLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'reflect'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalisation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'relu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialisation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'kaiming'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upsample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upsample_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">act_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/neural_network_layers.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neural_network_layers.ConvLayer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>A modifiable convolutional layer for deep networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<em>int</em>) – The number of input channels to the convolutional layer.</p></li>
+<li><p><strong>out_channels</strong> (<em>int</em>) – The number of output channels of the convolutional layer.</p></li>
+<li><p><strong>kernel</strong> (<em>int</em><em> or </em><em>Sequence</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – The size of the convolutional kernel to use in the <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>
+linear transformation. Default is 3.</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em> or </em><em>Sequence</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – The stride of the convolutional kernel. Default is 1.</p></li>
+<li><p><strong>pad</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of padding to use during the convolutional layer. Default is
+<code class="docutils literal notranslate"><span class="pre">&quot;reflect&quot;</span></code>. Other options available
+<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d">here</a>.</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to use a bias node in the fully-connected layer. Default
+is False. i.e. whether to have the fully-connected layer perform the
+transformation as <span class="math notranslate nohighlight">\(y = \Theta x\)</span> without bias or <span class="math notranslate nohighlight">\(y = \Theta
+x + b\)</span> where <span class="math notranslate nohighlight">\(b\)</span> is the bias of the node.</p></li>
+<li><p><strong>normalisation</strong> (<em>str</em><em>, </em><em>optional</em>) – The normalisation to use in the layer. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> – no
+normalisation used. Options <code class="docutils literal notranslate"><span class="pre">&quot;batch&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;instance&quot;</span></code> are supported
+to perform batch or instance normalisation on the data.</p></li>
+<li><p><strong>activation</strong> (<em>str</em><em>, </em><em>optional</em>) – The nonlinearity to use for the layer. Default is <code class="docutils literal notranslate"><span class="pre">&quot;relu&quot;</span></code> – uses the
+<abbr title="rectified linear unit">ReLU</abbr> nonlinearity. Other options
+supported are <code class="docutils literal notranslate"><span class="pre">&quot;leaky_relu&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sigmoid&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;tanh&quot;</span></code>.</p></li>
+<li><p><strong>initialisation</strong> (<em>str</em><em>, </em><em>optional</em>) – How to initialise the learnable parameters in a layer. Default is
+<code class="docutils literal notranslate"><span class="pre">&quot;kaiming&quot;</span></code> – learnable parameters are initialised using Kaiming
+initialisation. Other options supported are <code class="docutils literal notranslate"><span class="pre">&quot;He&quot;</span></code> (which is
+equivalent to Kaiming initialisation but is sometime what it’s called),
+<code class="docutils literal notranslate"><span class="pre">&quot;Xavier&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>upsample</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not the convolutional layer will be used to spatially
+upsample the data using a linear interpolation. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>upsample_factor</strong> (<em>int</em><em>, </em><em>optional</em>) – The factor that the spatial dimensions is upsampled. Default is 2.</p></li>
+<li><p><strong>use_dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to apply dropout after the activation. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of a node dropping out of the network. Default is 0.5.</p></li>
+<li><p><strong>conv_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – The additional keyword arguments to be passed to the <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>
+module. Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code> – an empty dictionary.</p></li>
+<li><p><strong>norm_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to the normalisation being
+used. Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p></li>
+<li><p><strong>act_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to the activation being used.
+Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_network_layers.ConvLayer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/neural_network_layers.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neural_network_layers.ConvLayer.forward" title="Permalink to this definition"></a></dt>
+<dd><p>The class method defining the behaviour of the constructed layer.
+Transformations are applied to the data in the order of upsample,
+linear, normalisation, activation, dropout if selected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inp</strong> (<em>torch.Tensor</em>) – The input data to be transformed by the layer.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transformed data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="transpose-convolutional-layer">
+<h2>Transpose Convolutional Layer<a class="headerlink" href="#transpose-convolutional-layer" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_network_layers.ConvTranspLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neural_network_layers.</span></span><span class="sig-name descname"><span class="pre">ConvTranspLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'reflect'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalisation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'relu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialisation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'kaiming'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">act_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/neural_network_layers.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neural_network_layers.ConvTranspLayer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>A modifiable transpose convolutional layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<em>int</em>) – The number of input channels to the transpose convolutional layer.</p></li>
+<li><p><strong>out_channels</strong> (<em>int</em>) – The number of output channels of the transpose convolutional layer.</p></li>
+<li><p><strong>kernel</strong> (<em>int</em><em> or </em><em>Sequence</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – The size of the convolutional kernel to use in the
+<code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2dTranspose</span></code> linear transformation. Default is 3.</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em> or </em><em>Sequence</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – <p>The stride of the convolutional kernel. Default is 1. This is also used
+to define the <code class="docutils literal notranslate"><span class="pre">output_padding</span></code> kwarg for the
+<code class="docutils literal notranslate"><span class="pre">torch.nn.ConvTranspose2d</span></code> module. <code class="docutils literal notranslate"><span class="pre">output_padding</span></code> provides
+implicit padding on the output of the transpose convolution when
+<code class="docutils literal notranslate"><span class="pre">stride</span> <span class="pre">&gt;</span> <span class="pre">1</span></code> to deterministically find the correct output shape. For
+more information, please see <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d">here</a>.</p>
+</p></li>
+<li><p><strong>pad</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>The type of padding to use during the convolutional layer. Default is
+<code class="docutils literal notranslate"><span class="pre">&quot;reflect&quot;</span></code>. Other options available
+<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2dTranspose">here</a>.</p>
+</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to use a bias node in the fully-connected layer. Default
+is False. i.e. whether to have the fully-connected layer perform the
+transformation as <span class="math notranslate nohighlight">\(y = \Theta x\)</span> without bias or <span class="math notranslate nohighlight">\(y = \Theta
+x + b\)</span> where <span class="math notranslate nohighlight">\(b\)</span> is the bias of the node.</p></li>
+<li><p><strong>normalisation</strong> (<em>str</em><em>, </em><em>optional</em>) – The normalisation to use in the layer. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> – no
+normalisation used. Options <code class="docutils literal notranslate"><span class="pre">&quot;batch&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;instance&quot;</span></code> are supported
+to perform batch or instance normalisation on the data.</p></li>
+<li><p><strong>activation</strong> (<em>str</em><em>, </em><em>optional</em>) – The nonlinearity to use for the layer. Default is <code class="docutils literal notranslate"><span class="pre">&quot;relu&quot;</span></code> – uses the
+<abbr title="rectified linear unit">ReLU</abbr> nonlinearity. Other options
+supported are <code class="docutils literal notranslate"><span class="pre">&quot;leaky_relu&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sigmoid&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;tanh&quot;</span></code>.</p></li>
+<li><p><strong>initialisation</strong> (<em>str</em><em>, </em><em>optional</em>) – How to initialise the learnable parameters in a layer. Default is
+<code class="docutils literal notranslate"><span class="pre">&quot;kaiming&quot;</span></code> – learnable parameters are initialised using Kaiming
+initialisation. Other options supported are <code class="docutils literal notranslate"><span class="pre">&quot;He&quot;</span></code> (which is
+equivalent to Kaiming initialisation but is sometime what it’s called),
+<code class="docutils literal notranslate"><span class="pre">&quot;Xavier&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>use_dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to apply dropout after the activation. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of a node dropping out of the network. Default is 0.5.</p></li>
+<li><p><strong>conv_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – The additional keyword arguments to be passed to the <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>
+module. Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code> – an empty dictionary.</p></li>
+<li><p><strong>norm_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to the normalisation being
+used. Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p></li>
+<li><p><strong>act_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to the activation being used.
+Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_network_layers.ConvTranspLayer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/neural_network_layers.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neural_network_layers.ConvTranspLayer.forward" title="Permalink to this definition"></a></dt>
+<dd><p>The class method defining the behaviour of the constructed layer.
+Transformations are applied to the data in the order of
+linear, normalisation, activation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inp</strong> (<em>torch.Tensor</em>) – The input data to be transformed by the layer.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transformed data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="residual-layer">
+<h2>Residual Layer<a class="headerlink" href="#residual-layer" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_network_layers.ResLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neural_network_layers.</span></span><span class="sig-name descname"><span class="pre">ResLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'reflect'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalisation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'relu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialisation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'kaiming'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upsample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upsample_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">act_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/neural_network_layers.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neural_network_layers.ResLayer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>A modifiable residual layer for deep neural networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<em>int</em>) – The number of input channels to the convolutional layer.</p></li>
+<li><p><strong>out_channels</strong> (<em>int</em>) – The number of output channels of the convolutional layer.</p></li>
+<li><p><strong>kernel</strong> (<em>int</em><em> or </em><em>Sequence</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – The size of the convolutional kernel to use in the <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>
+linear transformation. Default is 3.</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em> or </em><em>Sequence</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – The stride of the convolutional kernel. Default is 1.</p></li>
+<li><p><strong>pad</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>The type of padding to use during the convolutional layer. Default is
+<code class="docutils literal notranslate"><span class="pre">&quot;reflect&quot;</span></code>. Other options available
+<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d">here</a>.</p>
+</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to use a bias node in the fully-connected layer. Default
+is False. i.e. whether to have the fully-connected layer perform the
+transformation as <span class="math notranslate nohighlight">\(y = \Theta x\)</span> without bias or <span class="math notranslate nohighlight">\(y = \Theta
+x + b\)</span> where <span class="math notranslate nohighlight">\(b\)</span> is the bias of the node.</p></li>
+<li><p><strong>normalisation</strong> (<em>str</em><em>, </em><em>optional</em>) – The normalisation to use in the layer. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> – no
+normalisation used. Options <code class="docutils literal notranslate"><span class="pre">&quot;batch&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;instance&quot;</span></code> are supported
+to perform batch or instance normalisation on the data.</p></li>
+<li><p><strong>activation</strong> (<em>str</em><em>, </em><em>optional</em>) – The nonlinearity to use for the layer. Default is <code class="docutils literal notranslate"><span class="pre">&quot;relu&quot;</span></code> – uses the
+<abbr title="rectified linear unit">ReLU</abbr> nonlinearity. Other options
+supported are <code class="docutils literal notranslate"><span class="pre">&quot;leaky_relu&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sigmoid&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;tanh&quot;</span></code>.</p></li>
+<li><p><strong>initialisation</strong> (<em>str</em><em>, </em><em>optional</em>) – How to initialise the learnable parameters in a layer. Default is
+<code class="docutils literal notranslate"><span class="pre">&quot;kaiming&quot;</span></code> – learnable parameters are initialised using Kaiming
+initialisation. Other options supported are <code class="docutils literal notranslate"><span class="pre">&quot;He&quot;</span></code> (which is
+equivalent to Kaiming initialisation but is sometime what it’s called),
+<code class="docutils literal notranslate"><span class="pre">&quot;Xavier&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>upsample</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not the convolutional layer will be used to spatially
+upsample the data using a linear interpolation. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>upsample_factor</strong> (<em>int</em><em>, </em><em>optional</em>) – The factor that the spatial dimensions is upsampled. Default is 2.</p></li>
+<li><p><strong>use_dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to apply dropout after the first activation. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of a node dropping out of the network. Default is 0.5.</p></li>
+<li><p><strong>conv_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – The additional keyword arguments to be passed to the <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>
+module. Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code> – an empty dictionary.</p></li>
+<li><p><strong>norm_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to the normalisation being
+used. Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p></li>
+<li><p><strong>act_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to the activation being used.
+Default is <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_network_layers.ResLayer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference external" href="https://github.com/bionictoucan/multi_pow/blob/main/neural_network_layers.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neural_network_layers.ResLayer.forward" title="Permalink to this definition"></a></dt>
+<dd><p>The class method defining the behaviour of the constructed layer.
+Transformations are applied to the data in the order of
+linear, normalisation, activation, dropout (if selected), linear
+normalisation, adding the input, activation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inp</strong> (<em>torch.Tensor</em>) – The input data to be transformed by the layer.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transformed data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="API.html" class="btn btn-neutral float-left" title="Code API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="factory.html" class="btn btn-neutral float-right" title="Frameworks for Training Neural Networks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, John A. Armstrong.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
