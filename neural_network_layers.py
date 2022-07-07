@@ -46,6 +46,9 @@ class FCLayer(nn.Module):
     act_kwargs : dict, optional
         Additional keyword arguments to be passed to the activation being used.
         Default is ``{}``.
+    init_kwargs : dict, optional
+        Additional keyword arguments to be passed to the initialisation being
+        used. Default is ``{}``.
     """
 
     def __init__(
@@ -61,42 +64,17 @@ class FCLayer(nn.Module):
         lin_kwargs: Dict = {},
         norm_kwargs: Dict = {},
         act_kwargs: Dict = {},
+        init_kwargs: Dict = {}
     ) -> None:
         super().__init__()
 
         self.lin = nn.Linear(in_nodes, out_nodes, bias=bias, **lin_kwargs)
 
-        if (isinstance(normalisation, str)) and (normalisation.lower() == "batch"):
-            self.norm = nn.BatchNorm1d(out_nodes, **norm_kwargs)
-        elif (isinstance(normalisation, str)) and (normalisation.lower() == "instance"):
-            self.norm = nn.InstanceNorm1d(out_nodes, **norm_kwargs)
-        else:
-            self.norm = None
+        self.norm = self._assign_normalisation(out_nodes, normalisation=normalisation, norm_kwargs=norm_kwargs)
 
-        if activation.lower() == "relu":
-            self.act = nn.ReLU(inplace=True)
-        elif activation.lower() == "leaky_relu":
-            self.act = nn.LeakyReLU(inplace=True, **act_kwargs)
-        elif activation.lower() == "sigmoid":
-            self.act = nn.Sigmoid()
-        elif activation.lower() == "tanh":
-            self.act = nn.Tanh()
-        else:
-            raise NotImplementedError("Pester John to add this.")
+        self.act = self._assign_activation(activation=activation, act_kwargs=act_kwargs)
 
-        if initialisation:
-            if initialisation.lower() == "kaiming" or "he":
-                nn.init.kaiming_normal_(self.lin.weight, nonlinearity=activation)
-                if bias:
-                    nn.init.kaiming_uniform_(self.lin.bias, nonlinearity=activation)
-            elif initialisation.lower() == "xavier":
-                nn.init.xavier_normal_(
-                    self.lin.weight, gain=nn.init.calculate_gain(activation)
-                )
-                if bias:
-                    nn.init.xavier_uniform_(
-                        self.lin.bias, gain=nn.init.calculate_gain(activation)
-                    )
+        self._init_weights(initialisation, bias, activation, init_kwargs)
 
         if use_dropout:
             self.dropout = nn.Dropout(dropout_prob)
@@ -110,6 +88,96 @@ class FCLayer(nn.Module):
     @property
     def bias(self):
         return self.lin.bias
+
+    def _assign_normalisation(self, out_nodes: int, normalisation: Optional[str], norm_kwargs: Dict) -> Optional[nn.Module]:
+        if (isinstance(normalisation, str)):
+            if normalisation.lower() == "batch":
+                return nn.BatchNorm1d(out_nodes, **norm_kwargs)
+            elif normalisation.lower() == "instance":
+                return nn.InstanceNorm1d(out_nodes, **norm_kwargs)
+            elif normalisation.lower() == "group":
+                return nn.GroupNorm(out_nodes, **norm_kwargs)
+            elif normalisation.lower() == "layer":
+                return nn.LayerNorm(out_nodes, **norm_kwargs)
+        else:
+            return None
+    
+    def _assign_activation(self, activation: str, act_kwargs: Dict) -> nn.Module:
+        if activation.lower() == "relu":
+            return nn.ReLU(inplace=True)
+        elif activation.lower() == "leaky_relu":
+            return nn.LeakyReLU(inplace=True, **act_kwargs)
+        elif activation.lower() == "sigmoid":
+            return nn.Sigmoid()
+        elif activation.lower() == "tanh":
+            return nn.Tanh()
+        elif activation.lower() == "elu":
+            return nn.ELU(inplace=True, **act_kwargs)
+        elif activation.lower() == "prelu":
+            return nn.PReLU(**act_kwargs)
+        elif activation.lower() == "rrelu":
+            return nn.RReLU(inplace=True, **act_kwargs)
+        elif activation.lower() == "selu":
+            return nn.SELU(inplace=True)
+        elif activation.lower() == "celu":
+            return nn.CELU(inplace=True, **act_kwargs)
+        elif activation.lower() == "gelu":
+            return nn.GELU()
+        elif activation.lower() == "silu":
+            return nn.SiLU(inplace=True)
+        elif activation.lower() == "relu6":
+            return nn.ReLU6(inplace=True)
+        elif activation.lower() == "softmax":
+            return nn.Softmax(**act_kwargs)
+        else:
+            raise NotImplementedError("Pester John to add this.")
+
+    def _init_weights(self, initialisation: Optional[str], bias: bool, activation: str, init_kwargs: Dict) -> None:
+        if initialisation:
+            if initialisation.lower() == "kaiming" or "he":
+                nn.init.kaiming_normal_(self.lin.weight, nonlinearity=activation, **init_kwargs)
+                if bias:
+                    nn.init.kaiming_normal_(self.lin.bias, nonlinearity=activation, **init_kwargs)
+            elif initialisation.lower() == "xavier":
+                nn.init.xavier_normal_(
+                    self.lin.weight, gain=nn.init.calculate_gain(activation)
+                )
+                if bias:
+                    nn.init.xavier_normal_(
+                        self.lin.bias, gain=nn.init.calculate_gain(activation)
+                    )
+            elif initialisation.lower() == "uniform":
+                nn.init.uniform_(self.lin.weight, **init_kwargs)
+                if bias:
+                    nn.init.uniform_(self.lin.bias, **init_kwargs)
+            elif initialisation.lower() == "normal":
+                nn.init.normal_(self.lin.weight, **init_kwargs)
+                if bias:
+                    nn.init.normal_(self.lin.bias, **init_kwargs)
+            elif initialisation.lower() == "constant":
+                nn.init.constant_(self.lin.weight, **init_kwargs)
+                if bias:
+                    nn.init.constant_(self.lin.bias, **init_kwargs)
+            elif initialisation.lower() == "eye":
+                nn.init.eye_(self.lin.weight)
+                if bias:
+                    nn.init.ones_(self.lin.bias)
+            elif initialisation.lower() == "kaiming uniform" or "he uniform":
+                nn.init.kaiming_uniform_(self.lin.weight, nonlinearity=activation, **init_kwargs)
+                if bias:
+                    nn.init.kaiming_uniform_(self.lin.bias, nonlinearity=activation, **init_kwargs)
+            elif initialisation.lower() == "xavier uniform":
+                nn.init.xavier_uniform_(self.lin.weight, gain=nn.init.calculate_gain(activation))
+                if bias:
+                    nn.init.xavier_uniform_(self.lin.bias, gain=nn.init.calculate_gain(activation))
+            elif initialisation.lower() == "orthogonal":
+                nn.init.orthogonal_(self.lin.weight, gain=nn.init.calculate_gain(activation))
+                if bias:
+                    nn.init.orthogonal_(self.lin.bias, gain=nn.init.calculate_gain(activation))
+            elif initialisation.lower() == "sparse":
+                nn.init.sparse_(self.lin.weight, **init_kwargs)
+                if bias:
+                    nn.init.sparse_(self.lin.bias, **init_kwargs)
 
     def forward(self, inp: torch.Tensor) -> torch.Tensor:
         """

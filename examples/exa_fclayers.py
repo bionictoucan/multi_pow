@@ -5,7 +5,7 @@ Using the Fully-connected Layer
 ===============================
 """
 
-#%%
+# %%
 # The following will demonstrate how to use the ``FCLayer`` object from the
 # ``neural_network_layers`` script. This is a highly customisable
 # fully-connected layer for use in construction of bespoke neural networks. We
@@ -39,10 +39,10 @@ from neural_network_layers import FCLayer
 # output :math:`y`. This is used to construct the learnable parameters
 # :math:`\Theta`. ``in_nodes`` and ``out_nodes`` are integers.
 #
-# The non-linear function that is part of a neural network layer can be set
-# through the ``activation`` keyword argument. Its default value ``"relu"`` uses
-# the rectified linear unit non-linearity but other options of ``"leaky_relu"``,
-# ``"sigmoid"`` and ``"tanh"`` exist [#f1]_.
+# The non-linear function (often referred to as the activation) that is part of
+# a neural network layer can be set through the ``activation`` keyword argument.
+# Its default value ``"relu"`` uses the rectified linear unit non-linearity but
+# other options of ``"leaky_relu"``, ``"sigmoid"`` and ``"tanh"`` exist [#f1]_.
 #
 # Setting up an ``FCLayer``
 # -------------------------
@@ -54,8 +54,45 @@ print(fclayer)
 
 # %%
 # This create a fully-connected layer with input dimension 3, output dimension
-# 5, no bias and the ReLU non-linearity. This is equivalent to defining a
-# ``nn.Sequential`` object as follows
+# 5, no bias and the ReLU non-linearity. This is shown in the figure below.
+#
+# .. image:: ../images/fclayer.png
+#     :width: 400
+#     :align: center
+#
+# The input :math:`x` consists of three numbers: :math:`x_{1}, x_{2}, x_{3}`.
+# The output :math:`y` consists of five numbers: :math:`y_{1}, y_{2}, y_{3},
+# y_{4}, y_{5}`. The arrows indicate that each of the three inputs has a part to
+# play in forming each of the five outputs &mdash; this is where the name
+# "fully-connected" comes from, every input is connected to every output. Each
+# of these arrows also represent an element of the learnable parameters
+# :math:`\Theta` e.g. the value of :math:`y_{1}` is obtained via a linear
+# combination of the input values multiplied by the associated weight for that
+# connection. In more mathematical terms, :math:`\Theta` is a matrix consisting
+# of each weight ordered by the connections between the inputs and outputs.
+# Following our example, if we label the weight from :math:`x_{1}` to
+# :math:`y_{1}` as :math:`\theta_{11}`, the weight from :math:`x_{2}` to
+# :math:`y_{1}` as :math:`\theta_{12}` and so on and so forth then the matrix of
+# weights can be written as
+#
+# .. math::
+#     \Theta = \begin{bmatrix}
+#                      \theta_{11} & \theta_{12} & \theta_{13} \\
+#                      \theta_{21} & \theta_{22} & \theta_{23} \\
+#                      \theta_{31} & \theta_{32} & \theta_{33} \\
+#                      \theta_{41} & \theta_{42} & \theta_{43} \\
+#                      \theta_{51} & \theta_{52} & \theta_{53}
+#               \end{bmatrix}
+#
+# The output :math:`y` can then be calculated via matrix multiplication of
+# :math:`\Theta` and :math:`x` (plus the potential addition of the bias).
+#
+# The outputs are then operated on by the activation to produce the final output
+# of the ``FCLayer``. In this example we use the ReLU activation which will
+# return the value passed to the function if the value is positive and will
+# return zero otherwise.
+#
+# This is equivalent to defining a ``nn.Sequential`` object as follows
 
 fcseq = nn.Sequential(nn.Linear(3, 5, bias=False), nn.ReLU(inplace=True))
 

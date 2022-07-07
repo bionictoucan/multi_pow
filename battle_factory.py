@@ -261,9 +261,6 @@ class ClassifierTrainer(Trainer):
                 predicted == labels
             ).sum()  # produces a boolean tensor which when summed evaluates True to 1 and False to 0.
 
-        if self.scheduler:
-            self.scheduler.step()
-
         return torch.mean(torch.tensor(batch_losses)), float((correct / total) * 100)
 
     def validation(
@@ -373,9 +370,6 @@ class RegressorTrainer(Trainer):
             self.optimiser.step()
 
             batch_losses.append(loss.item())
-
-        if self.scheduler:
-            self.scheduler.step()
 
         return torch.mean(torch.tensor(batch_losses))
 
