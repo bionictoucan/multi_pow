@@ -48,6 +48,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../download.html">How to Access and Use This Code</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="exa_convlayer.html">Using the Convolutional Layer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exa_fclayers_adv.html">Advanced Usage of the Fully-connected Layer</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Using the Fully-connected Layer</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#setting-up-an-fclayer">Setting up an <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code></a></li>
@@ -119,10 +120,10 @@ linear transformation. The two main arguments for the linear transformation
 is the dimensionality of the input <span class="math notranslate nohighlight">\(x\)</span> and the dimensionality of the
 output <span class="math notranslate nohighlight">\(y\)</span>. This is used to construct the learnable parameters
 <span class="math notranslate nohighlight">\(\Theta\)</span>. <code class="docutils literal notranslate"><span class="pre">in_nodes</span></code> and <code class="docutils literal notranslate"><span class="pre">out_nodes</span></code> are integers.</p>
-<p>The non-linear function that is part of a neural network layer can be set
-through the <code class="docutils literal notranslate"><span class="pre">activation</span></code> keyword argument. Its default value <code class="docutils literal notranslate"><span class="pre">&quot;relu&quot;</span></code> uses
-the rectified linear unit non-linearity but other options of <code class="docutils literal notranslate"><span class="pre">&quot;leaky_relu&quot;</span></code>,
-<code class="docutils literal notranslate"><span class="pre">&quot;sigmoid&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;tanh&quot;</span></code> exist <a class="footnote-reference brackets" href="#f1" id="id1">1</a>.</p>
+<p>The non-linear function (often referred to as the activation) that is part of
+a neural network layer can be set through the <code class="docutils literal notranslate"><span class="pre">activation</span></code> keyword argument.
+Its default value <code class="docutils literal notranslate"><span class="pre">&quot;relu&quot;</span></code> uses the rectified linear unit non-linearity but
+other options of <code class="docutils literal notranslate"><span class="pre">&quot;leaky_relu&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sigmoid&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;tanh&quot;</span></code> exist <a class="footnote-reference brackets" href="#f1" id="id1">1</a>.</p>
 <section id="setting-up-an-fclayer">
 <h2>Setting up an <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code><a class="headerlink" href="#setting-up-an-fclayer" title="Permalink to this heading"></a></h2>
 <p>To construct the layer we do the following:</p>
@@ -139,8 +140,37 @@ the rectified linear unit non-linearity but other options of <code class="docuti
 </pre></div>
 </div>
 <p>This create a fully-connected layer with input dimension 3, output dimension
-5, no bias and the ReLU non-linearity. This is equivalent to defining a
-<code class="docutils literal notranslate"><span class="pre">nn.Sequential</span></code> object as follows</p>
+5, no bias and the ReLU non-linearity. This is shown in the figure below.</p>
+<a class="reference internal image-reference" href="../_images/fclayer.png"><img alt="../_images/fclayer.png" class="align-center" src="../_images/fclayer.png" style="width: 400px;" /></a>
+<p>The input <span class="math notranslate nohighlight">\(x\)</span> consists of three numbers: <span class="math notranslate nohighlight">\(x_{1}, x_{2}, x_{3}\)</span>.
+The output <span class="math notranslate nohighlight">\(y\)</span> consists of five numbers: <span class="math notranslate nohighlight">\(y_{1}, y_{2}, y_{3},
+y_{4}, y_{5}\)</span>. The arrows indicate that each of the three inputs has a part to
+play in forming each of the five outputs &amp;mdash; this is where the name
+“fully-connected” comes from, every input is connected to every output. Each
+of these arrows also represent an element of the learnable parameters
+<span class="math notranslate nohighlight">\(\Theta\)</span> e.g. the value of <span class="math notranslate nohighlight">\(y_{1}\)</span> is obtained via a linear
+combination of the input values multiplied by the associated weight for that
+connection. In more mathematical terms, <span class="math notranslate nohighlight">\(\Theta\)</span> is a matrix consisting
+of each weight ordered by the connections between the inputs and outputs.
+Following our example, if we label the weight from <span class="math notranslate nohighlight">\(x_{1}\)</span> to
+<span class="math notranslate nohighlight">\(y_{1}\)</span> as <span class="math notranslate nohighlight">\(\theta_{11}\)</span>, the weight from <span class="math notranslate nohighlight">\(x_{2}\)</span> to
+<span class="math notranslate nohighlight">\(y_{1}\)</span> as <span class="math notranslate nohighlight">\(\theta_{12}\)</span> and so on and so forth then the matrix of
+weights can be written as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Theta = \begin{bmatrix}
+                 \theta_{11} &amp; \theta_{12} &amp; \theta_{13} \\
+                 \theta_{21} &amp; \theta_{22} &amp; \theta_{23} \\
+                 \theta_{31} &amp; \theta_{32} &amp; \theta_{33} \\
+                 \theta_{41} &amp; \theta_{42} &amp; \theta_{43} \\
+                 \theta_{51} &amp; \theta_{52} &amp; \theta_{53}
+          \end{bmatrix}\end{split}\]</div>
+<p>The output <span class="math notranslate nohighlight">\(y\)</span> can then be calculated via matrix multiplication of
+<span class="math notranslate nohighlight">\(\Theta\)</span> and <span class="math notranslate nohighlight">\(x\)</span> (plus the potential addition of the bias).</p>
+<p>The outputs are then operated on by the activation to produce the final output
+of the <code class="docutils literal notranslate"><span class="pre">FCLayer</span></code>. In this example we use the ReLU activation which will
+return the value passed to the function if the value is positive and will
+return zero otherwise.</p>
+<p>This is equivalent to defining a <code class="docutils literal notranslate"><span class="pre">nn.Sequential</span></code> object as follows</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fcseq</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -248,7 +278,7 @@ function being addable is being considered (I only thought of it when
 writing this document).</p>
 </dd>
 </dl>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.022 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.021 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-exa-fclayers-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/8d0cd522ddae877424614b9e752df40c/exa_fclayers.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">exa_fclayers.py</span></code></a></p>

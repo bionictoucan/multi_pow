@@ -10,6 +10,27 @@ Examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Using the Convolutional Layer">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_exa_convlayer_thumb.png
+     :alt: Using the Convolutional Layer
+
+     :ref:`sphx_glr_auto_examples_exa_convlayer.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/exa_convlayer
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Advanced Usage of the Fully-connected Layer">
 
 .. only:: html

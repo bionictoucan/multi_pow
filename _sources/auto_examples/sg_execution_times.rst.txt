@@ -5,10 +5,12 @@
 
 Computation times
 =================
-**00:01.291** total execution time for **auto_examples** files:
+**00:01.245** total execution time for **auto_examples** files:
 
 +-----------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_exa_fclayers_adv.py` (``exa_fclayers_adv.py``) | 00:01.270 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_exa_convlayer.py` (``exa_convlayer.py``)       | 00:01.187 | 0.0 MB |
 +-----------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_exa_fclayers.py` (``exa_fclayers.py``)         | 00:00.022 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_exa_fclayers_adv.py` (``exa_fclayers_adv.py``) | 00:00.038 | 0.0 MB |
++-----------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_auto_examples_exa_fclayers.py` (``exa_fclayers.py``)         | 00:00.021 | 0.0 MB |
 +-----------------------------------------------------------------------------+-----------+--------+

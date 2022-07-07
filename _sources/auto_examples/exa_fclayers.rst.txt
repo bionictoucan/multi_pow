@@ -71,10 +71,10 @@ is the dimensionality of the input :math:`x` and the dimensionality of the
 output :math:`y`. This is used to construct the learnable parameters
 :math:`\Theta`. ``in_nodes`` and ``out_nodes`` are integers.
 
-The non-linear function that is part of a neural network layer can be set
-through the ``activation`` keyword argument. Its default value ``"relu"`` uses
-the rectified linear unit non-linearity but other options of ``"leaky_relu"``,
-``"sigmoid"`` and ``"tanh"`` exist [#f1]_.
+The non-linear function (often referred to as the activation) that is part of
+a neural network layer can be set through the ``activation`` keyword argument.
+Its default value ``"relu"`` uses the rectified linear unit non-linearity but
+other options of ``"leaky_relu"``, ``"sigmoid"`` and ``"tanh"`` exist [#f1]_.
 
 Setting up an ``FCLayer``
 -------------------------
@@ -107,13 +107,50 @@ To construct the layer we do the following:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-59
+.. GENERATED FROM PYTHON SOURCE LINES 56-96
 
 This create a fully-connected layer with input dimension 3, output dimension
-5, no bias and the ReLU non-linearity. This is equivalent to defining a
-``nn.Sequential`` object as follows
+5, no bias and the ReLU non-linearity. This is shown in the figure below.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-62
+.. image:: ../images/fclayer.png
+    :width: 400
+    :align: center
+
+The input :math:`x` consists of three numbers: :math:`x_{1}, x_{2}, x_{3}`.
+The output :math:`y` consists of five numbers: :math:`y_{1}, y_{2}, y_{3},
+y_{4}, y_{5}`. The arrows indicate that each of the three inputs has a part to
+play in forming each of the five outputs &mdash; this is where the name
+"fully-connected" comes from, every input is connected to every output. Each
+of these arrows also represent an element of the learnable parameters
+:math:`\Theta` e.g. the value of :math:`y_{1}` is obtained via a linear
+combination of the input values multiplied by the associated weight for that
+connection. In more mathematical terms, :math:`\Theta` is a matrix consisting
+of each weight ordered by the connections between the inputs and outputs.
+Following our example, if we label the weight from :math:`x_{1}` to
+:math:`y_{1}` as :math:`\theta_{11}`, the weight from :math:`x_{2}` to
+:math:`y_{1}` as :math:`\theta_{12}` and so on and so forth then the matrix of
+weights can be written as
+
+.. math::
+    \Theta = \begin{bmatrix}
+                     \theta_{11} & \theta_{12} & \theta_{13} \\
+                     \theta_{21} & \theta_{22} & \theta_{23} \\
+                     \theta_{31} & \theta_{32} & \theta_{33} \\
+                     \theta_{41} & \theta_{42} & \theta_{43} \\
+                     \theta_{51} & \theta_{52} & \theta_{53}
+              \end{bmatrix}
+
+The output :math:`y` can then be calculated via matrix multiplication of
+:math:`\Theta` and :math:`x` (plus the potential addition of the bias).
+
+The outputs are then operated on by the activation to produce the final output
+of the ``FCLayer``. In this example we use the ReLU activation which will
+return the value passed to the function if the value is positive and will
+return zero otherwise.
+
+This is equivalent to defining a ``nn.Sequential`` object as follows
+
+.. GENERATED FROM PYTHON SOURCE LINES 96-99
 
 .. code-block:: default
 
@@ -127,14 +164,14 @@ This create a fully-connected layer with input dimension 3, output dimension
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-67
+.. GENERATED FROM PYTHON SOURCE LINES 100-104
 
 The main idea is to have a nicer looking way of representing these layers
 (especially when the networks get really deep). Each element of the
 ``FCLayer`` object can be accessed via class attributes ``.lin``` for the
 linear function and ``.act`` for the non-linearity e.g.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-70
+.. GENERATED FROM PYTHON SOURCE LINES 104-107
 
 .. code-block:: default
 
@@ -156,12 +193,12 @@ linear function and ``.act`` for the non-linearity e.g.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-73
+.. GENERATED FROM PYTHON SOURCE LINES 108-110
 
 A dummy input can be created to show that the objects ``fclayer`` and
 ``fcseq`` are equivalent.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-78
+.. GENERATED FROM PYTHON SOURCE LINES 110-115
 
 .. code-block:: default
 
@@ -177,7 +214,7 @@ A dummy input can be created to show that the objects ``fclayer`` and
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-85
+.. GENERATED FROM PYTHON SOURCE LINES 116-122
 
 .. note::
     The default random initialisation for ``nn.Linear`` objects samples a
@@ -186,7 +223,7 @@ A dummy input can be created to show that the objects ``fclayer`` and
     sampling, the easiest way to compare these two examples is to initialise
     them with the same numbers. Below we initialise them with 0.5
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-89
+.. GENERATED FROM PYTHON SOURCE LINES 122-126
 
 .. code-block:: default
 
@@ -214,7 +251,7 @@ A dummy input can be created to show that the objects ``fclayer`` and
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-95
+.. GENERATED FROM PYTHON SOURCE LINES 127-132
 
 Then the output is calculated for passing the dummy inputs to the different
 formulations of the layer.
@@ -222,7 +259,7 @@ formulations of the layer.
 .. note::
     The layers can be applied to inputs in the same manner as functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-98
+.. GENERATED FROM PYTHON SOURCE LINES 132-135
 
 .. code-block:: default
 
@@ -244,13 +281,13 @@ formulations of the layer.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-102
+.. GENERATED FROM PYTHON SOURCE LINES 136-139
 
 Further, we can check how the layer we have defined interacts with gradient
 backpropagation by creating a dummy desired output and a loss function that we
 want to use to optmise our layer.
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-109
+.. GENERATED FROM PYTHON SOURCE LINES 139-146
 
 .. code-block:: default
 
@@ -268,7 +305,7 @@ want to use to optmise our layer.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-118
+.. GENERATED FROM PYTHON SOURCE LINES 147-155
 
 The above code assigns the output of the ``FCLayer`` applied to the dummy
 input to the variable ``output`` alongside the output of the
@@ -279,7 +316,7 @@ desired output (``loss`` and ``loss_seq``, respectively following the naming
 conventions for the outputs). The gradient of the loss with respect to each
 weight is then calculated doing the following
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-122
+.. GENERATED FROM PYTHON SOURCE LINES 155-159
 
 .. code-block:: default
 
@@ -294,11 +331,11 @@ weight is then calculated doing the following
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-124
+.. GENERATED FROM PYTHON SOURCE LINES 160-161
 
 These calculated gradients can then be accessed from the original objects.
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-127
+.. GENERATED FROM PYTHON SOURCE LINES 161-164
 
 .. code-block:: default
 
@@ -328,7 +365,7 @@ These calculated gradients can then be accessed from the original objects.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-135
+.. GENERATED FROM PYTHON SOURCE LINES 165-172
 
 As can be seen, both the outputs and the gradients calculated via
 backpropagation are identical whether using this customisable block or using
@@ -338,7 +375,7 @@ useful!
 For more advanced use of the ``FCLayer`` object, the interested reader is
 referred to :ref:`fclayer_adv_exa`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-142
+.. GENERATED FROM PYTHON SOURCE LINES 175-179
 
 .. [#f1] These are the most commonly-used non-linearities but implementations
          of other can be added when needed. Also, a custom non-linearity
@@ -348,7 +385,7 @@ referred to :ref:`fclayer_adv_exa`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.022 seconds)
+   **Total running time of the script:** ( 0 minutes  0.021 seconds)
 
 
 .. _sphx_glr_download_auto_examples_exa_fclayers.py:
