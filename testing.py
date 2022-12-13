@@ -33,3 +33,28 @@ def testing(model: vgg11, data: np.ndarray, labels: np.ndarray, device_id: Union
             correct += (predicted == labels).sum()
 
     return y_preds, y_probs, correct, total
+
+def majority_vote(y_preds: List, n: int, return_counts: bool = False, return_unique: bool = False) -> Union[List, Tuple[List,...]]:
+    y_preds_maj = np.array(y_preds).reshape([n, -1]) #since the segments are classified in order, they can be reshape by the number of samples to create rows for each whole sample
+
+    num_classes_pred = []
+    num_classes_counts = []
+    num_classes_unique = []
+    for sample in y_preds_maj:
+        unique, counts = np.unique(sample, return_counts=True)
+        if unique.shape[0] == 1:
+            num_classes_pred.append(unique.item())
+        else:
+            idx = np.where(counts == np.max(counts))
+            num_classes_pred.append(unique[idx].item())
+        num_classes_counts.append(counts)
+        num_classes_unique.append(unique)
+
+    if return_counts and return_unique:
+        return num_classes_pred, num_classes_counts, num_classes_unique
+    elif return_counts:
+        return num_classes_pred, num_classes_counts
+    elif return_unique:
+        return num_classes_pred, num_classes_unique
+    else:
+        return num_classes_pred
