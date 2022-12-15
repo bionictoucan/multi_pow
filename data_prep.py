@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from skimage.io import imread
 import os
+from tqdm import tqdm
 from utils import segmentation
 from typing import Optional, Tuple, List
 
