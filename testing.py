@@ -58,3 +58,37 @@ def majority_vote(y_preds: List, n: int, return_counts: bool = False, return_uni
         return num_classes_pred, num_classes_unique
     else:
         return num_classes_pred
+
+def counts_to_probs_binary(num_counts: List, pred_labels: List) -> np.ndarray:
+    probs = []
+    for j, sample in enumerate(num_counts):
+        if sample.shape[0] == 2:
+            probs.append(sample/sample.sum())
+        else:
+            if pred_labels[j] == 0:
+                probs.append(np.array([1., 0.]))
+            else:
+                probs.append(np.array([0., 1.]))
+    return np.array(probs)
+
+def counts_to_probs_multi(num_counts: List, pred_labels: List, unique_labels: List) -> np.ndarray:
+    probs = []
+    for j, sample in enumerate(num_counts):
+        if sample.shape[0] == 3:
+            probs.append(sample/sample.sum())
+        elif sample.shape[0] == 2:
+            if (unique_labels[j] == [0,1]).all():
+                probs.append(np.insert(sample/sample.sum(), 2, 0.))
+            elif (unique_labels[j] == [1,2]).all():
+                probs.append(np.insert(sample/sample.sum(), 1, 0.))
+            elif (unique_labels[j] == [0,2]).all():
+                probs.append(np.insert(sample/sample.sum(), 1, 0.))
+        else:
+            if pred_labels[j] == 0:
+                probs.append(np.array([1., 0., 0.]))
+            elif pred_labels[j] == 1:
+                probs.append(np.array([0., 1., 0.]))
+            else:
+                probs.append(np.array([0., 0., 1.]))
+
+    return np.array(probs)

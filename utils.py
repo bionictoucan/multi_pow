@@ -58,3 +58,7 @@ def segmentation(img, n):
     segments = np.reshape(segments, newshape=((segments.shape[0]*segments.shape[1]), n, n))
 
     return segments
+
+def add_value_label(axis, x_list,y_list,c="k"):
+    for i in range(len(x_list)):
+        axis.text(i,y_list[i],y_list[i], ha="center",color=c)
