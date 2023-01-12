@@ -6,7 +6,13 @@ from dataset import PowderDataset
 from tqdm import tqdm
 from typing import List, Tuple, Union
 
-def testing(model: vgg11, data: np.ndarray, labels: np.ndarray, device_id: Union[int, str] = "cuda") -> Tuple[List[int], List[Union[float, np.ndarray]], int, int]:
+
+def testing(
+    model: vgg11,
+    data: np.ndarray,
+    labels: np.ndarray,
+    device_id: Union[int, str] = "cuda",
+) -> Tuple[List[int], List[Union[float, np.ndarray]], int, int]:
     dataset = PowderDataset(inp=data, out=labels)
     loader = DataLoader(dataset, shuffle=False, batch_size=1)
 
@@ -16,7 +22,7 @@ def testing(model: vgg11, data: np.ndarray, labels: np.ndarray, device_id: Union
     model.eval()
     with torch.no_grad():
         for images, labels in tqdm(loader):
-            images = images.float().unsqueeze(1).to(device)
+            images = images.float().unsqueeze(1).to(device) / 255.0
             labels = labels.long().to(device)
 
             output = model(images)
@@ -34,8 +40,13 @@ def testing(model: vgg11, data: np.ndarray, labels: np.ndarray, device_id: Union
 
     return y_preds, y_probs, correct, total
 
-def majority_vote(y_preds: List, n: int, return_counts: bool = False, return_unique: bool = False) -> Union[List, Tuple[List,...]]:
-    y_preds_maj = np.array(y_preds).reshape([n, -1]) #since the segments are classified in order, they can be reshape by the number of samples to create rows for each whole sample
+
+def majority_vote(
+    y_preds: List, n: int, return_counts: bool = False, return_unique: bool = False
+) -> Union[List, Tuple[List, ...]]:
+    y_preds_maj = np.array(y_preds).reshape(
+        [n, -1]
+    )  # since the segments are classified in order, they can be reshape by the number of samples to create rows for each whole sample
 
     num_classes_pred = []
     num_classes_counts = []
@@ -59,36 +70,40 @@ def majority_vote(y_preds: List, n: int, return_counts: bool = False, return_uni
     else:
         return num_classes_pred
 
+
 def counts_to_probs_binary(num_counts: List, pred_labels: List) -> np.ndarray:
     probs = []
     for j, sample in enumerate(num_counts):
         if sample.shape[0] == 2:
-            probs.append(sample/sample.sum())
+            probs.append(sample / sample.sum())
         else:
             if pred_labels[j] == 0:
-                probs.append(np.array([1., 0.]))
+                probs.append(np.array([1.0, 0.0]))
             else:
-                probs.append(np.array([0., 1.]))
+                probs.append(np.array([0.0, 1.0]))
     return np.array(probs)
 
-def counts_to_probs_multi(num_counts: List, pred_labels: List, unique_labels: List) -> np.ndarray:
+
+def counts_to_probs_multi(
+    num_counts: List, pred_labels: List, unique_labels: List
+) -> np.ndarray:
     probs = []
     for j, sample in enumerate(num_counts):
         if sample.shape[0] == 3:
-            probs.append(sample/sample.sum())
+            probs.append(sample / sample.sum())
         elif sample.shape[0] == 2:
-            if (unique_labels[j] == [0,1]).all():
-                probs.append(np.insert(sample/sample.sum(), 2, 0.))
-            elif (unique_labels[j] == [1,2]).all():
-                probs.append(np.insert(sample/sample.sum(), 1, 0.))
-            elif (unique_labels[j] == [0,2]).all():
-                probs.append(np.insert(sample/sample.sum(), 1, 0.))
+            if (unique_labels[j] == [0, 1]).all():
+                probs.append(np.insert(sample / sample.sum(), 2, 0.0))
+            elif (unique_labels[j] == [1, 2]).all():
+                probs.append(np.insert(sample / sample.sum(), 1, 0.0))
+            elif (unique_labels[j] == [0, 2]).all():
+                probs.append(np.insert(sample / sample.sum(), 1, 0.0))
         else:
             if pred_labels[j] == 0:
-                probs.append(np.array([1., 0., 0.]))
+                probs.append(np.array([1.0, 0.0, 0.0]))
             elif pred_labels[j] == 1:
-                probs.append(np.array([0., 1., 0.]))
+                probs.append(np.array([0.0, 1.0, 0.0]))
             else:
-                probs.append(np.array([0., 0., 1.]))
+                probs.append(np.array([0.0, 0.0, 1.0]))
 
     return np.array(probs)

@@ -6,19 +6,32 @@ from tqdm import tqdm
 from utils import segmentation
 from typing import Optional, Tuple, List
 
-def training_data_prep(imgs_pth: str, class_pth: str, model_classes: str = "cohesive", augs: bool = True, test_imgs: Optional[List] = None) -> Tuple[np.ndarray, np.ndarray]:
+
+def training_data_prep(
+    imgs_pth: str,
+    class_pth: str,
+    model_classes: str = "cohesive",
+    augs: bool = True,
+    test_imgs: Optional[List] = None,
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     This function will take the image directory, CSV file containing the classes
     and what kind of model the data is to be made for and return the full
     training/validation dataset and its associated labels.
     """
 
-    imgs = sorted([imgs_pth+x for x in os.listdir(imgs_pth) if ".jpg" in x]) #creates a list of all image paths in alphabetical order
+    imgs = sorted(
+        [imgs_pth + x for x in os.listdir(imgs_pth) if ".jpg" in x]
+    )  # creates a list of all image paths in alphabetical order
 
     df = pd.read_csv(class_pth, delimiter="\t")
-    sort_df = df.sort_values("imagename").reset_index() #reorders the .txt file by the `imagename` column, alphabetically
+    sort_df = df.sort_values(
+        "imagename"
+    ).reset_index()  # reorders the .txt file by the `imagename` column, alphabetically
 
-    if not isinstance(test_imgs, list): #if the test image paths are not specified then use the ones used in the paper
+    if not isinstance(
+        test_imgs, list
+    ):  # if the test image paths are not specified then use the ones used in the paper
         test_imgs = [
             "Alcohol cetyl.jpg",
             "Calcium Carbonate (40%) - multicomponent.jpg",
@@ -28,12 +41,16 @@ def training_data_prep(imgs_pth: str, class_pth: str, model_classes: str = "cohe
             "Mefenamic acid.jpg",
             "Pearlitol 200SD.jpg",
             "Lidocaine.jpg",
-            "Dimethyl fumarate.jpg"
+            "Dimethyl fumarate.jpg",
         ]
 
-    trainval_df = sort_df.loc[~sort_df["imagename"].isin(test_imgs)] # get rid of the image paths for the external testing images
-    if "Span 60" in trainval_df.Material: # get rid of Span 60
-        trainval_df.drop(trainval_df[trainval_df.Material == "Span 60"].index, inplace=True)
+    trainval_df = sort_df.loc[
+        ~sort_df["imagename"].isin(test_imgs)
+    ]  # get rid of the image paths for the external testing images
+    if "Span 60" in trainval_df.Material:  # get rid of Span 60
+        trainval_df.drop(
+            trainval_df[trainval_df.Material == "Span 60"].index, inplace=True
+        )
 
     classes = trainval_df["Class"].to_numpy()
     num_classes = np.zeros(classes.shape[0], dtype=np.uint8)
@@ -67,8 +84,8 @@ def training_data_prep(imgs_pth: str, class_pth: str, model_classes: str = "cohe
     if augs:
         for j, img in enumerate(tqdm(trainval_imgs)):
             img = imread(img)
-            img_v = img[::-1] #flipped vertically
-            img_h = img[:, ::-1] #flipped horizontally
+            img_v = img[::-1]  # flipped vertically
+            img_h = img[:, ::-1]  # flipped horizontally
 
             aug_imgs.extend([img, img_v, img_h])
     else:
@@ -88,29 +105,45 @@ def training_data_prep(imgs_pth: str, class_pth: str, model_classes: str = "cohe
     segmented_trainval = segmented_trainval.reshape([-1, 1024, 1024])
 
     if augs:
-        classeslists = [[x]*3*no_segments for x in num_classes]
+        classeslists = [[x] * 3 * no_segments for x in num_classes]
     else:
-        classeslists = [[x]*no_segments for x in num_classes] #if there are augmentations we must multiply the number of labels by the number of augmentations, also need to increase the number of labels by the number of segments
+        classeslists = [
+            [x] * no_segments for x in num_classes
+        ]  # if there are augmentations we must multiply the number of labels by the number of augmentations, also need to increase the number of labels by the number of segments
 
     all_classes = np.array([lab for lst in classeslists for lab in lst])
 
-    assert(segmented_trainval.shape[0] == all_classes.shape[0]) #make sure the input and output data have the same dimensions
+    assert (
+        segmented_trainval.shape[0] == all_classes.shape[0]
+    )  # make sure the input and output data have the same dimensions
 
     return segmented_trainval, all_classes
 
-def testing_data_prep(imgs_pth: str, class_pth: str, model_classes: str = "cohesive", test_imgs: Optional[List] = None) -> Tuple[np.ndarray, np.ndarray]:
+
+def testing_data_prep(
+    imgs_pth: str,
+    class_pth: str,
+    model_classes: str = "cohesive",
+    test_imgs: Optional[List] = None,
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     This function will take the image directory, CSV file containing the classes
     and what kind of model the data is to be made for and return the full
     training/validation dataset and its associated labels.
     """
 
-    imgs = sorted([imgs_pth+x for x in os.listdir(imgs_pth) if ".jpg" in x]) #creates a list of all image paths in alphabetical order
+    imgs = sorted(
+        [imgs_pth + x for x in os.listdir(imgs_pth) if ".jpg" in x]
+    )  # creates a list of all image paths in alphabetical order
 
     df = pd.read_csv(class_pth, delimiter="\t")
-    sort_df = df.sort_values("imagename").reset_index() #reorders the .txt file by the `imagename` column, alphabetically
+    sort_df = df.sort_values(
+        "imagename"
+    ).reset_index()  # reorders the .txt file by the `imagename` column, alphabetically
 
-    if not isinstance(test_imgs, list): #if the test image paths are not specified then use the ones used in the paper
+    if not isinstance(
+        test_imgs, list
+    ):  # if the test image paths are not specified then use the ones used in the paper
         test_imgs = [
             "Alcohol cetyl.jpg",
             "Calcium Carbonate (40%) - multicomponent.jpg",
@@ -120,10 +153,12 @@ def testing_data_prep(imgs_pth: str, class_pth: str, model_classes: str = "cohes
             "Mefenamic acid.jpg",
             "Pearlitol 200SD.jpg",
             "Lidocaine.jpg",
-            "Dimethyl fumarate.jpg"
+            "Dimethyl fumarate.jpg",
         ]
 
-    test_df = sort_df.loc[sort_df["imagename"].isin(test_imgs)] # get rid of the image paths for the training and validation images
+    test_df = sort_df.loc[
+        sort_df["imagename"].isin(test_imgs)
+    ]  # get rid of the image paths for the training and validation images
 
     classes = test_df["Class"].to_numpy()
     num_classes = np.zeros(classes.shape[0], dtype=np.uint8)
@@ -169,10 +204,12 @@ def testing_data_prep(imgs_pth: str, class_pth: str, model_classes: str = "cohes
     no_segments = segmented_test.shape[1]
     segmented_test = segmented_test.reshape([-1, 1024, 1024])
 
-    classeslists = [[x]*no_segments for x in num_classes] 
+    classeslists = [[x] * no_segments for x in num_classes]
 
     all_classes = np.array([lab for lst in classeslists for lab in lst])
 
-    assert(segmented_test.shape[0] == all_classes.shape[0]) #make sure the input and output data have the same dimensions
+    assert (
+        segmented_test.shape[0] == all_classes.shape[0]
+    )  # make sure the input and output data have the same dimensions
 
-    return segmented_test, all_classes
+    return segmented_test, all_classes, num_classes

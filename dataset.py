@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 from torch.utils.data import Dataset
 from typing import Union, Optional, Tuple, List
 import random
@@ -116,7 +117,7 @@ class PowderDataset(Dataset):
             corresponding output or a tuple of the (input, output) is returned
             with the input having been augmented if the object is set up to do so.
         """
-        if not isinstance(self.labels, (torch.Tensor, list)):
+        if not isinstance(self.labels, (torch.Tensor, np.ndarray, list)):
             return self.data[index]
         else:
             if isinstance(

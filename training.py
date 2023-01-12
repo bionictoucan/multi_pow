@@ -6,6 +6,7 @@ from dataset import PowderDataset
 from typing import Optional, Callable, Union, Dict, Tuple
 import os
 
+
 class Trainer:
     """
     This is the default class for defining trainers to teach neural networks
@@ -77,7 +78,8 @@ class Trainer:
         self.data_pth = data_pth
 
         self.save_dir = save_dir
-        if not os.path.isdir(save_dir): os.mkdir(save_dir)
+        if not os.path.isdir(save_dir):
+            os.mkdir(save_dir)
 
         self.scheduler = scheduler
 
@@ -185,11 +187,22 @@ class Trainer:
         else:
             print(f"=> no checkpoint found at {filename}")
 
+
 class BinaryTrainer(Trainer):
-    def load_data(self, train_in: np.ndarray, train_out: np.ndarray, val_in: np.ndarray, val_out: np.ndarray):
-        self.train_loader = DataLoader(PowderDataset(train_in, train_out), batch_size=self.batch_size, shuffle=True)
-        self.val_loader = DataLoader(PowderDataset(val_in, val_out), batch_size=self.batch_size, shuffle=True)
-        
+    def load_data(
+        self,
+        train_in: np.ndarray,
+        train_out: np.ndarray,
+        val_in: np.ndarray,
+        val_out: np.ndarray,
+    ):
+        self.train_loader = DataLoader(
+            PowderDataset(train_in, train_out), batch_size=self.batch_size, shuffle=True
+        )
+        self.val_loader = DataLoader(
+            PowderDataset(val_in, val_out), batch_size=self.batch_size, shuffle=True
+        )
+
     def train(self, train_loader: torch.utils.data.DataLoader) -> Tuple[float, float]:
         """
         The function used to train the classifier model.
@@ -212,7 +225,7 @@ class BinaryTrainer(Trainer):
         batch_losses = []
         total, correct = 0.0, 0.0
         for j, (images, labels) in enumerate(tqdm(train_loader)):
-            images, labels = images.float().to(self.device), labels.to(
+            images, labels = images.float().to(self.device) / 255.0, labels.to(
                 self.device
             )
 
@@ -225,9 +238,13 @@ class BinaryTrainer(Trainer):
             batch_losses.append(loss.item())
 
             # work out the % correct per epoch accumulatively
-            output = output.squeeze() #gets rid of the second dimension which is always 1
-            output = torch.sigmoid(output) #finds the probability from the logit
-            predicted = torch.tensor([1 if x >= 0.5 else 0 for x in output]).to(self.device)
+            output = (
+                output.squeeze()
+            )  # gets rid of the second dimension which is always 1
+            output = torch.sigmoid(output)  # finds the probability from the logit
+            predicted = torch.tensor([1 if x >= 0.5 else 0 for x in output]).to(
+                self.device
+            )
             total += labels.size(0)
             correct += (
                 predicted == labels.squeeze()
@@ -261,55 +278,59 @@ class BinaryTrainer(Trainer):
         with torch.no_grad():
             batch_losses = []
             for images, labels in val_loader:
-                images, labels = images.float().to(self.device), labels.to(
+                images, labels = images.float().to(self.device) / 255.0, labels.to(
                     self.device
                 )
                 output = self.model(images)
 
                 loss = self.loss_fn(output, labels)
                 batch_losses.append(loss.item())
-                
-                output = output.squeeze() #gets rid of the second dimension which is always 1
-                output = torch.sigmoid(output) #finds the probability from the logit
-                predicted = torch.tensor([1 if x >= 0.5 else 0 for x in output]).to(self.device)
+
+                output = (
+                    output.squeeze()
+                )  # gets rid of the second dimension which is always 1
+                output = torch.sigmoid(output)  # finds the probability from the logit
+                predicted = torch.tensor([1 if x >= 0.5 else 0 for x in output]).to(
+                    self.device
+                )
                 total += labels.size(0)
                 correct += (predicted == labels.squeeze()).sum()
 
         return torch.mean(torch.tensor(batch_losses)), float((correct / total) * 100)
-        
-    def shady_guy(self, load = None, load_pth = "."):
+
+    def shady_guy(self, load=None, load_pth="."):
         if load:
             print("=> a model is being loaded.")
             self.load_checkpoint(load_pth)
-            
-        #initialisation of the plotting environment
-        fig = plt.figure(figsize=(6,6))
-        train_ax = fig.add_subplot(2,1,1)
+
+        # initialisation of the plotting environment
+        fig = plt.figure(figsize=(6, 6))
+        train_ax = fig.add_subplot(2, 1, 1)
         val_ax = train_ax.twinx()
         train_ax.set_ylabel("Training Loss", color=pt_vibrant["cyan"])
         train_ax.tick_params(axis="x", labelbottom=False)
         val_ax.set_ylabel("Validation Loss", color=pt_vibrant["magenta"])
-        train_ax_perc = fig.add_subplot(2,1,2)
+        train_ax_perc = fig.add_subplot(2, 1, 2)
         val_ax_perc = train_ax_perc.twinx()
         train_ax_perc.set_ylabel("Training Percentage [%]", color=pt_vibrant["cyan"])
         train_ax_perc.set_xlabel("Number of Epochs")
         val_ax_perc.set_ylabel("Validation Percentage [%]", color=pt_vibrant["magenta"])
         fig.show()
         fig.canvas.draw()
-        
+
         train_losses, val_losses, train_perc, val_perc = [], [], [], []
-        
+
         t_init = time()
         for n in range(self.total_epochs):
             if n != 0:
                 self.current_epoch += 1
             if n == 0 and load:
                 self.current_epoch += 1
-                
+
             tl, tp = self.train(train_loader=self.train_loader)
             train_losses.append(tl.item())
             train_perc.append(tp)
-            
+
             vl, vp = self.validation(val_loader=self.val_loader)
             val_losses.append(vl.item())
             val_perc.append(vp)
@@ -320,31 +341,44 @@ class BinaryTrainer(Trainer):
                     self.scheduler.step(vl)
                 else:
                     self.scheduler.step()
-            
+
             self.train_losses = train_losses
             self.val_losses = val_losses
             self.train_perc = train_perc
             self.val_perc = val_perc
-            
+
             if self.scheduler:
-                self.checkpoint(add_info={"scheduler_state_dict" : self.scheduler.state_dict(), "train_perc" : self.train_perc, "val_perc" : self.val_perc})
+                self.checkpoint(
+                    add_info={
+                        "scheduler_state_dict": self.scheduler.state_dict(),
+                        "train_perc": self.train_perc,
+                        "val_perc": self.val_perc,
+                    }
+                )
             else:
-                self.checkpoint(add_info={"train_perc" : self.train_perc, "val_perc" : self.val_perc})
+                self.checkpoint(
+                    add_info={"train_perc": self.train_perc, "val_perc": self.val_perc}
+                )
             self.save_checkpoint()
-            
-        #plot the results
+
+            # plot the results
             fig.suptitle(f"Time elapsed {t_now}s after epoch {self.current_epoch}")
             train_ax.set_ylabel("Training Loss", color=pt_vibrant["cyan"])
             train_ax.tick_params(axis="x", labelbottom=False)
             train_ax_perc.set_xlabel("Number of Epochs")
             val_ax.set_ylabel("Validation Loss", color=pt_vibrant["magenta"])
-            train_ax_perc.set_ylabel("Training Percentage [%]", color=pt_vibrant["cyan"])
-            val_ax_perc.set_ylabel("Validation Percentage [%]", color=pt_vibrant["magenta"])
+            train_ax_perc.set_ylabel(
+                "Training Percentage [%]", color=pt_vibrant["cyan"]
+            )
+            val_ax_perc.set_ylabel(
+                "Validation Percentage [%]", color=pt_vibrant["magenta"]
+            )
             train_ax.plot(train_losses, color=pt_vibrant["cyan"], marker="o")
             val_ax.plot(val_losses, color=pt_vibrant["magenta"], marker="o")
             train_ax_perc.plot(train_perc, color=pt_vibrant["cyan"], marker="o")
             val_ax_perc.plot(val_perc, color=pt_vibrant["magenta"], marker="o")
             fig.canvas.draw()
+
 
 class MultiTrainer(Trainer):
     def train(self, train_loader: torch.utils.data.DataLoader) -> Tuple[float, float]:
@@ -369,7 +403,7 @@ class MultiTrainer(Trainer):
         batch_losses = []
         total, correct = 0.0, 0.0
         for j, (images, labels) in enumerate(tqdm(train_loader)):
-            images, labels = images.float().to(self.device), labels.to(
+            images, labels = images.float().to(self.device) / 255.0, labels.to(
                 self.device
             )
 
@@ -418,7 +452,7 @@ class MultiTrainer(Trainer):
         with torch.no_grad():
             batch_losses = []
             for images, labels in val_loader:
-                images, labels = images.float().to(self.device), labels.to(
+                images, labels = images.float().to(self.device) / 255.0, labels.to(
                     self.device
                 )
                 output = self.model(images)
@@ -432,46 +466,51 @@ class MultiTrainer(Trainer):
         return torch.mean(torch.tensor(batch_losses)), float((correct / total) * 100)
 
     def load_data(self, train_in, train_out, val_in, val_out):
-        self.train_loader = DataLoader(PowderDataset(train_in, train_out), batch_size=self.batch_size, shuffle=True)
-        self.val_loader = DataLoader(PowderDataset(val_in, val_out), batch_size=self.batch_size, shuffle=True)
-        
-    def shady_guy(self, load = None, load_pth = "."):
+        self.train_loader = DataLoader(
+            PowderDataset(train_in, train_out), batch_size=self.batch_size, shuffle=True
+        )
+        self.val_loader = DataLoader(
+            PowderDataset(val_in, val_out), batch_size=self.batch_size, shuffle=True
+        )
+
+    def shady_guy(self, load=None, load_pth="."):
         if load:
             print("=> a model is being loaded.")
             self.load_checkpoint(load_pth)
-            
-        if not os.path.isdir("vgg11_balanced_9"): os.mkdir("vgg11_balanced_9")
+
+        if not os.path.isdir("vgg11_balanced_9"):
+            os.mkdir("vgg11_balanced_9")
 
         self.save_dir = "vgg11_balanced_9/"
-        
-        #initialisation of the plotting environment
-        fig = plt.figure(figsize=(6,6))
-        train_ax = fig.add_subplot(2,1,1)
+
+        # initialisation of the plotting environment
+        fig = plt.figure(figsize=(6, 6))
+        train_ax = fig.add_subplot(2, 1, 1)
         val_ax = train_ax.twinx()
         train_ax.set_ylabel("Training Loss", color=pt_vibrant["cyan"])
         train_ax.tick_params(axis="x", labelbottom=False)
         val_ax.set_ylabel("Validation Loss", color=pt_vibrant["magenta"])
-        train_ax_perc = fig.add_subplot(2,1,2)
+        train_ax_perc = fig.add_subplot(2, 1, 2)
         val_ax_perc = train_ax_perc.twinx()
         train_ax_perc.set_ylabel("Training Percentage [%]", color=pt_vibrant["cyan"])
         train_ax_perc.set_xlabel("Number of Epochs")
         val_ax_perc.set_ylabel("Validation Percentage [%]", color=pt_vibrant["magenta"])
         fig.show()
         fig.canvas.draw()
-        
+
         train_losses, val_losses, train_perc, val_perc = [], [], [], []
-        
+
         t_init = time()
         for n in range(self.total_epochs):
             if n != 0:
                 self.current_epoch += 1
             if n == 0 and load:
                 self.current_epoch += 1
-                
+
             tl, tp = self.train(train_loader=self.train_loader)
             train_losses.append(tl.item())
             train_perc.append(tp)
-            
+
             vl, vp = self.validation(val_loader=self.val_loader)
             val_losses.append(vl.item())
             val_perc.append(vp)
@@ -482,26 +521,38 @@ class MultiTrainer(Trainer):
                     self.scheduler.step(vl)
                 else:
                     self.scheduler.step()
-            
+
             self.train_losses = train_losses
             self.val_losses = val_losses
             self.train_perc = train_perc
             self.val_perc = val_perc
-            
+
             if self.scheduler:
-                self.checkpoint(add_info={"scheduler_state_dict" : self.scheduler.state_dict(), "train_perc" : self.train_perc, "val_perc" : self.val_perc})
+                self.checkpoint(
+                    add_info={
+                        "scheduler_state_dict": self.scheduler.state_dict(),
+                        "train_perc": self.train_perc,
+                        "val_perc": self.val_perc,
+                    }
+                )
             else:
-                self.checkpoint(add_info={"train_perc" : self.train_perc, "val_perc" : self.val_perc})
+                self.checkpoint(
+                    add_info={"train_perc": self.train_perc, "val_perc": self.val_perc}
+                )
             self.save_checkpoint()
-            
-        #plot the results
+
+            # plot the results
             fig.suptitle(f"Time elapsed {t_now}s after epoch {self.current_epoch}")
             train_ax.set_ylabel("Training Loss", color=pt_vibrant["cyan"])
             train_ax.tick_params(axis="x", labelbottom=False)
             train_ax_perc.set_xlabel("Number of Epochs")
             val_ax.set_ylabel("Validation Loss", color=pt_vibrant["magenta"])
-            train_ax_perc.set_ylabel("Training Percentage [%]", color=pt_vibrant["cyan"])
-            val_ax_perc.set_ylabel("Validation Percentage [%]", color=pt_vibrant["magenta"])
+            train_ax_perc.set_ylabel(
+                "Training Percentage [%]", color=pt_vibrant["cyan"]
+            )
+            val_ax_perc.set_ylabel(
+                "Validation Percentage [%]", color=pt_vibrant["magenta"]
+            )
             train_ax.plot(train_losses, color=pt_vibrant["cyan"], marker="o")
             val_ax.plot(val_losses, color=pt_vibrant["magenta"], marker="o")
             train_ax_perc.plot(train_perc, color=pt_vibrant["cyan"], marker="o")
