@@ -1,3 +1,5 @@
+import numpy as np
+import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -5,7 +7,18 @@ from torch.utils.data import DataLoader
 from dataset import PowderDataset
 from typing import Optional, Callable, Union, Dict, Tuple
 import os
+from time import time
+from tqdm import tqdm
 
+pt_vibrant = {
+    "blue" : "#0077BB",
+    "cyan" : "#33BBEE",
+    "teal" : "#009988",
+    "orange" : "#EE7733",
+    "red" : "#CC3311",
+    "magenta" : "#EE3377",
+    "grey" : "#BBBBBB"
+}
 
 class Trainer:
     """
@@ -51,7 +64,7 @@ class Trainer:
         loss_fn: Callable[[torch.tensor, torch.tensor], torch.tensor],
         no_of_epochs: int,
         batch_size: int,
-        data_pth: str,
+        data_pth: Optional[str] = None,
         save_dir: str = "./",
         scheduler: Optional[torch.optim.lr_scheduler._LRScheduler] = None,
         device_id: Union[int, str] = 0,
@@ -477,11 +490,6 @@ class MultiTrainer(Trainer):
         if load:
             print("=> a model is being loaded.")
             self.load_checkpoint(load_pth)
-
-        if not os.path.isdir("vgg11_balanced_9"):
-            os.mkdir("vgg11_balanced_9")
-
-        self.save_dir = "vgg11_balanced_9/"
 
         # initialisation of the plotting environment
         fig = plt.figure(figsize=(6, 6))

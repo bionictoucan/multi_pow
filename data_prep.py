@@ -92,7 +92,7 @@ def training_data_prep(
         for j, img in enumerate(tqdm(trainval_imgs)):
             aug_imgs.append(imread(img))
 
-    for j, img in enumerate(aug_imgs):
+    for j, img in enumerate(tqdm(aug_imgs)):
         if j == 0:
             segments = segmentation(img, n=1024)
             segmented_trainval = np.expand_dims(segments, axis=0)
