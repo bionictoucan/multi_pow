@@ -18,6 +18,36 @@ def training_data_prep(
     This function will take the image directory, CSV file containing the classes
     and what kind of model the data is to be made for and return the full
     training/validation dataset and its associated labels.
+
+    Parameters
+    ----------
+    imgs_pth : str
+        The path to the directory of large images.
+    class_pth : str
+        The path to the file containing the class labels.
+    model_classes : str, optional
+        How to generate the class labels for the model. Default is "cohesive".
+        This will generate labels for a binary model of cohesive vs.
+        non-cohesive where everything cohesive will be assigned 0 while
+        non-cohesive is assigned 1. Other options include "free flowing", which
+        will assign 1 to all free flowing images and 0 to the rest, and "multi"
+        which will generate the multiclass labels where 0 refers to cohesive
+        materials, 1 to easy flowing and 2 to free flowing.
+    augs : bool, optional
+        Whether or not to apply the 2 augmentations used on the data
+        in the paper. These are the data flipped vertically and the data flipped
+        horizontally. Default is True.
+    test_imgs: list, optional
+        Which images to exclude from the training and validation data for use as
+        an external test set. Default is None which uses the list of images used
+        for the external test set in the paper.
+
+    Returns
+    -------
+    segmented_trainval : np.ndarray
+        The training and validation datasets prepared for training the model.
+    all_classes : np.ndarray
+        The class labels for each segment in the training and validation dataset.
     """
 
     imgs = sorted(
@@ -125,11 +155,40 @@ def testing_data_prep(
     class_pth: str,
     model_classes: str = "cohesive",
     test_imgs: Optional[List] = None,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     This function will take the image directory, CSV file containing the classes
     and what kind of model the data is to be made for and return the full
     training/validation dataset and its associated labels.
+
+    Parameters
+    ----------
+    imgs_pth : str
+        The path to the directory of images.
+    class_pth : str
+        The path to the file containing the class labels.
+    model_classes : str, optional
+        How to generate the class labels for the model. Default is "cohesive".
+        This will generate labels for a binary model of cohesive vs.
+        non-cohesive where everything cohesive will be assigned 0 while
+        non-cohesive is assigned 1. Other options include "free flowing", which
+        will assign 1 to all free flowing images and 0 to the rest, and "multi"
+        which will generate the multiclass labels where 0 refers to cohesive
+        materials, 1 to easy flowing and 2 to free flowing.
+    test_imgs: list, optional
+        Which images to exclude from the training and validation data for use as
+        an external test set. Default is None which uses the list of images used
+        for the external test set in the paper.
+
+    Returns
+    -------
+    segmented_test : np.ndarray
+        The testing data prepared to test the model.
+    all_classes : np.ndarray
+        The class labels for each image segment.
+    num_classes : np.ndarray
+        The class labels for the entire samples for comparison when doing a
+        majority vote on the class of the sample.
     """
 
     imgs = sorted(

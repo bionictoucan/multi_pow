@@ -2,17 +2,49 @@ import numpy as np
 import torch
 from model import vgg11
 from torch.utils.data import DataLoader
+import torchvision.models as models
 from dataset import PowderDataset
 from tqdm import tqdm
 from typing import List, Tuple, Union
 
 
 def testing(
-    model: vgg11,
+    model: models.vgg.VGG,
     data: np.ndarray,
     labels: np.ndarray,
     device_id: Union[int, str] = "cuda",
 ) -> Tuple[List[int], List[Union[float, np.ndarray]], int, int]:
+    """
+    The function used to classify the segments of images and compare them with
+    their ground truth labels.
+
+    Parameters
+    ----------
+    model : torchvision.models.vgg.VGG
+        The trained model to evaluate the images using.
+    data : numpy.ndarray
+        The images to classify.
+    labels : numpy.ndarray
+        The ground truth labels of the images to classify.
+    device_id : int or str
+        The device to use for testing. Can be an integer to specify the GPU to
+        use or can be a string such as "cuda" or "cpu". Default is "cuda" i.e.
+        will use the first GPU it finds available.
+
+    Returns
+    -------
+    y_preds : list
+        The model predictions for each image segment.
+    y_probs : list
+        The probabilities of the class labels from the model. This will either
+        be a single number for the binary models (indicating the probability of
+        the image being in class 1) or an array of numbers for the multiclass
+        case (indicating the probability of each class at each location).
+    correct : int
+        The number of correct classifications by the model.
+    total : int
+        The total number of classifications by the model.
+    """
     dataset = PowderDataset(inp=data, out=labels)
     loader = DataLoader(dataset, shuffle=False, batch_size=1)
 
@@ -44,6 +76,33 @@ def testing(
 def majority_vote(
     y_preds: List, n: int, return_counts: bool = False, return_unique: bool = False
 ) -> Union[List, Tuple[List, ...]]:
+    """
+    This function will work out a majority vote for a sample where there are
+    predictions for each segment.
+
+    Parameters
+    ----------
+    y_preds : list
+        The predictions from the model for each segment.
+    n : int
+        The number of samples. This is used to reshape the `y_preds` list such
+        that the number of samples is a dimension.
+    return_counts : bool, optional
+        This is the flag for returning the number of segments classified into
+        each class. Default is False.
+    return_unique : bool, optional
+        This is the flag for returning the number of unique labels predicted by
+        the network. Default is False.
+
+    Returns
+    -------
+    num_classes_pred : list
+        The majority vote predictions of the model.
+    num_classes_counts : list, optional
+        The counts for each class predicted by the model.
+    num_classes_unique : list, optional
+        The unique class labels predicted for each sample.
+    """
     y_preds_maj = np.array(y_preds).reshape(
         [n, -1]
     )  # since the segments are classified in order, they can be reshape by the number of samples to create rows for each whole sample
@@ -72,6 +131,25 @@ def majority_vote(
 
 
 def counts_to_probs_binary(num_counts: List, pred_labels: List) -> np.ndarray:
+    """
+    The function for converting the counts of each segment class labels to
+    probability of each class for a whole image to help calculate the area under
+    the ROC curve (AUC).
+
+    Parameters
+    ----------
+    num_counts : list
+        The list of the the number of counts for each sample and each class.
+    pred_labels : list
+        The predicted labels of the samples so the code knows that when all
+        segments are classified as the same class which class the sample belongs
+        to.
+        
+    Returns
+    -------
+    probs : numpy.ndarray
+        The probabilities for the classes of each sample based on the majority vote.
+    """
     probs = []
     for j, sample in enumerate(num_counts):
         if sample.shape[0] == 2:
@@ -87,6 +165,27 @@ def counts_to_probs_binary(num_counts: List, pred_labels: List) -> np.ndarray:
 def counts_to_probs_multi(
     num_counts: List, pred_labels: List, unique_labels: List
 ) -> np.ndarray:
+    """
+    Same function as above but for the multiclass model.
+
+    Parameters
+    ----------
+    num_counts : list
+        The list of the the number of counts for each sample and each class.
+    pred_labels : list
+        The predicted labels of the samples so the code knows that when all
+        segments are classified as the same class which class the sample belongs
+        to.
+    unique_labels : list
+        The unique labels that have been assigned in the classification so the
+        function knows where to put the probabilities if not all of the classes
+        are predicted for the segments.
+        
+    Returns
+    -------
+    probs : numpy.ndarray
+        The probabilities for the classes of each sample based on the majority vote.
+    """
     probs = []
     for j, sample in enumerate(num_counts):
         if sample.shape[0] == 3:
