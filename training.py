@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from dataset import PowderDataset
@@ -254,7 +255,7 @@ class BinaryTrainer(Trainer):
             output = (
                 output.squeeze()
             )  # gets rid of the second dimension which is always 1
-            output = torch.sigmoid(output)  # finds the probability from the logit
+            output = F.sigmoid(output)  # finds the probability from the logit
             predicted = torch.tensor([1 if x >= 0.5 else 0 for x in output]).to(
                 self.device
             )
@@ -302,7 +303,7 @@ class BinaryTrainer(Trainer):
                 output = (
                     output.squeeze()
                 )  # gets rid of the second dimension which is always 1
-                output = torch.sigmoid(output)  # finds the probability from the logit
+                output = F.sigmoid(output)  # finds the probability from the logit
                 predicted = torch.tensor([1 if x >= 0.5 else 0 for x in output]).to(
                     self.device
                 )

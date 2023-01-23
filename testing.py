@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import torch.nn.functional as F
 from model import vgg11
 from torch.utils.data import DataLoader
 import torchvision.models as models
@@ -59,11 +60,11 @@ def testing(
 
             output = model(images)
             if output.shape[0] == 1:
-                output = torch.sigmoid(output)
+                output = F.sigmoid(output)
                 y_probs.append(output.cpu().numpy().item())
                 predicted = 1 if output > 0.5 else 0
             else:
-                output = torch.softmax(output)
+                output = F.softmax(output, dim=1)
                 y_probs.append(output.cpu().numpy())
                 _, predicted = torch.max(output.data, 1)
             y_preds.append(predicted)
