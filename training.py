@@ -239,12 +239,12 @@ class BinaryTrainer(Trainer):
         batch_losses = []
         total, correct = 0.0, 0.0
         for j, (images, labels) in enumerate(tqdm(train_loader)):
-            images, labels = images.float().to(self.device) / 255.0, labels.to(
+            images, labels = images.float().to(self.device) / 255.0, labels.float().to(
                 self.device
             )
 
             self.optimiser.zero_grad()
-            output = self.model(images)
+            output = self.model(images).squeeze()
             loss = self.loss_fn(output, labels)
             loss.backward()
             self.optimiser.step()
@@ -292,10 +292,10 @@ class BinaryTrainer(Trainer):
         with torch.no_grad():
             batch_losses = []
             for images, labels in val_loader:
-                images, labels = images.float().to(self.device) / 255.0, labels.to(
+                images, labels = images.float().to(self.device) / 255.0, labels.float().to(
                     self.device
                 )
-                output = self.model(images)
+                output = self.model(images).squeeze()
 
                 loss = self.loss_fn(output, labels)
                 batch_losses.append(loss.item())
@@ -417,7 +417,7 @@ class MultiTrainer(Trainer):
         batch_losses = []
         total, correct = 0.0, 0.0
         for j, (images, labels) in enumerate(tqdm(train_loader)):
-            images, labels = images.float().to(self.device) / 255.0, labels.to(
+            images, labels = images.float().to(self.device) / 255.0, labels.long().to(
                 self.device
             )
 
@@ -466,7 +466,7 @@ class MultiTrainer(Trainer):
         with torch.no_grad():
             batch_losses = []
             for images, labels in val_loader:
-                images, labels = images.float().to(self.device) / 255.0, labels.to(
+                images, labels = images.float().to(self.device) / 255.0, labels.long().to(
                     self.device
                 )
                 output = self.model(images)
