@@ -38,7 +38,7 @@ The important code this work is separated across 6 files:
   image.
 * `training.py` contains objects for training and validating the networks
   depending on whether it is a binary problem or a multiclass problem.
-* `utils.py` contains the method for segmenting the images into 1024$\times$1024
+* `utils.py` contains the method for segmenting the images into 1024&times;1024
   segments to be treated as independent samples by the model. This is needed as
   the original images from the G3 used are of the entire microscope slide and
   even after downsampling are still huge (~6k$\times$4k pixels).
