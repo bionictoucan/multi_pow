@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 import torchvision.models as models
 from dataset import PowderDataset
 from tqdm import tqdm
+from itertools import product
 from typing import List, Tuple, Union
 
 
@@ -207,3 +208,74 @@ def counts_to_probs_multi(
                 probs.append(np.array([0.0, 0.0, 1.0]))
 
     return np.array(probs)
+
+def joint_model_preds(y_probs_1: List, y_probs_2: List) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    This function takes the probabilities of samples being in class 1 from two
+    binary models and combines them assuming that both models are
+    statistically-independent of one another. This is done by formulating the
+    probabilities of both models as (¬P_1, P_1) and (¬P_2, P_2) where P_1 and
+    P_2 are the probabilities of the sample being classified as class 1 in model
+    1 and 2, respectively. We can then find the three probabilities to match the
+    three classes in the multiclass problem:
+
+    1. Cohesive: ¬P_1 * ¬P_2
+    2. Easy flowing: P_1 * ¬P_2
+    3. Free flowing: P_1 * P_2
+
+    Parameters
+    ----------
+    y_probs_1 : list
+        The probabilities of the samples being in class 1 from model 1.
+    y_probs_2 : list
+        The probabilities of the samples being in class 1 from model 2.
+
+    Returns
+    -------
+    y_preds_joint : numpy.ndarray
+        The predicted labels from the combination of the models.
+    joint_probs : numpy.ndarray
+        The probabilities of the samples belonging to each of the three classes
+        from the joint model.
+    """
+    y_probs_1_full = [(1-y, y) for y in y_probs_1]
+    y_probs_2_full = [(1-y, y) for y in y_probs_2] # the binary numbers return 1 number representing the probability of a sample being in class 1
+
+    joint_probs = np.zeros((len(y_probs_1_full),4))
+    for j in range(joint_probs.shape[0]):
+        joint_probs[j] = [x*y for x,y in product(y_probs_1_full[j], y_probs_2_full[j])]
+
+    joint_probs = joint_probs[:, [0, 2, 3]]
+    joint_probs /= joint_probs.sum(axis=1)[:, None]
+
+    y_preds_joint = np.argmax(joint_probs, axis=1)
+
+    return y_preds_joint, joint_probs
+
+def joint_trues(y_true_1: List, y_true_2: List) -> np.ndarray:
+    """
+    A function for finding the true labels for the joint models of the samples.
+
+    Parameters
+    ----------
+    y_true_1 : list
+        The true labels for model 1.
+    y_true_2 : list
+        The true labels for model 2.
+
+    Returns
+    -------
+    y_true_comb : numpy.ndarray
+        Thr true labels for combined model.
+    """
+    y_true_comb = np.zeros(len(y_true_1.shape))
+
+    for j, pair in enumerate(zip(y_true_1, y_true_2)):
+        if pair == (1,1):
+            y_true_comb[j] = 2
+        elif pair == (1,0):
+            y_true_comb[j] = 1
+        elif pair == (0,0):
+            y_true_comb[j] = 0
+
+    return y_true_comb
