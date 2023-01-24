@@ -2,6 +2,7 @@
 ## John A. Armstrong, 24/01/2023
 [![Code style:
 black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 [![DOI](https://zenodo.org/badge/577694581.svg)](https://zenodo.org/badge/latestdoi/577694581)
 
 The following repository contains the code for the building, training and
