@@ -41,7 +41,7 @@ The important code this work is separated across 6 files:
 * `utils.py` contains the method for segmenting the images into 1024&times;1024
   segments to be treated as independent samples by the model. This is needed as
   the original images from the G3 used are of the entire microscope slide and
-  even after downsampling are still huge (~6k$\times$4k pixels).
+  even after downsampling are still huge (~6k&times;4k pixels).
 
 The `examples` folder contains two Jupyter notebooks which demonstrate how to
 train a network and how to test a network.
