@@ -1,6 +1,7 @@
 import torch.nn as nn
 import torchvision.models as models
 
+
 def vgg11(model_type: str) -> models.vgg.VGG:
     """
     This function returns the VGG-11 model used in the paper with the correctly

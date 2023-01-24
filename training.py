@@ -12,14 +12,15 @@ from time import time
 from tqdm import tqdm
 
 pt_vibrant = {
-    "blue" : "#0077BB",
-    "cyan" : "#33BBEE",
-    "teal" : "#009988",
-    "orange" : "#EE7733",
-    "red" : "#CC3311",
-    "magenta" : "#EE3377",
-    "grey" : "#BBBBBB"
+    "blue": "#0077BB",
+    "cyan": "#33BBEE",
+    "teal": "#009988",
+    "orange": "#EE7733",
+    "red": "#CC3311",
+    "magenta": "#EE3377",
+    "grey": "#BBBBBB",
 }
+
 
 class Trainer:
     """
@@ -292,9 +293,9 @@ class BinaryTrainer(Trainer):
         with torch.no_grad():
             batch_losses = []
             for images, labels in val_loader:
-                images, labels = images.float().to(self.device) / 255.0, labels.float().to(
+                images, labels = images.float().to(
                     self.device
-                )
+                ) / 255.0, labels.float().to(self.device)
                 output = self.model(images).squeeze()
 
                 loss = self.loss_fn(output, labels)
@@ -466,9 +467,9 @@ class MultiTrainer(Trainer):
         with torch.no_grad():
             batch_losses = []
             for images, labels in val_loader:
-                images, labels = images.float().to(self.device) / 255.0, labels.long().to(
+                images, labels = images.float().to(
                     self.device
-                )
+                ) / 255.0, labels.long().to(self.device)
                 output = self.model(images)
                 _, predicted = torch.max(output.data, 1)
                 total += labels.size(0)

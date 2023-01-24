@@ -146,7 +146,7 @@ def counts_to_probs_binary(num_counts: List, pred_labels: List) -> np.ndarray:
         The predicted labels of the samples so the code knows that when all
         segments are classified as the same class which class the sample belongs
         to.
-        
+
     Returns
     -------
     probs : numpy.ndarray
@@ -182,7 +182,7 @@ def counts_to_probs_multi(
         The unique labels that have been assigned in the classification so the
         function knows where to put the probabilities if not all of the classes
         are predicted for the segments.
-        
+
     Returns
     -------
     probs : numpy.ndarray
@@ -209,7 +209,10 @@ def counts_to_probs_multi(
 
     return np.array(probs)
 
-def joint_model_preds(y_probs_1: List, y_probs_2: List) -> Tuple[np.ndarray, np.ndarray]:
+
+def joint_model_preds(
+    y_probs_1: List, y_probs_2: List
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     This function takes the probabilities of samples being in class 1 from two
     binary models and combines them assuming that both models are
@@ -238,12 +241,16 @@ def joint_model_preds(y_probs_1: List, y_probs_2: List) -> Tuple[np.ndarray, np.
         The probabilities of the samples belonging to each of the three classes
         from the joint model.
     """
-    y_probs_1_full = [(1-y, y) for y in y_probs_1]
-    y_probs_2_full = [(1-y, y) for y in y_probs_2] # the binary numbers return 1 number representing the probability of a sample being in class 1
+    y_probs_1_full = [(1 - y, y) for y in y_probs_1]
+    y_probs_2_full = [
+        (1 - y, y) for y in y_probs_2
+    ]  # the binary numbers return 1 number representing the probability of a sample being in class 1
 
-    joint_probs = np.zeros((len(y_probs_1_full),4))
+    joint_probs = np.zeros((len(y_probs_1_full), 4))
     for j in range(joint_probs.shape[0]):
-        joint_probs[j] = [x*y for x,y in product(y_probs_1_full[j], y_probs_2_full[j])]
+        joint_probs[j] = [
+            x * y for x, y in product(y_probs_1_full[j], y_probs_2_full[j])
+        ]
 
     joint_probs = joint_probs[:, [0, 2, 3]]
     joint_probs /= joint_probs.sum(axis=1)[:, None]
@@ -251,6 +258,7 @@ def joint_model_preds(y_probs_1: List, y_probs_2: List) -> Tuple[np.ndarray, np.
     y_preds_joint = np.argmax(joint_probs, axis=1)
 
     return y_preds_joint, joint_probs
+
 
 def joint_trues(y_true_1: List, y_true_2: List) -> np.ndarray:
     """
@@ -271,11 +279,11 @@ def joint_trues(y_true_1: List, y_true_2: List) -> np.ndarray:
     y_true_comb = np.zeros(len(y_true_1.shape))
 
     for j, pair in enumerate(zip(y_true_1, y_true_2)):
-        if pair == (1,1):
+        if pair == (1, 1):
             y_true_comb[j] = 2
-        elif pair == (1,0):
+        elif pair == (1, 0):
             y_true_comb[j] = 1
-        elif pair == (0,0):
+        elif pair == (0, 0):
             y_true_comb[j] = 0
 
     return y_true_comb
