@@ -276,7 +276,7 @@ def joint_trues(y_true_1: List, y_true_2: List) -> np.ndarray:
     y_true_comb : numpy.ndarray
         Thr true labels for combined model.
     """
-    y_true_comb = np.zeros(len(y_true_1.shape))
+    y_true_comb = np.zeros(len(y_true_1))
 
     for j, pair in enumerate(zip(y_true_1, y_true_2)):
         if pair == (1, 1):
