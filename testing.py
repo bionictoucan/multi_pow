@@ -66,7 +66,7 @@ def testing(
                 predicted = 1 if output > 0.5 else 0
             else:
                 output = F.softmax(output, dim=1)
-                y_probs.append(output.cpu().numpy())
+                y_probs.append(output.cpu().numpy().squeeze())
                 _, predicted = torch.max(output.data, 1)
             y_preds.append(predicted.cpu().numpy())
             total += labels.size(0)
