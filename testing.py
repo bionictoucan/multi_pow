@@ -68,7 +68,7 @@ def testing(
                 output = F.softmax(output, dim=1)
                 y_probs.append(output.cpu().numpy())
                 _, predicted = torch.max(output.data, 1)
-            y_preds.append(predicted)
+            y_preds.append(predicted.cpu().numpy())
             total += labels.size(0)
             correct += (predicted == labels).sum()
 
