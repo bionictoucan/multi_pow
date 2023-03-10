@@ -60,7 +60,7 @@ def testing(
             labels = labels.long().to(device)
 
             output = model(images)
-            if output.shape[0] == 1:
+            if output.shape[1] == 1:
                 output = F.sigmoid(output)
                 y_probs.append(output.cpu().numpy().item())
                 predicted = 1 if output > 0.5 else 0
